@@ -1,25 +1,35 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
-
 const AdminProtectedRoute = ({ children }) => {
-
-  const { currentUser, isAdmin, loading } = useAuth();
-
+  const { currentUser, userRole, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return <p>Loading...</p>;
   }
 
-
-  if (!currentUser || !isAdmin) {
-    return <Navigate to="/admin/login" />;
+  if (!currentUser) {
+    return <Navigate to="/admin/login" replace />;
   }
 
+  if (!userRole) {
+    return <p>Checking account permissions...</p>;
+  }
+
+  if (userRole !== "admin") {
+    if (userRole === "user") {
+      return <Navigate to="/dashboard" replace />;
+    }
+
+    if (userRole === "technician") {
+      return <Navigate to="/technician/dashboard" replace />;
+    }
+
+    return <Navigate to="/" replace />;
+  }
 
   return children;
-
 };
-
 
 export default AdminProtectedRoute;

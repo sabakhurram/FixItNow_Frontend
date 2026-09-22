@@ -1,65 +1,97 @@
 import { useState } from "react";
 import { doSignInWithEmailAndPassword } from "../../firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { checkAdminStatus } from "../../api/adminApi";
+import { auth } from "../../firebase/firebase";
 import "./AdminLogin.css";
+
 const AdminLogin = () => {
-      const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
- 
-const handleLogin = async (e) => {
 
-  e.preventDefault();
-
-  try {
-
-    // 1. Firebase login
-    const userCredential = await doSignInWithEmailAndPassword(
-      email,
-      password
-    );
-
-
-    const user = userCredential.user;
-
-
-    // 2. Get Firebase token
+  const getUserRole = async (user) => {
     const token = await user.getIdToken();
 
+    const response = await fetch(
+      "https://fixitnowbackend-production.up.railway.app/api/users/profile",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    // 3. Send token to backend
-  const data = await checkAdminStatus(token);
-
-
-    // 4. Check admin status
-    if(data.isAdmin){
-
-      console.log("Admin verified");
-
-      navigate("/admin/dashboard");
-
-    }
-    else{
-
-      console.log("Not an admin");
-
-      alert("Access denied: Admins only");
-
+    if (!response.ok) {
+      throw new Error("Unable to verify account role.");
     }
 
+    const data = await response.json();
 
-  } catch(error){
+    return data.user?.role;
+  };
 
-    console.log(error.message);
-    
-    alert("Invalid email or password");
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  }
+    if (loading) return;
 
-};
+    setLoading(true);
+
+    try {
+      const userCredential =
+        await doSignInWithEmailAndPassword(
+          email,
+          password
+        );
+
+      const user = userCredential.user;
+
+      const role = await getUserRole(user);
+
+      console.log("Admin login role:", role);
+
+      if (role === "admin") {
+        console.log("Admin verified");
+
+        navigate("/admin/dashboard", {
+          replace: true,
+        });
+
+        return;
+      }
+
+      if (role === "user") {
+        alert(
+          "Customer accounts must use the Customer Portal."
+        );
+      } else if (role === "technician") {
+        alert(
+          "Technician accounts must use the Technician Portal."
+        );
+      } else {
+        alert("Access denied.");
+      }
+
+      await auth.signOut();
+
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        error.message ||
+        "Invalid email or password"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="admin-login-page">
+
       <div className="admin-login-card">
 
         <div className="admin-logo">
@@ -67,36 +99,53 @@ const handleLogin = async (e) => {
           <p>Admin Portal</p>
         </div>
 
-        <form className="admin-login-form"
-          onSubmit={handleLogin}>
+        <form
+          className="admin-login-form"
+          onSubmit={handleLogin}
+        >
 
           <div className="input-group">
             <label>EmailAddress</label>
+
             <input
-            type="email"
-               placeholder="Enter your email"
-             value={email}
-             onChange={(e)=>setEmail(e.target.value)}
-              />
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+              required
+            />
           </div>
 
           <div className="input-group">
             <label>Password</label>
-           <input
-  type="password"
-  placeholder="Enter your password"
-  value={password}
-  onChange={(e)=>setPassword(e.target.value)}
-/>
+
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+              required
+            />
           </div>
 
-          <button type="submit" className="login-btn">
-            Sign In
+          <button
+            type="submit"
+            className="login-btn"
+            disabled={loading}
+          >
+            {loading
+              ? "Signing In..."
+              : "Sign In"}
           </button>
 
         </form>
 
       </div>
+
     </div>
   );
 };

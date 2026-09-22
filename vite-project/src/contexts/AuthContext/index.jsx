@@ -17,90 +17,127 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
-  // Automatically syncs the authenticated user state to the backend
+  // Automatically syncs the authenticated user with the backend
   const syncUserWithBackend = async (firebaseUser) => {
     try {
       const token = await firebaseUser.getIdToken();
-      const response = await fetch('https://fixitnowbackend-production.up.railway.app/api/users/sync', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+
+      const response = await fetch(
+        "https://fixitnowbackend-production.up.railway.app/api/users/sync",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(`Sync failed with status: ${response.status}. Details: ${errorData.details || errorData.error || 'Unknown error'}`);
+
+        throw new Error(
+          `Sync failed with status: ${response.status}. Details: ${
+            errorData.details ||
+            errorData.error ||
+            "Unknown error"
+          }`
+        );
       }
+
       const data = await response.json();
-      console.log('Backend user sync successful:', data);
+
+      console.log("Backend user sync successful:", data);
+
     } catch (error) {
-      console.error('Error syncing user with backend:', error);
+      console.error("Error syncing user with backend:", error);
     }
   };
-  const checkAdminStatus = async (firebaseUser) => {
-  try {
 
-    const token = await firebaseUser.getIdToken();
 
-    const response = await fetch(
-      "https://fixitnowbackend-production.up.railway.app/api/users/admin-check",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+  // Gets the user's actual role from the backend
+  const getUserRole = async (firebaseUser) => {
+    try {
+      const token = await firebaseUser.getIdToken();
+
+      const response = await fetch(
+        "https://fixitnowbackend-production.up.railway.app/api/users/profile",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to get user profile: ${response.status}`
+        );
       }
-    );
 
+      const data = await response.json();
 
-    const data = await response.json();
+      const role = data.user?.role;
 
-    setIsAdmin(data.isAdmin);
+      console.log("User role:", role);
 
-  } catch (error) {
+      setUserRole(role || null);
 
-    console.error("Admin check failed:", error);
-    setIsAdmin(false);
+    } catch (error) {
+      console.error("Failed to get user role:", error);
+      setUserRole(null);
+    }
+  };
 
-  }
-};
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, initializeUser);
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      initializeUser
+    );
+
     return unsubscribe;
   }, []);
 
+
   async function initializeUser(user) {
-   if (user) {
+    if (user) {
 
-  setCurrentUser(user);
-  setUserLoggedIn(true);
+      setCurrentUser(user);
+      setUserLoggedIn(true);
 
-  syncUserWithBackend(user);
+      // First make sure the user exists in Supabase
+      await syncUserWithBackend(user);
 
-  checkAdminStatus(user);
+      // Then retrieve the user's role
+      await getUserRole(user);
 
-}
-    
-   else {
+    } else {
 
-  setCurrentUser(null);
-  setUserLoggedIn(false);
-  setIsAdmin(false);
+      setCurrentUser(null);
+      setUserLoggedIn(false);
+      setUserRole(null);
 
-}
+    }
+
     setLoading(false);
   }
+
 
   const value = {
     currentUser,
     userLoggedIn,
     loading,
-      isAdmin
+    userRole,
+
+    // Keep isAdmin available so existing components
+    // using it don't immediately break.
+    isAdmin: userRole === "admin",
   };
+
 
   return (
     <AuthContext.Provider value={value}>

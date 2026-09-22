@@ -16,7 +16,9 @@ import ProductsCatalogue from "./pages/Products/ProductsCatalogue";
 import ProductDetail from "./pages/Products/ProductDetail";
 import Checkout from "./pages/Products/Checkout";
 import Cart from "./pages/Products/Cart";
-
+import TechnicianLogin from './pages/Technician/TechnicianLogin';
+import TechnicianProtectedRoute from './Routes/TechnicianProtectedRoute';
+import TechnicianDashboard from './pages/Technician/TechnicianDashboard';
 function App() {
   return (
     <Routes>
@@ -114,7 +116,18 @@ function App() {
           </AdminProtectedRoute>
         }
       />
-
+<Route
+  path="/technician/login"
+  element={<TechnicianLogin />}
+/>
+<Route
+  path="/technician/dashboard"
+  element={
+    <TechnicianProtectedRoute>
+      <TechnicianDashboard />
+    </TechnicianProtectedRoute>
+  }
+/>
     </Routes>
   );
 }
