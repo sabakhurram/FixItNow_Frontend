@@ -2,6 +2,7 @@ import { getAuth } from "firebase/auth";
 
 const API_BASE = "https://fixitnowbackend-production.up.railway.app/api/orders";
 
+
 const getHeaders = async () => {
     const auth = getAuth();
     const currentUser = auth.currentUser;

@@ -5,6 +5,7 @@ import SalesChart from "./components/overview/SalesChart";
 import CustomerChart from "./components/overview/CustomerChart";
 import ServiceChart from "./components/overview/ServiceChart";
 import RecentActivity from "./components/overview/RecentActivity";
+import Technician from "./components/Technicians/Technician";
 import { useState,useEffect } from "react";
 import { getOverview } from "../../api/overviewService";
 import CustomerPage from "./components/Customers/CustomerPage";
@@ -13,6 +14,7 @@ import ServicePage from "./components/Services/ServicePage";
 import OrderPage from "./components/orders/OrderPage";
 import ReviewPage from "./components/reviews/ReviewPage";
 import { fetchSalesSummary } from "../../api/orderApi";
+
 import NotificationDropdown from "./components/overview/NotificationDropdown";
 import {doSignOut } from "../../firebase/auth";
 import {
@@ -20,6 +22,7 @@ import {
     Users,
     Package,
     Wrench,
+        UserCog,
     Settings,
     LogOut,
     Menu, Search, Bell, CircleDollarSign,
@@ -154,6 +157,16 @@ const formatSales = (amount) => {
 >
     <Users size={19} strokeWidth={1.8} />
     <span>Customers</span>
+</button>
+<button
+    className={`nav-item ${activeTab === "technicians" ? "active" : ""}`}
+    onClick={() => {
+        setActiveTab("technicians");
+        setSidebarOpen(false);
+    }}
+>
+    <UserCog size={19} strokeWidth={1.8} />
+    <span>Technicians</span>
 </button>
 <button
     className={`nav-item ${activeTab === "products" ? "active" : ""}`}
@@ -454,7 +467,9 @@ const formatSales = (amount) => {
    {activeTab === "customers" && (
     <CustomerPage />
 )}
-
+{activeTab === "technicians" && (
+    <Technician />
+)}
     {activeTab === "products" && (
     <>
         <ProductPage />
