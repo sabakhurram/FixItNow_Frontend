@@ -7,6 +7,7 @@ import { doSignOut } from "../../../firebase/auth";
 import './Navbar.css';
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from '../../../assets/FixItNow Logo.png';
+import NotificationBell from '../../common/NotificationBell';
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -104,6 +105,7 @@ const Navbar = () => {
                 gap: "10px"
               }}
             >
+              <NotificationBell />
               <Link to="/dashboard" className="navbar__signin">
                 Dashboard
               </Link>

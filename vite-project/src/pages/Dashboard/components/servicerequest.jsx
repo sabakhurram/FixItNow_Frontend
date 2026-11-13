@@ -15,14 +15,51 @@ import {
   FileText,
   Image,
   Video,
-  ShieldCheck
+  ShieldCheck,
+  Star,
+  UserCheck,
+  CheckCircle2,
+  Loader2
 } from "lucide-react";
 
+import { submitTechnicianReview } from "../../../api/reviewApi";
 import "./servicerequest.css";
 
 const ServiceRequests = ({ serviceRequests = [] }) => {
-
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [rating, setRating] = useState(5);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewSuccess, setReviewSuccess] = useState(false);
+
+  const handleSubmitReview = async () => {
+    if (!selectedRequest?.technician_id) {
+      alert("No technician is linked to this ticket to review.");
+      return;
+    }
+    setSubmittingReview(true);
+    try {
+      await submitTechnicianReview({
+        technician_id: selectedRequest.technician_id,
+        service_id: selectedRequest.id,
+        service_type: selectedRequest.type?.toLowerCase() || "inspection",
+        rating,
+        review_text: reviewText,
+        author_name: selectedRequest.full_name || "Customer"
+      });
+      setReviewSuccess(true);
+      setTimeout(() => {
+        setShowReviewForm(false);
+        setReviewSuccess(false);
+      }, 3000);
+    } catch (err) {
+      alert("Failed to submit review: " + err.message);
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
 
 
   const formatValue = (value) => {
@@ -736,11 +773,127 @@ const ServiceRequests = ({ serviceRequests = [] }) => {
 
 
             <div className="request-full-details">
+              {selectedRequest.technician_id && (
+                <div style={{
+                  padding: "16px",
+                  background: "rgba(2, 132, 199, 0.08)",
+                  border: "1px solid rgba(2, 132, 199, 0.2)",
+                  borderRadius: "10px",
+                  marginBottom: "20px"
+                }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <UserCheck size={18} color="#0284c7" />
+                      <strong style={{ fontSize: "14px", color: "#0f172a" }}>Field Technician Assigned</strong>
+                    </div>
+                    {!showReviewForm && (
+                      <button
+                        onClick={() => setShowReviewForm(true)}
+                        style={{
+                          background: "#facc15",
+                          color: "#713f12",
+                          border: "none",
+                          padding: "6px 12px",
+                          borderRadius: "6px",
+                          fontSize: "12px",
+                          fontWeight: "700",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px"
+                        }}
+                      >
+                        <Star size={14} fill="#713f12" /> Rate Technician
+                      </button>
+                    )}
+                  </div>
+                  <p style={{ margin: "4px 0 0 0", fontSize: "13px", color: "#475569" }}>
+                    A certified technical specialist has been dispatched for this solar service.
+                  </p>
+
+                  {/* Rating Form Dropdown */}
+                  {showReviewForm && (
+                    <div style={{ marginTop: "14px", padding: "14px", background: "#ffffff", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+                      {reviewSuccess ? (
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#16a34a", fontSize: "13px", fontWeight: "600" }}>
+                          <CheckCircle2 size={16} /> Thank you! Your feedback has been recorded.
+                        </div>
+                      ) : (
+                        <>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                            <span style={{ fontSize: "13px", fontWeight: "600", color: "#1e293b" }}>Rate Service Experience</span>
+                            <div style={{ display: "flex", gap: "4px" }}>
+                              {[1, 2, 3, 4, 5].map((s) => (
+                                <button
+                                  key={s}
+                                  type="button"
+                                  onClick={() => setRating(s)}
+                                  onMouseEnter={() => setHoverRating(s)}
+                                  onMouseLeave={() => setHoverRating(0)}
+                                  style={{ background: "none", border: "none", cursor: "pointer", padding: "2px" }}
+                                >
+                                  <Star
+                                    size={18}
+                                    color="#facc15"
+                                    fill={(hoverRating || rating) >= s ? "#facc15" : "none"}
+                                  />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <textarea
+                            placeholder="How was the technician's professionalism, diagnostic accuracy, and service speed?..."
+                            value={reviewText}
+                            onChange={(e) => setReviewText(e.target.value)}
+                            style={{
+                              width: "100%",
+                              minHeight: "70px",
+                              padding: "8px 10px",
+                              borderRadius: "6px",
+                              border: "1px solid #cbd5e1",
+                              fontSize: "12px",
+                              marginBottom: "10px",
+                              outline: "none"
+                            }}
+                          />
+
+                          <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
+                            <button
+                              type="button"
+                              onClick={() => setShowReviewForm(false)}
+                              style={{ background: "#f1f5f9", border: "none", padding: "6px 12px", borderRadius: "6px", fontSize: "12px", cursor: "pointer" }}
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleSubmitReview}
+                              disabled={submittingReview}
+                              style={{
+                                background: "#0284c7",
+                                color: "#ffffff",
+                                border: "none",
+                                padding: "6px 14px",
+                                borderRadius: "6px",
+                                fontSize: "12px",
+                                fontWeight: "600",
+                                cursor: submittingReview ? "not-allowed" : "pointer"
+                              }}
+                            >
+                              {submittingReview ? "Submitting..." : "Submit Review"}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {renderRequestDetails(
                 selectedRequest
               )}
-
             </div>
 
 

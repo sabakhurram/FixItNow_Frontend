@@ -6,6 +6,7 @@ import React, {
 
 import { auth } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { getApiBaseUrl } from "../../config/apiConfig";
 
 export const AuthContext = React.createContext();
 
@@ -25,7 +26,7 @@ export function AuthProvider({ children }) {
       const token = await firebaseUser.getIdToken();
 
       const response = await fetch(
-        "https://fixitnowbackend-production.up.railway.app/api/users/sync",
+        `${getApiBaseUrl()}/users/sync`,
         {
           method: "POST",
           headers: {
@@ -63,7 +64,7 @@ export function AuthProvider({ children }) {
       const token = await firebaseUser.getIdToken();
 
       const response = await fetch(
-        "https://fixitnowbackend-production.up.railway.app/api/users/profile",
+        `${getApiBaseUrl()}/users/profile`,
         {
           method: "GET",
           headers: {

@@ -17,17 +17,22 @@ import { fetchSalesSummary } from "../../api/orderApi";
 
 import NotificationDropdown from "./components/overview/NotificationDropdown";
 import {doSignOut } from "../../firebase/auth";
+import { broadcastGlobalNotification } from "../../api/notificationApi";
 import {
     LayoutDashboard,
     Users,
     Package,
     Wrench,
-        UserCog,
+    UserCog,
     Settings,
     LogOut,
     Menu, Search, Bell, CircleDollarSign,
     ShoppingBag,
-    Star
+    Star,
+    Megaphone,
+    X,
+    Send,
+    CheckCircle2
 } from "lucide-react";
 
 function AdminDashboard() {
@@ -42,6 +47,39 @@ const [overviewError, setOverviewError] = useState("");
 const [totalSales, setTotalSales] = useState(0);
 const [salesLoading, setSalesLoading] = useState(true);
 const [notificationsOpen, setNotificationsOpen] = useState(false);
+
+// Feature 8: Global Broadcast Notification Modal
+const [broadcastModalOpen, setBroadcastModalOpen] = useState(false);
+const [broadcastForm, setBroadcastForm] = useState({
+    title: "",
+    message: "",
+    type: "info",
+    target_role: "all"
+});
+const [broadcastSending, setBroadcastSending] = useState(false);
+const [broadcastSuccess, setBroadcastSuccess] = useState(false);
+
+const handleSendBroadcast = async (e) => {
+    e.preventDefault();
+    if (!broadcastForm.title || !broadcastForm.message) {
+        alert("Title and message are required.");
+        return;
+    }
+    setBroadcastSending(true);
+    try {
+        await broadcastGlobalNotification(broadcastForm);
+        setBroadcastSuccess(true);
+        setTimeout(() => {
+            setBroadcastModalOpen(false);
+            setBroadcastSuccess(false);
+            setBroadcastForm({ title: "", message: "", type: "info", target_role: "all" });
+        }, 2500);
+    } catch (err) {
+        alert("Failed to broadcast notification: " + err.message);
+    } finally {
+        setBroadcastSending(false);
+    }
+};
 useEffect(() => {
 
     const loadOverview = async () => {
@@ -285,6 +323,28 @@ const formatSales = (amount) => {
     )}
 
 </div>
+
+<button
+    onClick={() => setBroadcastModalOpen(true)}
+    style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "6px",
+        background: "rgba(2, 132, 199, 0.12)",
+        color: "#38bdf8",
+        border: "1px solid rgba(2, 132, 199, 0.3)",
+        borderRadius: "8px",
+        padding: "7px 12px",
+        fontSize: "12px",
+        fontWeight: "600",
+        cursor: "pointer",
+        marginRight: "4px"
+    }}
+    title="Broadcast Notification (Feature 8)"
+>
+    <Megaphone size={15} />
+    <span>Broadcast</span>
+</button>
                         <div className="admin-profile">
 
                             <div className="profile-avatar">
@@ -480,6 +540,161 @@ const formatSales = (amount) => {
 {activeTab === "orders" && <OrderPage />}
 {activeTab === "reviews" && <ReviewPage />}
 </section>
+
+{/* BROADCAST ANNOUNCEMENT MODAL (FEATURE 8) */}
+{broadcastModalOpen && (
+    <div style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0, 0, 0, 0.75)",
+        backdropFilter: "blur(4px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+        padding: "16px"
+    }}>
+        <div style={{
+            background: "#0f172a",
+            border: "1px solid rgba(255, 255, 255, 0.15)",
+            borderRadius: "14px",
+            width: "100%",
+            maxWidth: "500px",
+            padding: "24px",
+            boxShadow: "0 20px 40px rgba(0, 0, 0, 0.6)"
+        }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <Megaphone size={18} color="#38bdf8" />
+                    <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>Broadcast Global Announcement</h3>
+                </div>
+                <button
+                    onClick={() => setBroadcastModalOpen(false)}
+                    style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer" }}
+                >
+                    <X size={18} />
+                </button>
+            </div>
+
+            {broadcastSuccess ? (
+                <div style={{ padding: "16px", background: "rgba(16, 185, 129, 0.15)", color: "#34d399", borderRadius: "8px", fontSize: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
+                    <CheckCircle2 size={18} /> Announcement broadcasted to all targets successfully!
+                </div>
+            ) : (
+                <form onSubmit={handleSendBroadcast} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                    <div>
+                        <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginBottom: "6px" }}>
+                            Target Audience
+                        </label>
+                        <select
+                            value={broadcastForm.target_role}
+                            onChange={(e) => setBroadcastForm({ ...broadcastForm, target_role: e.target.value })}
+                            style={{
+                                width: "100%",
+                                background: "#1e293b",
+                                color: "#f8fafc",
+                                border: "1px solid rgba(255, 255, 255, 0.15)",
+                                borderRadius: "8px",
+                                padding: "9px 12px",
+                                fontSize: "13px",
+                                outline: "none"
+                            }}
+                        >
+                            <option value="all">All Users & Technicians</option>
+                            <option value="technician">Technicians Only</option>
+                            <option value="user">Customers Only</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginBottom: "6px" }}>
+                            Announcement Title
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="e.g. Scheduled System Maintenance / Monsoon Solar Safety Notice"
+                            value={broadcastForm.title}
+                            onChange={(e) => setBroadcastForm({ ...broadcastForm, title: e.target.value })}
+                            style={{
+                                width: "100%",
+                                background: "#1e293b",
+                                color: "#f8fafc",
+                                border: "1px solid rgba(255, 255, 255, 0.15)",
+                                borderRadius: "8px",
+                                padding: "9px 12px",
+                                fontSize: "13px",
+                                outline: "none"
+                            }}
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginBottom: "6px" }}>
+                            Message Body
+                        </label>
+                        <textarea
+                            placeholder="Write message content for all users..."
+                            value={broadcastForm.message}
+                            onChange={(e) => setBroadcastForm({ ...broadcastForm, message: e.target.value })}
+                            style={{
+                                width: "100%",
+                                minHeight: "80px",
+                                background: "#1e293b",
+                                color: "#f8fafc",
+                                border: "1px solid rgba(255, 255, 255, 0.15)",
+                                borderRadius: "8px",
+                                padding: "9px 12px",
+                                fontSize: "13px",
+                                outline: "none",
+                                resize: "vertical"
+                            }}
+                            required
+                        />
+                    </div>
+
+                    <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "10px" }}>
+                        <button
+                            type="button"
+                            onClick={() => setBroadcastModalOpen(false)}
+                            style={{
+                                background: "transparent",
+                                color: "#94a3b8",
+                                border: "1px solid rgba(255, 255, 255, 0.15)",
+                                borderRadius: "8px",
+                                padding: "8px 16px",
+                                fontSize: "13px",
+                                cursor: "pointer"
+                            }}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={broadcastSending}
+                            style={{
+                                background: "#0284c7",
+                                color: "#ffffff",
+                                border: "none",
+                                borderRadius: "8px",
+                                padding: "8px 18px",
+                                fontSize: "13px",
+                                fontWeight: "600",
+                                cursor: broadcastSending ? "not-allowed" : "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "6px"
+                            }}
+                        >
+                            <Send size={14} />
+                            {broadcastSending ? "Publishing..." : "Broadcast Alert"}
+                        </button>
+                    </div>
+                </form>
+            )}
+        </div>
+    </div>
+)}
 
 
             </main>

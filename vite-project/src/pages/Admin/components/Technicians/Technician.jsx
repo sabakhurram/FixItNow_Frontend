@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../../contexts/AuthContext";
+import { getApiBaseUrl } from "../../../../config/apiConfig";
 import {
   UserCog,
   Plus,
@@ -12,9 +13,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import "./Technician.css";
-const API_URL =
-  // "https://fixitnowbackend-production.up.railway.app/api";
-  "http://localhost:5000/api";
+const getTechniciansApiUrl = () => getApiBaseUrl();
 const Technician = () => {
   const { currentUser } = useAuth();
 
@@ -40,7 +39,7 @@ const Technician = () => {
 
       const token = await currentUser.getIdToken();
 
-      const response = await fetch(`${API_URL}/users/technicians`, {
+      const response = await fetch(`${getTechniciansApiUrl()}/users/technicians`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -106,7 +105,7 @@ const Technician = () => {
 
       const token = await currentUser.getIdToken();
 
-      const response = await fetch(`${API_URL}/users/technicians`, {
+      const response = await fetch(`${getTechniciansApiUrl()}/users/technicians`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

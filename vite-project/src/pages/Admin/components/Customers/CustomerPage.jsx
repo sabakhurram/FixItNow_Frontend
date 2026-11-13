@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../../contexts/AuthContext";
+import { getApiBaseUrl } from "../../../../config/apiConfig";
 
 import CustomerStats from "./CustomerStats";
 import CustomerToolbar from "./CustomerToolbar";
@@ -43,7 +44,7 @@ useEffect(() => {
             const token = await currentUser.getIdToken();
 
             const response = await fetch(
-                "https://fixitnowbackend-production.up.railway.app/api/users/customers",
+                `${getApiBaseUrl()}/users/customers`,
                 {
                     method: "GET",
 

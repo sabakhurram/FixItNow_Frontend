@@ -1,4 +1,5 @@
 import { getAuth } from "firebase/auth";
+import { getApiBaseUrl } from "../config/apiConfig";
 
 export const getOverview = async (range = "Last 30 Days") => {
 
@@ -12,7 +13,7 @@ export const getOverview = async (range = "Last 30 Days") => {
     const token = await currentUser.getIdToken();
 
     const response = await fetch(
-        `https://fixitnowbackend-production.up.railway.app/api/overview?range=${encodeURIComponent(range)}`,
+        `${getApiBaseUrl()}/overview?range=${encodeURIComponent(range)}`,
         {
             method: "GET",
             headers: {

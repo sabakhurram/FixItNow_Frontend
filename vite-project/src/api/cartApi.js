@@ -1,6 +1,7 @@
 import { auth } from "../firebase/firebase";
+import { getApiBaseUrl } from "../config/apiConfig";
 
-const API_URL = "https://fixitnowbackend-production.up.railway.app/api/cart";
+const getCartUrl = () => `${getApiBaseUrl()}/cart`;
 
 const getHeaders = async () => {
 
@@ -26,7 +27,7 @@ export const fetchCart = async () => {
 
     const headers = await getHeaders();
 
-    const response = await fetch(API_URL, {
+    const response = await fetch(getCartUrl(), {
         method: "GET",
         headers
     });
@@ -51,7 +52,7 @@ export const addCartItem = async (
 
     const headers = await getHeaders();
 
-    const response = await fetch(API_URL, {
+    const response = await fetch(getCartUrl(), {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -81,7 +82,7 @@ export const updateCartItem = async (
     const headers = await getHeaders();
 
     const response = await fetch(
-        `${API_URL}/${productId}`,
+        `${getCartUrl()}/${productId}`,
         {
             method: "PUT",
             headers,
@@ -112,7 +113,7 @@ export const removeCartItem = async (
     const headers = await getHeaders();
 
     const response = await fetch(
-        `${API_URL}/${productId}`,
+        `${getCartUrl()}/${productId}`,
         {
             method: "DELETE",
             headers
@@ -138,7 +139,7 @@ export const clearCart = async () => {
     const headers = await getHeaders();
 
     const response = await fetch(
-        API_URL,
+        getCartUrl(),
         {
             method: "DELETE",
             headers

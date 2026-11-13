@@ -1,6 +1,7 @@
 import { auth } from "../firebase/firebase";
+import { getApiBaseUrl } from "../config/apiConfig";
 
-const API_URL = "https://fixitnowbackend-production.up.railway.app/api/products";
+const getProductsUrl = () => `${getApiBaseUrl()}/products`;
 
 export const fetchProducts = async () => {
     const firebaseUser = auth.currentUser;
@@ -11,7 +12,7 @@ export const fetchProducts = async () => {
 
     const token = await firebaseUser.getIdToken();
 
-    const response = await fetch(API_URL, {
+    const response = await fetch(getProductsUrl(), {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`,
@@ -35,7 +36,7 @@ export const fetchProducts = async () => {
 export const fetchPublicProducts = async () => {
 
     const response = await fetch(
-        "https://fixitnowbackend-production.up.railway.app/api/products/public"
+        `${getProductsUrl()}/public`
     );
 
     if (!response.ok) {
@@ -56,7 +57,7 @@ export const fetchPublicProducts = async () => {
 export const fetchPublicProductById = async (productId) => {
 
     const response = await fetch(
-        `https://fixitnowbackend-production.up.railway.app/api/products/public/${productId}`
+        `${getProductsUrl()}/public/${productId}`
     );
 
     if (!response.ok) {
@@ -84,7 +85,7 @@ export const createProduct = async (productData) => {
 
     const token = await firebaseUser.getIdToken();
 
-    const response = await fetch(API_URL, {
+    const response = await fetch(getProductsUrl(), {
         method: "POST",
 
         headers: {
@@ -120,7 +121,7 @@ export const updateProduct = async (productId, productData) => {
     const token = await firebaseUser.getIdToken();
 
     const response = await fetch(
-        `${API_URL}/${productId}`,
+        `${getProductsUrl()}/${productId}`,
         {
             method: "PUT",
 
@@ -159,7 +160,7 @@ export const deleteProduct = async (productId) => {
 
 
     const response = await fetch(
-        `${API_URL}/${productId}`,
+        `${getProductsUrl()}/${productId}`,
         {
             method: "DELETE",
 

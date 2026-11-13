@@ -1,16 +1,17 @@
 import { getAuth } from "firebase/auth";
+import { getApiBaseUrl } from "../config/apiConfig";
 
-const BASE_URL = "https://fixitnowbackend-production.up.railway.app/api/reviews";
+const getReviewsUrl = () => `${getApiBaseUrl()}/reviews`;
 
 export const getSiteReviews = async () => {
-  const res = await fetch(`${BASE_URL}/site`);
+  const res = await fetch(`${getReviewsUrl()}/site`);
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || "Failed to fetch site reviews");
   return data.reviews || [];
 };
 
 export const getProductReviews = async (productId) => {
-  const res = await fetch(`${BASE_URL}/product/${productId}`);
+  const res = await fetch(`${getReviewsUrl()}/product/${productId}`);
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || "Failed to fetch product reviews");
   return data.reviews || [];
@@ -25,7 +26,7 @@ export const submitReview = async (reviewData) => {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const res = await fetch(BASE_URL, {
+  const res = await fetch(getReviewsUrl(), {
     method: "POST",
     headers,
     body: JSON.stringify(reviewData)
@@ -41,7 +42,7 @@ export const getAllReviewsAdmin = async () => {
   if (!currentUser) throw new Error("User not logged in");
   const token = await currentUser.getIdToken();
 
-  const res = await fetch(`${BASE_URL}/admin`, {
+  const res = await fetch(`${getReviewsUrl()}/admin`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   const data = await res.json();
@@ -55,7 +56,7 @@ export const updateReviewAdmin = async (id, updateFields) => {
   if (!currentUser) throw new Error("User not logged in");
   const token = await currentUser.getIdToken();
 
-  const res = await fetch(`${BASE_URL}/admin/${id}`, {
+  const res = await fetch(`${getReviewsUrl()}/admin/${id}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -74,11 +75,31 @@ export const deleteReviewAdmin = async (id) => {
   if (!currentUser) throw new Error("User not logged in");
   const token = await currentUser.getIdToken();
 
-  const res = await fetch(`${BASE_URL}/admin/${id}`, {
+  const res = await fetch(`${getReviewsUrl()}/admin/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` }
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || "Failed to delete review");
+  return data;
+};
+
+// Feature 7: Submit rating & review for an assigned technician
+export const submitTechnicianReview = async (reviewData) => {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  if (!currentUser) throw new Error("Please sign in to rate your technician.");
+  const token = await currentUser.getIdToken();
+
+  const res = await fetch(`${getReviewsUrl()}/technician`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(reviewData)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to submit technician review");
   return data;
 };

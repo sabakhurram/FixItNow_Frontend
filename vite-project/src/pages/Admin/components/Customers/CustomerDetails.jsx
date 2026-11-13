@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../../contexts/AuthContext";
+import { getApiBaseUrl } from "../../../../config/apiConfig";
 import {
     X,
     Mail,
@@ -32,7 +33,7 @@ function CustomerDetails({ customer, onClose }) {
             setLoadingActivity(true);
             try {
                 const token = await currentUser.getIdToken();
-                const res = await fetch(`https://fixitnowbackend-production.up.railway.app/api/users/customers/${customer.id}/details`, {
+                const res = await fetch(`${getApiBaseUrl()}/users/customers/${customer.id}/details`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const data = await res.json();

@@ -1,4 +1,7 @@
 import { getAuth } from 'firebase/auth';
+import { getApiBaseUrl } from '../config/apiConfig';
+
+const getAmcUrl = () => `${getApiBaseUrl()}/amc`;
 
 export const submitAmc = async (formData) => {
   const auth = getAuth();
@@ -10,7 +13,7 @@ export const submitAmc = async (formData) => {
 
   const token = await currentUser.getIdToken();
 
-  const response = await fetch('https://fixitnowbackend-production.up.railway.app/api/amc', {
+  const response = await fetch(getAmcUrl(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -42,7 +45,7 @@ export const getAMCs = async () => {
 
 
   const response = await fetch(
-    "https://fixitnowbackend-production.up.railway.app/api/amc",
+    getAmcUrl(),
     {
       method:"GET",
       headers:{
@@ -80,7 +83,7 @@ export const submitAMC = async (formData) => {
 
 
   const response = await fetch(
-    "https://fixitnowbackend-production.up.railway.app/api/amc",
+    getAmcUrl(),
     {
       method: "POST",
 
@@ -117,7 +120,7 @@ export const getAllAMCContracts = async () => {
     const token = await currentUser.getIdToken();
 
     const response = await fetch(
-        "https://fixitnowbackend-production.up.railway.app/api/amc/admin",
+        `${getAmcUrl()}/admin`,
         {
             method: "GET",
             headers: {
@@ -143,7 +146,7 @@ export const updateAMCStatus = async (id, status) => {
     if (!currentUser) throw new Error("User not logged in");
     const token = await currentUser.getIdToken();
 
-    const response = await fetch(`https://fixitnowbackend-production.up.railway.app/api/amc/admin/${id}/status`, {
+    const response = await fetch(`${getAmcUrl()}/admin/${id}/status`, {
         method: "PUT",
         headers: {
             Authorization: `Bearer ${token}`,

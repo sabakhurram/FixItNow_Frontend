@@ -1,4 +1,8 @@
 import { getAuth } from 'firebase/auth';
+import { getApiBaseUrl } from '../config/apiConfig';
+
+const getRepairsUrl = () => `${getApiBaseUrl()}/repairs`;
+
 export const submitRepair = async (formData) => {
 
   const auth = getAuth();
@@ -11,7 +15,7 @@ export const submitRepair = async (formData) => {
   const token = await currentUser.getIdToken();
 
   const response = await fetch(
-    "https://fixitnowbackend-production.up.railway.app/api/repairs",
+    getRepairsUrl(),
     {
       method: "POST",
 
@@ -48,7 +52,7 @@ const token = await currentUser.getIdToken();
 
 
 const response = await fetch(
-"https://fixitnowbackend-production.up.railway.app/api/repairs",
+getRepairsUrl(),
 {
  method:"GET",
 
@@ -86,7 +90,7 @@ export const getAllRepairs = async () => {
     const token = await currentUser.getIdToken();
 
     const response = await fetch(
-        "https://fixitnowbackend-production.up.railway.app/api/repairs/admin",
+        `${getRepairsUrl()}/admin`,
         {
             method: "GET",
             headers: {
@@ -112,7 +116,7 @@ export const updateRepairStatus = async (id, status) => {
     if (!currentUser) throw new Error("User not logged in");
     const token = await currentUser.getIdToken();
 
-    const response = await fetch(`https://fixitnowbackend-production.up.railway.app/api/repairs/admin/${id}/status`, {
+    const response = await fetch(`${getRepairsUrl()}/admin/${id}/status`, {
         method: "PUT",
         headers: {
             Authorization: `Bearer ${token}`,

@@ -11,13 +11,16 @@ import {
     Home,
     Zap,
     Battery,
-    AlertCircle
+    AlertCircle,
+    UserCheck,
+    CheckCircle2
 } from "lucide-react";
 
 import { useState, useEffect } from "react";
 import { updateInspectionStatus } from "../../../../api/inspectionApi";
 import { updateRepairStatus } from "../../../../api/repairApi";
 import { updateAMCStatus } from "../../../../api/amcApi";
+import { fetchAllTechnicians, assignTechnicianToService } from "../../../../api/technicianApi";
 import "./ServiceRequestDetails.css";
 
 function ServiceRequestDetails({
@@ -31,12 +34,49 @@ function ServiceRequestDetails({
 
     const [currentStatus, setCurrentStatus] = useState(request.status || "Pending");
     const [isUpdating, setIsUpdating] = useState(false);
+    const [technicians, setTechnicians] = useState([]);
+    const [selectedTechId, setSelectedTechId] = useState(request.technician_id || "");
+    const [isAssigning, setIsAssigning] = useState(false);
+    const [assignSuccess, setAssignSuccess] = useState(false);
 
     useEffect(() => {
         if (request) {
             setCurrentStatus(request.status || "Pending");
+            setSelectedTechId(request.technician_id || "");
         }
     }, [request]);
+
+    useEffect(() => {
+        const loadTechs = async () => {
+            try {
+                const list = await fetchAllTechnicians();
+                setTechnicians(list || []);
+            } catch (err) {
+                console.warn("Could not load technicians:", err.message);
+            }
+        };
+        loadTechs();
+    }, []);
+
+    const handleAssignTechnician = async () => {
+        if (!selectedTechId) {
+            alert("Please select a technician to assign.");
+            return;
+        }
+        setIsAssigning(true);
+        try {
+            await assignTechnicianToService(service, request.id, selectedTechId);
+            request.technician_id = selectedTechId;
+            request.status = "assigned";
+            setCurrentStatus("assigned");
+            setAssignSuccess(true);
+            setTimeout(() => setAssignSuccess(false), 4000);
+        } catch (err) {
+            alert("Failed to assign technician: " + err.message);
+        } finally {
+            setIsAssigning(false);
+        }
+    };
 
     const handleStatusChange = async (newStatus) => {
         setIsUpdating(true);
@@ -151,12 +191,85 @@ function ServiceRequestDetails({
                             }}
                         >
                             <option value="pending">Pending</option>
+                            <option value="assigned">Assigned</option>
                             <option value="scheduled">Scheduled</option>
                             <option value="in_progress">In Progress</option>
                             <option value="completed">Completed</option>
                             <option value="cancelled">Cancelled</option>
                         </select>
                     </div>
+                </div>
+
+                {/* TECHNICIAN DISPATCH & ASSIGNMENT (FEATURE 1) */}
+                <div style={{
+                    margin: "14px 0",
+                    padding: "16px",
+                    background: "rgba(2, 132, 199, 0.08)",
+                    border: "1px solid rgba(2, 132, 199, 0.2)",
+                    borderRadius: "10px"
+                }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <UserCheck size={18} color="#38bdf8" />
+                            <strong style={{ fontSize: "14px", color: "#f8fafc" }}>Assign Field Technician</strong>
+                        </div>
+                        {assignSuccess && (
+                            <span style={{ fontSize: "12px", color: "#4ade80", display: "flex", alignItems: "center", gap: "4px" }}>
+                                <CheckCircle2 size={14} /> Assigned successfully!
+                            </span>
+                        )}
+                    </div>
+
+                    <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
+                        <select
+                            value={selectedTechId}
+                            onChange={(e) => setSelectedTechId(e.target.value)}
+                            style={{
+                                flex: "1",
+                                minWidth: "220px",
+                                background: "#0f172a",
+                                color: "#f8fafc",
+                                border: "1px solid rgba(255, 255, 255, 0.2)",
+                                borderRadius: "8px",
+                                padding: "8px 12px",
+                                fontSize: "13px"
+                            }}
+                        >
+                            <option value="">-- Select Field Technician --</option>
+                            {technicians.map((t) => (
+                                <option key={t.id} value={t.id}>
+                                    {t.display_name || t.email} ({t.email})
+                                </option>
+                            ))}
+                        </select>
+
+                        <button
+                            onClick={handleAssignTechnician}
+                            disabled={isAssigning || !selectedTechId}
+                            style={{
+                                background: "#0284c7",
+                                color: "#ffffff",
+                                border: "none",
+                                borderRadius: "8px",
+                                padding: "8px 16px",
+                                fontSize: "13px",
+                                fontWeight: "600",
+                                cursor: isAssigning ? "not-allowed" : "pointer",
+                                opacity: !selectedTechId || isAssigning ? 0.6 : 1,
+                                transition: "all 0.2s"
+                            }}
+                        >
+                            {isAssigning ? "Assigning..." : (request.technician_id ? "Reassign Tech" : "Dispatch Tech")}
+                        </button>
+                    </div>
+
+                    {request.technician_id && (
+                        <p style={{ margin: "8px 0 0 0", fontSize: "12px", color: "#94a3b8" }}>
+                            Currently Assigned: <span style={{ color: "#38bdf8", fontWeight: "600" }}>
+                                {technicians.find(t => t.id === request.technician_id)?.display_name || request.technician_id}
+                            </span>
+                        </p>
+                    )}
                 </div>
 
 

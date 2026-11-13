@@ -1,6 +1,7 @@
 import { getAuth } from "firebase/auth";
+import { getApiBaseUrl } from "../config/apiConfig";
 
-const API_BASE = "https://fixitnowbackend-production.up.railway.app/api/orders";
+const getOrdersUrl = () => `${getApiBaseUrl()}/orders`;
 
 
 const getHeaders = async () => {
@@ -19,7 +20,7 @@ const getHeaders = async () => {
 // Create a new order
 export const createOrder = async (orderData) => {
     const headers = await getHeaders();
-    const response = await fetch(API_BASE, {
+    const response = await fetch(getOrdersUrl(), {
         method: "POST",
         headers,
         body: JSON.stringify(orderData)
@@ -34,7 +35,7 @@ export const createOrder = async (orderData) => {
 // Fetch orders placed by the current user
 export const fetchUserOrders = async () => {
     const headers = await getHeaders();
-    const response = await fetch(API_BASE, {
+    const response = await fetch(getOrdersUrl(), {
         method: "GET",
         headers
     });
@@ -48,7 +49,7 @@ export const fetchUserOrders = async () => {
 // Admin: Fetch all orders
 export const fetchAdminOrders = async () => {
     const headers = await getHeaders();
-    const response = await fetch(`${API_BASE}/admin`, {
+    const response = await fetch(`${getOrdersUrl()}/admin`, {
         method: "GET",
         headers
     });
@@ -62,7 +63,7 @@ export const fetchAdminOrders = async () => {
 export const fetchSalesSummary = async () => {
     const headers = await getHeaders();
 
-    const response = await fetch(`${API_BASE}/admin/sales-summary`, {
+    const response = await fetch(`${getOrdersUrl()}/admin/sales-summary`, {
         method: "GET",
         headers
     });
@@ -78,7 +79,7 @@ export const fetchSalesSummary = async () => {
 // Admin: Update order status
 export const updateOrderStatus = async (orderId, status) => {
     const headers = await getHeaders();
-    const response = await fetch(`${API_BASE}/admin/${orderId}/status`, {
+    const response = await fetch(`${getOrdersUrl()}/admin/${orderId}/status`, {
         method: "PUT",
         headers,
         body: JSON.stringify({ status })

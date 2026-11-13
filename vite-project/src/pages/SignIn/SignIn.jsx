@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import { auth } from "../../firebase/firebase";
+import { getApiBaseUrl } from "../../config/apiConfig";
 
 import {
   doSignInWithEmailAndPassword,
@@ -23,7 +24,7 @@ const SignIn = () => {
     const token = await user.getIdToken();
 
     const response = await fetch(
-      "https://fixitnowbackend-production.up.railway.app/api/users/profile",
+      `${getApiBaseUrl()}/users/profile`,
       {
         method: "GET",
         headers: {
