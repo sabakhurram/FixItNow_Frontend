@@ -1,3 +1,6 @@
+/* Navbar: white glass floating pill, yellow buttons. Uses your theme tokens,
+   so it follows light/dark automatically.  */
+
 .navbar {
   position: fixed;
   top: 0;
@@ -7,27 +10,38 @@
   width: 100%;
   z-index: 10001;
   overflow: visible;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  background: transparent;
+  /* Solid white bar at the top of a page; becomes the floating pill on scroll */
+  background: var(--nav-bg-solid);
+  border-bottom: 1px solid var(--nav-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  /* No "all": the slide in/out is driven by framer-motion */
+  transition: top 0.5s var(--ease-out), width 0.5s var(--ease-out),
+    background 0.4s, border-color 0.4s, box-shadow 0.4s, opacity 0.3s;
 }
 
 .navbar--hidden {
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-20px);
 }
 
-/* Floating Pill layout triggered on scroll */
+/* Slid away while scrolling down (position is animated by framer-motion) */
+.navbar--retracted {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Floating pill, shown once you scroll */
 .navbar--scrolled {
   top: 16px;
   width: 92%;
   max-width: 1200px;
   border-radius: 50px;
-  background: rgba(15, 22, 41, 0.75);
+  background: var(--nav-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(245, 166, 35, 0.05);
+  border: 1px solid var(--nav-border);
+  box-shadow: var(--nav-shadow);
 }
 
 .navbar__inner {
@@ -42,7 +56,7 @@
 }
 
 .navbar--scrolled .navbar__inner {
-  padding: 12px 32px;
+  padding: 10px 24px;
 }
 
 .navbar__logo {
@@ -60,60 +74,51 @@
 }
 
 .navbar--scrolled .navbar__logo-img {
-  height: 44px;
+  height: 42px;
 }
 
-/* Nav Links Underline hover */
+/* Nav links: soft rounded highlight on hover */
 .navbar__links {
   display: flex;
   list-style: none;
-  gap: 32px;
+  gap: 4px;
   flex-shrink: 0; /* Prevent link group from squeezing */
 }
 
 .navbar__links a {
-  font-size: 0.95rem;
-  color: var(--muted);
+  display: block;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
   font-weight: 500;
-  transition: color 0.3s ease;
-  position: relative;
-  padding: 6px 0;
+  color: var(--muted);
   white-space: nowrap; /* Prevent nav links from wrapping */
-}
-
-.navbar__links a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: var(--gold);
-  border-radius: 2px;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: translateX(-50%);
-  box-shadow: 0 0 8px var(--gold);
+  transition: color 0.25s ease, background 0.25s ease;
 }
 
 .navbar__links a:hover {
-  color: var(--white);
+  color: var(--text);
+  background: var(--hover-bg);
 }
 
-.navbar__links a:hover::after {
-  width: 20px;
-  /* Short, elegant hover indicator */
+.navbar__links a:focus-visible,
+.navbar__signin:focus-visible,
+.navbar__signup:focus-visible,
+.navbar__hamburger:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
 }
 
-/* Call to Action Button */
+/* Call to Action Button (same yellow as every other button) */
 .navbar__cta {
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-  color: var(--bg-dark);
+  background: var(--accent);
+  color: var(--on-accent);
   padding: 10px 24px;
-  border-radius: 50px;
+  border-radius: var(--radius-pill);
   font-weight: 700;
-  font-size: 0.9rem;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 15px rgba(245, 166, 35, 0.15);
+  font-size: var(--text-sm);
+  transition: background 0.25s ease, transform 0.3s var(--ease-out);
   border: 1px solid transparent;
   display: inline-flex;
   align-items: center;
@@ -122,65 +127,65 @@
 }
 
 .navbar__cta:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 25px rgba(245, 166, 35, 0.35);
+  background: var(--accent-light);
+  transform: translateY(-2px);
 }
 
 /* Actions block */
 .navbar__actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
   flex-shrink: 0; /* Prevent actions group from squeezing */
 }
 
 .navbar__signin {
   background: transparent;
   border: none;
-  color: var(--white);
-  font-size: 0.95rem;
-  font-weight: 500;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
   cursor: pointer;
-  transition: color 0.3s ease;
-  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  padding: 9px 16px;
   white-space: nowrap; /* Prevent text wrapping */
+  transition: background 0.25s ease;
 }
 
 .navbar__signin:hover {
-  color: var(--gold);
+  background: var(--hover-bg);
 }
 
+/* Sign Up / Logout: the shared yellow button */
 .navbar__signup {
-  padding: 8px 18px;
-  border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--white);
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: var(--accent);
+  color: var(--on-accent);
   cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
   white-space: nowrap; /* Prevent text wrapping */
+  transition: background 0.25s ease, transform 0.3s var(--ease-out);
 }
 
 .navbar__signup:hover {
-  border-color: var(--gold);
-  background: rgba(245, 166, 35, 0.08);
-  color: var(--white);
-  box-shadow: 0 0 15px rgba(245, 166, 35, 0.08);
+  background: var(--accent-light);
+  transform: translateY(-2px);
 }
 
 /* Hamburger */
 .navbar__hamburger {
   display: none;
   background: transparent;
-  color: var(--white);
+  color: var(--text);
   border: none;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  outline: none;
 }
 
 /* Mobile Dropdown Drawer */
@@ -195,32 +200,32 @@
   align-items: center;
   gap: 20px;
   padding: 30px 20px;
-  background: rgba(15, 22, 41, 0.95);
+  background: var(--nav-bg-solid);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--nav-border);
   overflow: visible;
   pointer-events: auto;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--nav-shadow);
   z-index: 11001;
 }
 
 .navbar--scrolled .navbar__mobile {
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid var(--nav-border);
+  border-right: 1px solid var(--nav-border);
 }
 
 .navbar__mobile a {
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
   color: var(--muted);
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .navbar__mobile a:hover {
-  color: var(--white);
+  color: var(--text);
 }
 
 .navbar__cta--mobile {
@@ -236,16 +241,16 @@
 
 .user-name {
   font-weight: 500;
-  color: var(--white);
+  color: var(--text);
 }
 
 .avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(245, 166, 35, 0.08);
-  color: var(--gold);
-  border: 1px solid rgba(245, 166, 35, 0.2);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,23 +275,82 @@
 .mobile-signin {
   background: transparent;
   border: none;
-  color: white;
-  font-size: 1.1rem;
+  color: var(--text);
+  font-size: var(--text-lg);
   cursor: pointer;
   padding: 8px 16px;
 }
 
 .mobile-signup {
-  padding: 10px 20px;
-  border-radius: 30px;
-  border: 1px solid var(--gold);
-  background: transparent;
-  color: var(--gold);
+  padding: 12px 20px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 700;
   cursor: pointer;
   width: 100%;
   max-width: 200px;
+  text-align: center;
 }
 
+.mobile-signup:hover {
+  background: var(--accent-light);
+}
+
+/* Cart icon with count badge */
+.navbar__cart {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--text);
+  transition: background 0.25s ease;
+}
+
+.navbar__cart:hover {
+  background: var(--hover-bg);
+}
+
+.navbar__cart:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.navbar__cart-badge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--surface);
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+/* The extra copy next to the hamburger is for phones only */
+.navbar__cart--mobile {
+  display: none;
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .navbar__signup:hover,
+  .navbar__cta:hover {
+    transform: none;
+  }
+}
 
 /* ─── Responsive ─── */
 @media (max-width: 900px) {
@@ -306,5 +370,13 @@
 
   .navbar--scrolled {
     width: 94%;
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar__cart--mobile {
+    display: grid;
+    margin-left: auto;
+    margin-right: -12px;
   }
 }

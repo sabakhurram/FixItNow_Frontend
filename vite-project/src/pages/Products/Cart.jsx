@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 import {
     ArrowLeft,
     ShoppingCart,
@@ -8,21 +9,22 @@ import {
 } from "lucide-react";
 
 import { useCart } from "../../contexts/CartContext";
-
 import "./Cart.css";
 
 function Cart() {
-  const {
-    cartItems,
-    loading,
-    removeFromCart,
-    updateQuantity
-} = useCart();
+    const {
+        cartItems,
+        loading,
+        removeFromCart,
+        updateQuantity
+    } = useCart();
 
     const navigate = useNavigate();
-const handleContinueShopping = () => {
-    navigate("/products");
-};
+
+    const handleContinueShopping = () => {
+        navigate("/products");
+    };
+
     const subtotal = cartItems.reduce(
         (total, item) =>
             total + Number(item.price) * item.quantity,
@@ -40,19 +42,13 @@ const handleContinueShopping = () => {
 
     const handleDecrease = (item) => {
         if (item.quantity > 1) {
-            updateQuantity(
-                item.id,
-                item.quantity - 1
-            );
+            updateQuantity(item.id, item.quantity - 1);
         }
     };
 
     const handleIncrease = (item) => {
         if (item.quantity < Number(item.stock)) {
-            updateQuantity(
-                item.id,
-                item.quantity + 1
-            );
+            updateQuantity(item.id, item.quantity + 1);
         }
     };
 
@@ -63,32 +59,28 @@ const handleContinueShopping = () => {
             }
         });
     };
-if (loading) {
-    return (
-        <main className="cart-page">
-            <div className="cart-empty">
-                <ShoppingCart
-                    size={52}
-                    className="cart-empty-icon"
-                />
 
-                <h1>Loading Cart...</h1>
+    if (loading) {
+        return (
+            <main className="cart-page">
+                <div className="cart-empty">
+                    <ShoppingCart
+                        size={48}
+                        className="cart-empty-icon"
+                    />
+                    <h1>Loading Cart...</h1>
+                    <p>Please wait while we load your cart.</p>
+                </div>
+            </main>
+        );
+    }
 
-                <p>
-                    Please wait while we load your cart.
-                </p>
-            </div>
-        </main>
-    );
-}
     if (cartItems.length === 0) {
         return (
             <main className="cart-page">
-
                 <div className="cart-empty">
-
                     <ShoppingCart
-                        size={52}
+                        size={48}
                         className="cart-empty-icon"
                     />
 
@@ -98,181 +90,181 @@ if (loading) {
                         Looks like you haven't added
                         any products yet.
                     </p>
-<button
-    type="button"
-    className="cart-shop-btn"
-    onClick={handleContinueShopping}
->
-    <ArrowLeft size={17} />
-    Browse Products
-</button>
 
+                    <button
+                        type="button"
+                        className="cart-shop-btn"
+                        onClick={handleContinueShopping}
+                    >
+                        <ArrowLeft size={17} />
+                        Browse Products
+                    </button>
                 </div>
-
             </main>
         );
     }
 
     return (
         <main className="cart-page">
-
             <div className="cart-container">
 
-              <button
-    type="button"
-    className="cart-back-link"
-    onClick={handleContinueShopping}
->
-    <ArrowLeft size={17} />
-    Continue Shopping
-</button>
+                {/* Continue shopping */}
+                <button
+                    type="button"
+                    className="cart-back-link"
+                    onClick={handleContinueShopping}
+                >
+                    <ArrowLeft size={17} />
+                    <span>Continue Shopping</span>
+                </button>
 
-                <h1>Your Shopping Cart</h1>
+                <h1>Shopping Cart</h1>
 
                 <div className="cart-layout">
 
-                    {/* Cart Items */}
+                    {/* LEFT: ITEMS TABLE */}
                     <section className="cart-items-section">
 
-                        {cartItems.map((item) => (
+                        {/* Table header */}
+                        <div className="cart-table-header">
+                            <span className="cart-header-product">
+                                Product
+                            </span>
 
-                            <article
-                                className="cart-item"
-                                key={item.id}
-                            >
+                            <span className="cart-header-quantity">
+                                Quantity
+                            </span>
 
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    className="cart-item-image"
-                                />
+                            <span className="cart-header-total">
+                                Total
+                            </span>
 
-                                <div className="cart-item-info">
+                            <span className="cart-header-action">
+                                Action
+                            </span>
+                        </div>
 
-                                    <span className="cart-item-category">
-                                        {item.category}
-                                    </span>
+                        {/* Product rows */}
+                        <div className="cart-items-list">
+                            {cartItems.map((item) => (
+                                <article
+                                    className="cart-item"
+                                    key={item.id}
+                                >
+                                    {/* Product */}
+                                    <div className="cart-item-product">
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="cart-item-image"
+                                        />
 
-                                    <h2>
-                                        {item.name}
-                                    </h2>
+                                        <div className="cart-item-info">
+                                            <h2>{item.name}</h2>
 
-                                    <span className="cart-item-price">
-                                        Rs.{" "}
-                                        {Number(
-                                            item.price
-                                        ).toLocaleString()}
-                                    </span>
+                                            <span className="cart-item-category">
+                                                {item.category}
+                                            </span>
 
-                                </div>
+                                            <span className="cart-item-price">
+                                                Rs.{" "}
+                                                {Number(
+                                                    item.price
+                                                ).toLocaleString()}
+                                                {" "}each
+                                            </span>
+                                        </div>
+                                    </div>
 
-                                {/* Quantity */}
-                                <div className="cart-quantity-controls">
+                                    {/* Quantity */}
+                                    <div className="cart-quantity-controls">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleDecrease(item)
+                                            }
+                                            disabled={item.quantity <= 1}
+                                            aria-label="Decrease quantity"
+                                        >
+                                            <Minus size={14} />
+                                        </button>
 
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            handleDecrease(item)
-                                        }
-                                        disabled={
-                                            item.quantity <= 1
-                                        }
-                                    >
-                                        <Minus size={16} />
-                                    </button>
+                                        <span>{item.quantity}</span>
 
-                                    <span>
-                                        {item.quantity}
-                                    </span>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleIncrease(item)
+                                            }
+                                            disabled={
+                                                item.quantity >=
+                                                Number(item.stock)
+                                            }
+                                            aria-label="Increase quantity"
+                                        >
+                                            <Plus size={14} />
+                                        </button>
+                                    </div>
 
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            handleIncrease(item)
-                                        }
-                                        disabled={
-                                            item.quantity >=
-                                            Number(item.stock)
-                                        }
-                                    >
-                                        <Plus size={16} />
-                                    </button>
-
-                                </div>
-
-                                {/* Item total + remove */}
-                                <div className="cart-item-actions">
-
-                                    <strong>
+                                    {/* Item total */}
+                                    <div className="cart-item-total">
                                         Rs.{" "}
                                         {(
                                             Number(item.price) *
                                             item.quantity
                                         ).toLocaleString()}
-                                    </strong>
+                                    </div>
 
-                                    <button
-                                        type="button"
-                                        className="cart-remove-btn"
-                                        onClick={() =>
-                                            removeFromCart(item.id)
-                                        }
-                                        aria-label={`Remove ${item.name}`}
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
-
-                                </div>
-
-                            </article>
-
-                        ))}
-
+                                    {/* Remove */}
+                                    <div className="cart-item-action">
+                                        <button
+                                            type="button"
+                                            className="cart-remove-btn"
+                                            onClick={() =>
+                                                removeFromCart(item.id)
+                                            }
+                                            aria-label={`Remove ${item.name}`}
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
                     </section>
 
-                    {/* Order Summary */}
+                    {/* RIGHT: ORDER SUMMARY */}
                     <aside className="cart-summary">
 
                         <h2>Order Summary</h2>
 
                         <div className="cart-summary-row">
-
+                            <span>Subtotal</span>
                             <span>
-                                Subtotal
+                                Rs. {subtotal.toLocaleString()}
                             </span>
-
-                            <span>
-                                Rs.{" "}
-                                {subtotal.toLocaleString()}
-                            </span>
-
                         </div>
 
                         <div className="cart-summary-row">
-
-                            <span>
-                                Shipping
-                            </span>
-
+                            <span>Shipping Fee</span>
                             <span>
                                 {shippingFee === 0
                                     ? "Free"
-                                    : `Rs. ${shippingFee}`}
+                                    : `Rs. ${shippingFee.toLocaleString()}`}
                             </span>
-
                         </div>
 
+                        {subtotal > 0 && subtotal <= 15000 && (
+                            <p className="cart-shipping-note">
+                                Free shipping on orders above Rs. 15,000
+                            </p>
+                        )}
+
                         <div className="cart-summary-total">
-
-                            <span>
-                                Total
-                            </span>
-
+                            <span>Total</span>
                             <strong>
-                                Rs.{" "}
-                                {totalAmount.toLocaleString()}
+                                Rs. {totalAmount.toLocaleString()}
                             </strong>
-
                         </div>
 
                         <button
@@ -283,12 +275,16 @@ if (loading) {
                             Proceed to Checkout
                         </button>
 
+                        <div className="cart-summary-footer">
+                            <ShoppingCart size={15} />
+                            <span>
+                                Secure checkout · Your order is protected
+                            </span>
+                        </div>
+
                     </aside>
-
                 </div>
-
             </div>
-
         </main>
     );
 }

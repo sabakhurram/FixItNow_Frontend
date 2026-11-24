@@ -140,7 +140,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="signin">
+    <div className="signin" data-theme="light">
 
       <div className="signin-card">
 
@@ -200,6 +200,33 @@ const SignIn = () => {
         </button>
 
       </div>
+
+      {/* Photo panel with a short message */}
+      <aside className="signin-visual">
+        <div className="signin-visual__content">
+          <h2>
+            Power your home <span>with the sun.</span>
+          </h2>
+          <p>
+            Sign in to track your requests, manage your services and keep your
+            energy running smoothly.
+          </p>
+          <ul className="signin-visual__stats">
+            <li>
+              <strong>15+</strong>
+              <span>Years Experience</span>
+            </li>
+            <li>
+              <strong>100%</strong>
+              <span>Eco-Certified</span>
+            </li>
+            <li>
+              <strong>24/7</strong>
+              <span>Support</span>
+            </li>
+          </ul>
+        </div>
+      </aside>
 
     </div>
   );

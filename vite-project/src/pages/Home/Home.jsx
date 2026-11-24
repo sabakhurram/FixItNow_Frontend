@@ -1,6 +1,7 @@
 import React, { Suspense, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ScrollCanvas from '../../components/ScrollAnimation/ScrollCanvas';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Lazy load below-the-fold components for optimized page speed and performance
 const Services = React.lazy(() => import('./components/Services'));
@@ -47,20 +48,41 @@ const LazySectionPlaceholder = () => (
 
 function Home() {
     const location = useLocation();
-
+ 
+ useEffect(() => () => { document.documentElement.dataset.theme = 'dark'; }, []);
   useEffect(() => {
     if (!location.hash) return;
 
-    const scrollToSection = () => {
-      const element = document.querySelector(location.hash);
+   const scrollToSection = () => {
+  // Land after the reveal, with the first card in place
+ if (location.hash === '#services') {
+  const st = ScrollTrigger.getById('services-pin');
 
-      if (element) {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }
-    };
+  if (st) {
+    const tl = st.animation;
+    const firstServiceTime = tl?.labels?.['service-0'] ?? 0;
+    const progress = tl?.duration()
+      ? firstServiceTime / tl.duration()
+      : 0;
+
+    window.scrollTo({
+      top: st.start + progress * (st.end - st.start),
+      behavior: 'smooth',
+    });
+
+    return;
+  }
+}
+
+  const element = document.querySelector(location.hash);
+
+  if (element) {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }
+};
 
     // Wait for lazy-loaded sections to render
     setTimeout(scrollToSection, 300);

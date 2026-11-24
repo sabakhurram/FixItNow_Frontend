@@ -123,7 +123,7 @@ const Stats = () => {
   const inView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
-    <section className="stats mesh-bg" ref={ref}>
+    <section className="stats mesh-bg" data-theme="light" ref={ref}>
       <div className="stats__container">
         <div className="stats__header">
           <span className="stats__subtitle">Telemetry Deck</span>

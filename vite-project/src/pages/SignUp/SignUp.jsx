@@ -74,7 +74,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="signup">
+    <div className="signup" data-theme="light">
 
       <div className="signup-card">
 
@@ -140,6 +140,33 @@ const SignUp = () => {
 </button>
 
       </div>
+
+      {/* Photo panel with a short message */}
+      <aside className="signup-visual">
+        <div className="signup-visual__content">
+          <h2>
+            Your solar journey <span>starts here.</span>
+          </h2>
+          <p>
+            Create an account to book services, order products and follow every
+            request in one place.
+          </p>
+          <ul className="signup-visual__stats">
+            <li>
+              <strong>Book</strong>
+              <span>Solar services</span>
+            </li>
+            <li>
+              <strong>Order</strong>
+              <span>Quality products</span>
+            </li>
+            <li>
+              <strong>Track</strong>
+              <span>Every request</span>
+            </li>
+          </ul>
+        </div>
+      </aside>
 
     </div>
   );

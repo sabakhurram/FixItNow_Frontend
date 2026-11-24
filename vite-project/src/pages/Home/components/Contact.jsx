@@ -64,7 +64,7 @@ try {
   const progressPercent = Math.round((filledFields / requiredFields.length) * 100);
 
   return (
-    <section id="contact" className="contact">
+    <section id="contact" className="contact" data-theme="light">
       <div className="contact__container">
         {/* Left Column: Operational Telemetry Desk */}
         <motion.div

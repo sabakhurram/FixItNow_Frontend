@@ -1,0 +1,112 @@
+:root {
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --text-xs: 0.72rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --h3: clamp(1.4rem, 1.2rem + 0.8vw, 1.9rem);
+  --h2: clamp(2rem, 1.4rem + 2.6vw, 3.6rem);
+  --h1: clamp(3rem, 1.5rem + 6vw, 6.5rem);
+
+  /* Shape, spacing, motion */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --space-section: clamp(64px, 8vw, 120px);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Brand constants, identical in both themes */
+  --sun: #F5A623;
+  --sun-light: #FFD166;
+  --sun-deep: #C47C28;
+  --sky: #2E7DD1;
+  --eco: #06D6A0;
+  --grad-sun: linear-gradient(135deg, #F5A623 0%, #FFD166 100%);
+}
+
+/* :root,
+[data-theme="dark"] {
+  --bg: #0A0E1A;
+  --surface: #0F1629;
+  --surface-2: #162038;
+  --text: #F8F9FF;
+  --muted: #8892A4;
+  --line: rgba(255, 255, 255, 0.08);
+  --accent: #F5A623;
+  --accent-light: #FFD166;
+  --accent-text: #F5A623;
+  --accent-text-hover: #FFD166;
+  --accent-soft: rgba(245, 166, 35, 0.08);
+  --on-accent: #0A0E1A;
+  --hover-bg: rgba(255, 255, 255, 0.03);
+  --faint: rgba(255, 255, 255, 0.15);
+
+  --sky-text: #5AA9F5;
+  --eco-text: #06D6A0;
+  --success-text: #06D6A0;  --success-soft: rgba(6, 214, 160, 0.12);
+  --warning-text: #F5A623;  --warning-soft: rgba(245, 166, 35, 0.12);
+  --danger-text:  #FF6B6B;  --danger-soft:  rgba(255, 107, 107, 0.12);
+  --info-text:    #5AA9F5;  --info-soft:    rgba(90, 169, 245, 0.12);
+
+  --card-bg: rgba(15, 22, 41, 0.75);
+  --card-fade: 15, 22, 41;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-border-hover: rgba(245, 166, 35, 0.3);
+  --card-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --card-shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(245, 166, 35, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  --nav-bg: rgba(15, 22, 41, 0.75);
+  --nav-bg-solid: rgba(15, 22, 41, 0.95);
+  --nav-border: rgba(255, 255, 255, 0.08);
+  --nav-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(245, 166, 35, 0.05);
+} */
+
+[data-theme="light"] {
+  --bg: #F6F3EC;
+  --surface: #FFFFFF;
+  --surface-2: #EFEBE1;
+  --text: #0A0E1A;
+  --muted: #5B6478;
+  --line: rgba(10, 14, 26, 0.1);
+  --accent: #F5A623;
+  --accent-light: #FFD166;
+  --accent-text: #9A5B00;
+  --accent-text-hover: #7A4800;
+  --accent-soft: rgba(245, 166, 35, 0.14);
+  --on-accent: #0A0E1A;
+  --hover-bg: rgba(10, 14, 26, 0.04);
+  --faint: rgba(10, 14, 26, 0.18);
+
+  --sky-text: #1D5FA8;
+  --eco-text: #0B7A5A;
+  --success-text: #0B7A5A;  --success-soft: rgba(11, 122, 90, 0.1);
+  --warning-text: #8A5300;  --warning-soft: rgba(245, 166, 35, 0.18);
+  --danger-text:  #B42318;  --danger-soft:  rgba(180, 35, 24, 0.08);
+  --info-text:    #1D5FA8;  --info-soft:    rgba(29, 95, 168, 0.09);
+
+  --card-bg: #FFFFFF;
+  --card-fade: 255, 255, 255;
+  --card-border: rgba(10, 14, 26, 0.06);
+  --card-border-hover: rgba(245, 166, 35, 0.5);
+  --card-shadow: 0 1px 2px rgba(10, 14, 26, 0.04), 0 12px 24px rgba(10, 14, 26, 0.06), 0 30px 60px rgba(10, 14, 26, 0.08);
+  --card-shadow-hover: 0 1px 2px rgba(10, 14, 26, 0.05), 0 16px 32px rgba(10, 14, 26, 0.09), 0 40px 70px rgba(245, 166, 35, 0.16);
+
+  --nav-bg: rgba(255, 255, 255, 0.75);
+  --nav-bg-solid: rgba(255, 255, 255, 0.96);
+  --nav-border: rgba(10, 14, 26, 0.08);
+  --nav-shadow: 0 20px 40px rgba(10, 14, 26, 0.12);
+
+  --yellow-50:  #FFFBEB;  /* faintest tint */
+--yellow-100: #FFF4CC;
+--yellow-300: #FFD166;  /* same as --accent-light: hovers, highlights */
+--yellow-500: #F5A623;  /* same as --accent: the button yellow */
+--yellow-700: #9A5B00;  /* same as --accent-text: yellow text on white */
+
+--bg: #FFFFFF;                          /* was #F6F3EC (cream) */
+--surface-2: #F7F7F7;                   /* was #EFEBE1 (cream), now a neutral light grey */
+--accent-soft: rgba(255, 199, 44, 0.18);/* was a peachy amber tint, now a clear yellow tint */
+--card-border: rgba(10, 14, 26, 0.08);  /* was 0.06, so white cards stand out on white */
+}

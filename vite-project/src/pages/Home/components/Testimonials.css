@@ -1,182 +1,231 @@
-.testimonials {
-  position: relative;
-  padding: 96px 0;
+/* Testimonials. Uses your global tokens. Every class starts with
+   "client-reviews", so it will not clash with your old .testimonials /
+   .t-card styles. Replace your old Testimonials.css with this file. */
+
+.client-reviews {
+  padding: var(--space-section) 0;
+  background: var(--bg);
+  color: var(--text);
   overflow: hidden;
 }
 
-/* ─── Header ──────────────────────────────────────────────────────────── */
-.testimonials__head {
-  text-align: center;
-  margin-bottom: 56px;
-  padding: 0 24px;
+/* ---------- Header ---------- */
+
+.client-reviews__header {
+  width: min(var(--container, 1200px), 90%);
+  margin: 0 auto clamp(20px, 3vw, 36px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
-.testimonials__eyebrow {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 12px;
+.client-reviews__heading {
+  font-family: var(--font-display);
+  font-size: var(--h2);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--text);
 }
 
-.testimonials__head h2 {
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-  font-weight: 700;
-  margin: 0;
-  color: var(--white);
+.client-reviews__intro {
+  margin-top: 14px;
+  max-width: 46ch;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  color: var(--muted);
 }
 
-/* ─── Marquee shell ───────────────────────────────────────────────────── */
-.testimonials__marquee {
+/* ---------- Scrolling strip ---------- */
+
+.client-reviews__marquee {
   position: relative;
-  width: 100%;
+  overflow: hidden;
+  padding-block: 28px; /* room for card shadows */
 }
 
-/* Edge fade so cards don't hard-cut at the viewport edge */
-.testimonials__fade {
+/* Soft fades at both edges */
+.client-reviews__marquee::before,
+.client-reviews__marquee::after {
+  content: '';
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 120px;
+  width: clamp(40px, 10vw, 160px);
   z-index: 2;
   pointer-events: none;
 }
 
-.testimonials__fade--left {
+.client-reviews__marquee::before {
   left: 0;
-  background: linear-gradient(to right, var(--bg, #0a0e1a), transparent);
+  background: linear-gradient(90deg, var(--bg), transparent);
 }
 
-.testimonials__fade--right {
+.client-reviews__marquee::after {
   right: 0;
-  background: linear-gradient(to left, var(--bg, #0a0e1a), transparent);
+  background: linear-gradient(270deg, var(--bg), transparent);
 }
 
-/* ─── Track: the actual scrolling row ─────────────────────────────────── */
-.testimonials__track {
+.client-reviews__track {
   display: flex;
-  gap: 24px;
   width: max-content;
-  animation: marquee-scroll 38s linear infinite;
+  animation: client-reviews-scroll var(--marquee-duration, 48s) linear infinite;
 }
 
-/* Pause on hover — the whole row stops, feels intentional rather than glitchy */
-.testimonials__marquee:hover .testimonials__track {
+/* Pause while someone is reading */
+.client-reviews__marquee:hover .client-reviews__track,
+.client-reviews__marquee:focus-within .client-reviews__track {
   animation-play-state: paused;
 }
 
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-
+@keyframes client-reviews-scroll {
   to {
     transform: translateX(-50%);
   }
-
-  /* exactly half, since the list is duplicated once */
 }
 
-/* ─── Card ────────────────────────────────────────────────────────────── */
-.t-card {
-  flex: 0 0 auto;
-  width: 420px;
-  padding: 32px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(6px);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, background 0.35s ease;
+.client-reviews__group {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+  padding-right: 24px; /* equals the gap so the loop is seamless */
 }
 
-.t-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(245, 166, 35, 0.3);
-  background: rgba(255, 255, 255, 0.05);
+.client-reviews__item {
+  display: flex;
+  flex: 0 0 min(380px, 82vw);
 }
 
-.t-card__mark {
-  color: var(--gold);
-  opacity: 0.5;
-  margin-bottom: 16px;
+/* ---------- Card ---------- */
+
+.client-reviews__card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
 }
 
-.t-card__quote {
-  font-size: 1.02rem;
-  line-height: 1.7;
-  color: var(--white);
-  margin: 0 0 24px;
-  min-height: 110px;
-  /* keeps card heights consistent across varying quote lengths */
-}
-
-.t-card__footer {
+.client-reviews__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.t-card__stars {
-  display: flex;
-  gap: 2px;
+.client-reviews__stars {
+  display: inline-flex;
+  gap: 3px;
 }
 
-.t-card__author {
+.client-reviews__star {
+  color: var(--faint);
+  fill: none;
+}
+
+.client-reviews__star.is-on {
+  color: var(--accent);
+  fill: var(--accent);
+}
+
+.client-reviews__mark {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 9px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.client-reviews__quote {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.client-reviews__author {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  white-space: nowrap;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
 }
 
-.t-card__name {
+.client-reviews__avatar {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.client-reviews__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
   font-weight: 600;
-  color: var(--white);
+  color: var(--text);
 }
 
-.t-card__dot {
+.client-reviews__city {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--text-xs);
   color: var(--muted);
 }
 
-.t-card__city {
-  color: var(--muted);
-}
+/* ---------- Reduced motion: no auto-scroll, swipe or scroll instead ---------- */
 
-/* ─── Responsive ──────────────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .t-card {
-    width: 300px;
-    padding: 24px;
-  }
-
-  .t-card__quote {
-    font-size: 0.92rem;
-    min-height: 130px;
-  }
-
-  .testimonials__fade {
-    width: 60px;
-  }
-
-  .testimonials__track {
-    animation-duration: 28s;
-  }
-}
-
-/* ─── Reduced motion ──────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .testimonials__track {
-    animation: none;
+  .client-reviews__marquee {
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
   }
 
-  .t-card {
+  .client-reviews__marquee::before,
+  .client-reviews__marquee::after {
+    display: none;
+  }
+
+  .client-reviews__track {
+    animation: none;
+    padding-inline: 5%;
+  }
+
+  .client-reviews__item {
     scroll-snap-align: start;
+  }
+
+  /* Hide the loop copy and repeated cards */
+  .client-reviews__group[aria-hidden='true'],
+  .client-reviews__item[aria-hidden='true'] {
+    display: none;
+  }
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 560px) {
+  .client-reviews__card {
+    padding: 22px;
+  }
+
+  .client-reviews__group {
+    gap: 16px;
+    padding-right: 16px;
   }
 }

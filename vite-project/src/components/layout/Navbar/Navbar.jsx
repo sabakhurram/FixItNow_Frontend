@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User } from 'lucide-react';
+import { Menu, X, User, ShoppingCart } from 'lucide-react';
 import { useAuth } from "../../../contexts/AuthContext";
+import { useCart } from "../../../contexts/CartContext";
 import { doSignOut } from "../../../firebase/auth";
 import './Navbar.css';
 import { useNavigate, useLocation } from "react-router-dom";
@@ -21,6 +22,7 @@ const navLinks = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [hidden, setHidden] = useState(false); // slides away while scrolling down
   const location = useLocation();
 
   const isHomePage = location.pathname === '/';
@@ -33,6 +35,36 @@ const Navbar = () => {
 
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Floating-nav behaviour: hide on scroll down, come back on scroll up.
+  // Small backwards nudges (snap scrolling, layout shifts) are ignored, so
+  // only a deliberate scroll up brings the navbar back.
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let travelled = 0; // distance since the direction last changed (+ down, - up)
+
+    const onScrollDirection = () => {
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+      if (delta === 0) return;
+
+      // Start counting again whenever the direction flips
+      if (Math.sign(delta) !== Math.sign(travelled)) travelled = 0;
+      travelled += delta;
+
+      if (y < 120) {
+        setHidden(false);        // always visible near the top
+      } else if (travelled > 10) {
+        setHidden(true);         // scrolling down: slide away
+      } else if (travelled < -36) {
+        setHidden(false);        // a real scroll up: bring it back
+      }
+    };
+
+    window.addEventListener('scroll', onScrollDirection, { passive: true });
+    return () => window.removeEventListener('scroll', onScrollDirection);
   }, []);
 
   useEffect(() => {
@@ -53,6 +85,8 @@ const Navbar = () => {
   }, [isHomePage]);
 
   const { userLoggedIn, currentUser } = useAuth();
+  const { cartItems } = useCart();
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const handleLogout = async () => {
     try {
@@ -65,12 +99,28 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
+  // Stay visible while the mobile menu is open
+  const retracted = hidden && !mobileOpen;
+
+  // Cart icon with item count, available on every page that shows the navbar
+  const cartLink = (extraClass = '') => (
+    <Link
+      to="/cart"
+      className={`navbar__cart ${extraClass}`}
+      aria-label={cartCount > 0 ? `Shopping cart, ${cartCount} items` : 'Shopping cart'}
+    >
+      <ShoppingCart size={20} />
+      {cartCount > 0 && <span className="navbar__cart-badge">{cartCount}</span>}
+    </Link>
+  );
+
   return (
     <motion.nav
-      className={`navbar ${scrolled ? 'navbar--scrolled' : ''} ${!showNavbar ? 'navbar--hidden' : ''}`}
+      data-theme="light"
+      className={`navbar ${scrolled ? 'navbar--scrolled' : ''} ${!showNavbar ? 'navbar--hidden' : ''} ${retracted ? 'navbar--retracted' : ''}`}
       initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
+      animate={{ y: retracted ? -170 : 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
     >
       <div className="navbar__inner">
         <Link to="/" className="navbar__logo">
@@ -88,6 +138,7 @@ const Navbar = () => {
         </ul>
 
         <div className="navbar__actions">
+          {cartLink()}
           {!userLoggedIn ? (
             <>
               <Link to="/signin" className="navbar__signin">
@@ -124,6 +175,8 @@ const Navbar = () => {
             </div>
           )}
         </div>
+
+        {cartLink('navbar__cart--mobile')}
 
         <button
           className="navbar__hamburger"

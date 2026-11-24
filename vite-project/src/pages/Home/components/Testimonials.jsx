@@ -1,50 +1,87 @@
-import { useRef, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
+import { MotionConfig, motion } from 'framer-motion';
 import { Quote, Star } from 'lucide-react';
 import { getSiteReviews } from '../../../api/reviewApi';
 import './Testimonials.css';
 
+const EASE = [0.16, 1, 0.3, 1];
+const MAX_STARS = 5;
+/* The strip repeats cards until it is wider than any screen */
+const MIN_CARDS = 6;
+
+/* Shown until your backend reviews load (or if there are none) */
 const defaultTestimonials = [
   {
-    quote: "FixItNow transformed our energy bills completely. Within 3 months, we were saving over 80% on electricity. The installation was seamless.",
+    quote:
+      'FixItNow transformed our energy bills completely. Within 3 months, we were saving over 80% on electricity. The installation was seamless.',
     name: 'Ahmed Khan',
     city: 'Lahore',
     stars: 5,
   },
   {
-    quote: "Best investment we've ever made for our home. The team was punctual, clean, and explained everything perfectly from day one.",
+    quote:
+      "Best investment we've ever made for our home. The team was punctual, clean, and explained everything perfectly from day one.",
     name: 'Sarah Malik',
     city: 'Islamabad',
     stars: 5,
   },
   {
-    quote: "From consultation to installation, FixItNow exceeded every expectation. Their monitoring app keeps us informed around the clock.",
+    quote:
+      'From consultation to installation, FixItNow exceeded every expectation. Their monitoring app keeps us informed around the clock.',
     name: 'Bilal Hussain',
     city: 'Karachi',
     stars: 5,
-  }
+  },
 ];
 
-const Card = ({ t }) => (
-  <div className="t-card">
-    <Quote className="t-card__mark" size={28} strokeWidth={1.5} />
-    <p className="t-card__quote">{t.quote}</p>
-    <div className="t-card__footer">
-      <div className="t-card__stars">
-        {Array.from({ length: t.stars || 5 }).map((_, i) => (
-          <Star key={i} size={13} fill="var(--gold)" color="var(--gold)" />
-        ))}
-      </div>
-      <div className="t-card__author">
-        <span className="t-card__name">{t.name}</span>
-        {t.city && <><span className="t-card__dot">·</span><span className="t-card__city">{t.city}</span></>}
-      </div>
-    </div>
-  </div>
-);
+function Stars({ rating }) {
+  const filled = Math.min(MAX_STARS, Math.max(0, Math.round(Number(rating) || MAX_STARS)));
 
-const Testimonials = () => {
-  const trackRef = useRef(null);
+  return (
+    <span
+      className="client-reviews__stars"
+      role="img"
+      aria-label={`${filled} out of ${MAX_STARS} stars`}
+    >
+      {Array.from({ length: MAX_STARS }, (_, i) => (
+        <Star
+          key={i}
+          size={16}
+          className={i < filled ? 'client-reviews__star is-on' : 'client-reviews__star'}
+          aria-hidden="true"
+        />
+      ))}
+    </span>
+  );
+}
+
+function ReviewCard({ review }) {
+  const { quote, name, city, stars } = review;
+  const initial = (name || '?').trim().charAt(0).toUpperCase();
+
+  return (
+    <article className="client-reviews__card">
+      <div className="client-reviews__top">
+        <Stars rating={stars} />
+        <Quote className="client-reviews__mark" strokeWidth={1.8} aria-hidden="true" />
+      </div>
+
+      <p className="client-reviews__quote">{quote}</p>
+
+      <footer className="client-reviews__author">
+        <span className="client-reviews__avatar" aria-hidden="true">
+          {initial}
+        </span>
+        <span>
+          <span className="client-reviews__name">{name}</span>
+          {city && <span className="client-reviews__city">{city}</span>}
+        </span>
+      </footer>
+    </article>
+  );
+}
+
+function Testimonials() {
   const [list, setList] = useState(defaultTestimonials);
 
   useEffect(() => {
@@ -67,33 +104,78 @@ const Testimonials = () => {
     loadReviews();
   }, []);
 
-  const loopList = [...list, ...list];
+  /* Repeat the list so the strip is long enough; repeats are hidden from
+     screen readers so each review is announced once. */
+  const items = useMemo(() => {
+    const total = Math.max(MIN_CARDS, list.length);
+    return Array.from({ length: total }, (_, i) => ({
+      review: list[i % list.length],
+      isRepeat: i >= list.length,
+    }));
+  }, [list]);
+
+  const duration = Math.max(40, items.length * 7);
 
   return (
-    <section id="testimonials" className="testimonials">
-      <motion.div
-        className="testimonials__head"
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        viewport={{ once: true }}
+    <MotionConfig reducedMotion="user">
+      <section
+        id="testimonials"
+        className="client-reviews"
+        data-theme="light"
+        aria-labelledby="testimonials-title"
       >
-        <span className="testimonials__eyebrow">Trusted nationwide</span>
-        <h2>What our clients say</h2>
-      </motion.div>
+        <motion.header
+          className="client-reviews__header"
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: EASE }}
+        >
+          <div>
+            <h2 id="testimonials-title" className="client-reviews__heading">
+              What Our Clients Say
+            </h2>
+            <p className="client-reviews__intro">
+              Real feedback from the homeowners we have worked with.
+            </p>
+          </div>
 
-      <div className="testimonials__marquee">
-        <div className="testimonials__fade testimonials__fade--left" />
-        <div className="testimonials__fade testimonials__fade--right" />
+        </motion.header>
 
-        <div className="testimonials__track" ref={trackRef}>
-          {loopList.map((t, i) => (
-            <Card t={t} key={i} />
-          ))}
-        </div>
-      </div>
-    </section>
+        <motion.div
+          className="client-reviews__marquee"
+          style={{ '--marquee-duration': `${duration}s` }}
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
+        >
+          <div className="client-reviews__track">
+            <ul className="client-reviews__group" aria-label="Client reviews">
+              {items.map(({ review, isRepeat }, i) => (
+                <li
+                  key={i}
+                  className="client-reviews__item"
+                  aria-hidden={isRepeat ? 'true' : undefined}
+                >
+                  <ReviewCard review={review} />
+                </li>
+              ))}
+            </ul>
+
+            {/* Identical copy that makes the loop seamless */}
+            <ul className="client-reviews__group" aria-hidden="true">
+              {items.map(({ review }, i) => (
+                <li key={i} className="client-reviews__item">
+                  <ReviewCard review={review} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </motion.div>
+      </section>
+    </MotionConfig>
   );
-};
+}
 
 export default Testimonials;

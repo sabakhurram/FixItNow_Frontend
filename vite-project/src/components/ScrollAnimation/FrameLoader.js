@@ -1,114 +1,62 @@
-// Total number of frames extracted from your video
-export const TOTAL_FRAMES = 240;
+export const TOTAL_FRAMES = 240; // kept in case other files import it
 
-// Chunk size — load this many frames at a time to avoid browser memory spike
-const CHUNK_SIZE = 40;
+const DESKTOP = { folder: 'frames', count: 240 };
+const MOBILE = { folder: 'frames-sm', count: 120 };
+const MOBILE_MAX_WIDTH = 768;
+const CONCURRENCY = 8;
+const PRIORITY_FRAMES = 20;
 
-/**
- * Generates all frame paths as a flat array.
- * Uses Vite's import.meta.glob for reliable static asset resolution
- * instead of dynamic new URL() which silently fails on many frames.
- *
- * HOW TO USE:
- * In your Vite project, add this one-liner at the top of FrameLoader.js:
- *   const frameModules = import.meta.glob('../../assets/frames/*.jpg', { eager: true, as: 'url' });
- * Then replace getFramePaths() with:
- *   export const getFramePaths = () => Object.values(frameModules).sort();
- *
- * For now this version uses the padded URL approach as fallback.
- */
 export const getFramePaths = () => {
-  const paths = [];
-  for (let i = 1; i <= TOTAL_FRAMES; i++) {
-    const frameNum = String(i).padStart(4, '0');
-    paths.push(`/frames/frame${frameNum}.jpg`);
-    // ^ Put your frames in /public/frames/ folder instead of /src/assets/frames/
-    // This makes Vite serve them as static files — 100% reliable, no build-time resolution issues
-  }
-  return paths;
+  const { folder, count } = window.innerWidth < MOBILE_MAX_WIDTH ? MOBILE : DESKTOP;
+  return Array.from({ length: count }, (_, i) =>
+    `${import.meta.env.BASE_URL}${folder}/frame${String(i + 1).padStart(4, '0')}.jpg`
+  );
 };
 
 /**
- * Loads frames in chunks to avoid memory spike and browser throttling.
- * Uses ImageBitmap where available — it's decoded off the main thread
- * which means zero jank during preload.
- *
- * @param {string[]} paths - Array of image paths
- * @param {function} onProgress - Called with 0-100 percentage
- * @returns {Promise<(HTMLImageElement | ImageBitmap)[]>}
+ * Loads frames with a small concurrency pool, in order.
+ * `frames` is filled in place, so callers can read it while loading continues.
+ * onProgress: 0-100 for the first PRIORITY_FRAMES (what the loader waits for).
+ * onPriorityReady: fires once those frames are decoded.
  */
-export const preloadFrames = async (paths, onProgress) => {
-  const total = paths.length;
-  if (total === 0) {
-    onProgress?.(100);
-    return [];
-  }
+export const preloadFrames = ({ paths, signal, onProgress, onPriorityReady }) => {
+  const frames = new Array(paths.length).fill(null);
+  const priorityTotal = Math.min(PRIORITY_FRAMES, paths.length);
+  let cursor = 0;
+  let priorityDone = 0;
 
-  const results = new Array(total);
-  let loadedCount = 0;
+  if (priorityTotal === 0) onPriorityReady?.();
 
-  // Split paths into chunks
-  const chunks = [];
-  for (let i = 0; i < total; i += CHUNK_SIZE) {
-    chunks.push(paths.slice(i, i + CHUNK_SIZE));
-  }
+  const loadOne = async (i) => {
+    try {
+      const res = await fetch(paths[i], { signal });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const bitmap = await createImageBitmap(await res.blob());
+      if (signal?.aborted) bitmap.close();
+      else frames[i] = bitmap;
+    } catch (err) {
+      if (err.name === 'AbortError') throw err;
+      console.warn(`Frame failed to load: ${paths[i]}`, err);
+    }
 
-  // Load each chunk sequentially — prevents browser from opening 240 connections at once
-  for (let chunkIndex = 0; chunkIndex < chunks.length; chunkIndex++) {
-    const chunk = chunks[chunkIndex];
-    const startIndex = chunkIndex * CHUNK_SIZE;
+    if (i < priorityTotal) {
+      priorityDone++;
+      onProgress?.(Math.round((priorityDone / priorityTotal) * 100));
+      if (priorityDone === priorityTotal) onPriorityReady?.();
+    }
+  };
 
-    const chunkPromises = chunk.map((path, localIndex) => {
-      const globalIndex = startIndex + localIndex;
+  const worker = async () => {
+    while (cursor < paths.length) {
+      await loadOne(cursor++);
+    }
+  };
 
-      return new Promise((resolve) => {
-        // Use fetch + createImageBitmap if supported (off-main-thread decode = no jank)
-        if (typeof createImageBitmap !== 'undefined') {
-          fetch(path)
-            .then((res) => res.blob())
-            .then((blob) => createImageBitmap(blob))
-            .then((bitmap) => {
-              results[globalIndex] = bitmap;
-              loadedCount++;
-              onProgress?.(Math.round((loadedCount / total) * 100));
-              resolve();
-            })
-            .catch(() => {
-              // Fallback to HTMLImageElement if fetch/createImageBitmap fails
-              loadViaImage(path, globalIndex, results, () => {
-                loadedCount++;
-                onProgress?.(Math.round((loadedCount / total) * 100));
-                resolve();
-              });
-            });
-        } else {
-          // Fallback for browsers without createImageBitmap
-          loadViaImage(path, globalIndex, results, () => {
-            loadedCount++;
-            onProgress?.(Math.round((loadedCount / total) * 100));
-            resolve();
-          });
-        }
-      });
-    });
-
-    await Promise.all(chunkPromises);
-  }
-
-  return results;
+  const promise = Promise.all(Array.from({ length: CONCURRENCY }, worker)).then(() => frames);
+  return { frames, promise };
 };
 
-// Helper: classic HTMLImageElement fallback
-const loadViaImage = (path, index, results, onDone) => {
-  const img = new Image();
-  img.src = path;
-  img.onload = () => {
-    results[index] = img;
-    onDone();
-  };
-  img.onerror = () => {
-    console.warn(`Frame failed to load: ${path}`);
-    results[index] = null;
-    onDone();
-  };
+export const closeFrames = (frames) => {
+  frames.forEach((frame) => frame?.close());
+  frames.fill(null);
 };

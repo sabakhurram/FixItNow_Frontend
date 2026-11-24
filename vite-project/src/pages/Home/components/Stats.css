@@ -1,566 +1,295 @@
-.stats {
-  background: var(--bg-dark);
+/* Stats section: design only. Replace your whole Stats.css with this.
+
+   PHOTO: uncomment the --stats-photo line below and point it at your image
+   (path is relative to this CSS file). Without a photo you get a dark
+   gradient with a yellow glow. */
+
+section.stats {
+  --stats-photo: url('https://images.pexels.com/photos/6961122/pexels-photo-6961122.jpeg');
+
   position: relative;
   overflow: hidden;
-  padding: 120px 5%;
+  padding: var(--space-section) 5%;
+  color: var(--surface);
+  background-color: var(--text);
+  background-image:
+    /* yellow accent glow */
+    radial-gradient(
+      circle at 85% 20%,
+      color-mix(in srgb, var(--accent) 32%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 8% 95%,
+      color-mix(in srgb, var(--accent) 16%, transparent),
+      transparent 50%
+    ),
+    /* dark overlay: strongest on the text side so it stays readable */
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--text) 90%, transparent) 0%,
+      color-mix(in srgb, var(--text) 68%, transparent) 55%,
+      color-mix(in srgb, var(--text) 52%, transparent) 100%
+    ),
+    var(--stats-photo, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* stop the global .mesh-bg effect from moving the photo */
+  animation: none;
 }
 
-.stats::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 15% 15%, rgba(245, 166, 35, 0.02) 0%, transparent 50%),
-    radial-gradient(circle at 85% 85%, rgba(6, 214, 160, 0.02) 0%, transparent 50%);
-  pointer-events: none;
-}
-
+/* Two columns: heading left, 2x2 cards right */
 .stats__container {
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
   position: relative;
   z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+  max-width: var(--container, 1200px);
+  margin: 0 auto;
+  width: 100%;
 }
 
-/* ─── Header ─── */
+/* ─── Heading ─── */
 .stats__header {
-  text-align: center;
-  margin-bottom: 70px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  text-align: left;
+  text-shadow: 0 1px 14px color-mix(in srgb, var(--text) 40%, transparent);
 }
 
 .stats__subtitle {
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--gold);
-  font-weight: 600;
-  margin-bottom: 8px;
-  display: block;
+  text-shadow: none;
 }
 
 .stats__title {
-  font-size: clamp(2rem, 3.5vw, 3rem);
-  color: var(--white);
-  line-height: 1.1;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-display);
+  font-size: var(--h2);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--surface);
 }
 
 .stats__underline {
   width: 60px;
   height: 4px;
-  background: var(--gold);
-  margin: 16px auto 0;
+  margin: 18px 0 0;
   border-radius: 2px;
+  background: var(--accent);
 }
 
 .stats__description {
-  font-size: 1rem;
-  line-height: 1.65;
-  color: var(--muted);
-  max-width: 580px;
-  margin-top: 20px;
+  max-width: 44ch;
+  margin-top: 22px;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--surface) 86%, transparent);
 }
 
-/* ─── Grid wrapper: hosts both the connector layer and the card grid ─── */
+/* ─── Cards grid (2 x 2) ─── */
 .stats__grid-wrapper {
   position: relative;
 }
 
-/* ─── Grid ─── */
 .stats__grid {
-  position: relative;
-  z-index: 2;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
 }
 
-/* ─────────────────────────────────────────────────────────────────────
-   NETWORK CONNECTORS — the live energy lines between adjacent cards.
-   Sits as an absolutely positioned layer behind the cards (z-index 1).
-   3 connectors span the 3 gaps between 4 cards in the row.
-   Positioned at vertical card-center, horizontally bridging each gap.
-   ───────────────────────────────────────────────────────────────────── */
-.stats__network {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.6s ease 0.4s;
-}
-
-.stats__network.is-active {
-  opacity: 1;
-}
-
-.stats__connector {
-  position: absolute;
-  top: 50%;
-  /*
-    4 equal columns with 24px gaps: each connector bridges one gap.
-    Using calc with the column count keeps this accurate without JS measurement —
-    width of one gap is approximated as a thin strip centered on each grid seam.
-  */
-  width: calc(24px + 2px);
-  /* spans the gap plus a sliver into each card edge */
-  height: 2px;
-  transform: translateY(-50%);
-}
-
-/* Position each of the 3 connectors at its respective grid seam (25%, 50%, 75%) */
-.stats__connector:nth-child(1) {
-  left: calc(25% - 13px);
-}
-
-.stats__connector:nth-child(2) {
-  left: calc(50% - 13px);
-}
-
-.stats__connector:nth-child(3) {
-  left: calc(75% - 13px);
-}
-
-.stats__connector-line {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg,
-      rgba(245, 166, 35, 0.25),
-      rgba(255, 209, 102, 0.4),
-      rgba(245, 166, 35, 0.25));
-}
-
-/* The traveling glow — a small bright dot moving left to right across the connector, looping */
-.stats__connector-pulse {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--gold-light);
-  box-shadow: 0 0 8px 2px rgba(255, 209, 102, 0.7);
-  transform: translate(-50%, -50%);
-  animation: connector-travel 2.4s ease-in-out infinite;
-}
-
-@keyframes connector-travel {
-  0% {
-    left: 0%;
-    opacity: 0;
-  }
-
-  10% {
-    opacity: 1;
-  }
-
-  90% {
-    opacity: 1;
-  }
-
-  100% {
-    left: 100%;
-    opacity: 0;
-  }
-}
-
-/* Port marker on each card — visually anchors where the line "plugs in" */
+/* The animated telemetry extras are hidden for this cleaner look.
+   They are still in the JSX, so you can bring them back by deleting
+   this rule. */
+.stats__network,
+.stats__svg-container,
+.stats__card-tag,
 .stats__card-port {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  transform: translate(-50%, -50%);
-  z-index: 3;
+  display: none;
 }
 
-/* ─── Telemetry Block (Card) ─── */
+/* ─── Frosted glass card ─── */
 .stats__block {
   position: relative;
   overflow: hidden;
-  background: rgba(15, 22, 41, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: 20px;
-  padding: 44px 24px 36px 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.02);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 230px;
   display: flex;
   flex-direction: column;
+  padding: 26px 24px 22px;
+  background: color-mix(in srgb, var(--surface) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--surface) 28%, transparent);
+  border-radius: var(--radius-lg);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 20px 40px rgba(10, 14, 26, 0.25);
+  transition: transform 0.5s var(--ease-out), background 0.4s, border-color 0.4s,
+    box-shadow 0.4s;
 }
 
 .stats__block:hover {
-  transform: translateY(-8px);
-  background: rgba(15, 22, 41, 0.65);
+  transform: translateY(-6px);
+  background: color-mix(in srgb, var(--surface) 22%, transparent);
+  border-color: var(--accent);
+  box-shadow: 0 28px 50px rgba(10, 14, 26, 0.35),
+    0 0 30px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
-/* ─── Card Corner Lines ─── */
+/* Small corner dots, like the inspiration */
 .stats__card-corner {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  border: 0px solid transparent;
-  transition: border-color 0.4s ease, width 0.4s ease, height 0.4s ease;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
   pointer-events: none;
 }
 
-.stats__card-corner--tl {
-  top: 14px;
-  left: 14px;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.08);
-  border-left: 1.5px solid rgba(255, 255, 255, 0.08);
-}
+.stats__card-corner--tl { top: 12px; left: 12px; }
+.stats__card-corner--tr { top: 12px; right: 12px; }
+.stats__card-corner--bl { bottom: 12px; left: 12px; }
+.stats__card-corner--br { bottom: 12px; right: 12px; }
 
-.stats__card-corner--tr {
-  top: 14px;
-  right: 14px;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.08);
-  border-right: 1.5px solid rgba(255, 255, 255, 0.08);
-}
-
-.stats__card-corner--bl {
-  bottom: 14px;
-  left: 14px;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.08);
-  border-left: 1.5px solid rgba(255, 255, 255, 0.08);
-}
-
-.stats__card-corner--br {
-  bottom: 14px;
-  right: 14px;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.08);
-  border-right: 1.5px solid rgba(255, 255, 255, 0.08);
-}
-
-.stats__block:hover .stats__card-corner {
-  width: 14px;
-  height: 14px;
-}
-
-/* ─── Card Header ─── */
+/* Icon: small yellow circle in the top-right corner */
 .stats__card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  position: relative;
+  position: absolute;
+  top: 22px;
+  right: 22px;
   z-index: 2;
-}
-
-.stats__card-tag {
-  font-family: monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.25);
-  font-weight: 500;
 }
 
 .stats__card-icon {
   display: inline-flex;
-  padding: 8px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(255, 255, 255, 0.02);
-  transition: all 0.4s ease;
+  padding: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  transition: transform 0.4s var(--ease-out);
 }
 
-/* ─── Card Body & SVGs ─── */
+.stats__block:hover .stats__card-icon {
+  transform: rotate(-12deg) scale(1.08);
+}
+
+/* Number at the top, label at the bottom */
 .stats__card-body {
   position: relative;
   z-index: 2;
-  text-align: center;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  text-align: left;
 }
 
-.stats__svg-container {
-  height: 72px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 24px;
-  position: relative;
-}
-
-.stats__svg {
-  width: auto;
-  height: 100%;
-  max-width: 100px;
-  overflow: visible;
-}
-
-/* SVG 1: Orbit Animation */
-.orbit-dot {
-  transform-origin: 50px 50px;
-  animation: orbit-spin 8s linear infinite;
-}
-
-.orbit-line-2 {
-  transform-origin: 50px 50px;
-  animation: orbit-spin 20s linear infinite reverse;
-}
-
-@keyframes orbit-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* SVG 2: Wave Animation */
-.wave-path-front {
-  stroke-dasharray: 120;
-  stroke-dashoffset: 120;
-  transition: stroke-dashoffset 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.2s;
-}
-
-.is-in-view .wave-path-front {
-  stroke-dashoffset: 0;
-}
-
-.wave-path-front {
-  animation: wave-glow 2.5s ease-in-out infinite alternate;
-}
-
-@keyframes wave-glow {
-  0% {
-    opacity: 0.7;
-    stroke-width: 1.5;
-  }
-
-  100% {
-    opacity: 1;
-    stroke-width: 2.2;
-    filter: drop-shadow(0 0 3px var(--gold-light));
-  }
-}
-
-/* SVG 3: Radial Complete Circle Animation */
-.radial-fill,
-.radial-glow {
-  stroke-dasharray: 201;
-  stroke-dashoffset: 201;
-  transform: rotate(-90deg);
-  transform-origin: 50px 50px;
-  transition: stroke-dashoffset 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
-}
-
-.is-in-view .radial-fill,
-.is-in-view .radial-glow {
-  stroke-dashoffset: 0;
-}
-
-/* SVG 4: Radar Animation */
-.radar-line {
-  transform-origin: 50px 50px;
-  animation: radar-sweep 5s linear infinite;
-}
-
-.radar-ring-pulse {
-  transform-origin: 50px 50px;
-  animation: radar-pulse 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-}
-
-@keyframes radar-sweep {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes radar-pulse {
-  0% {
-    r: 4px;
-    opacity: 0.9;
-    stroke-width: 1.5px;
-  }
-
-  100% {
-    r: 40px;
-    opacity: 0;
-    stroke-width: 0.5px;
-  }
-}
-
-/* ─── Numbers & Text ─── */
 .stats__number {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--white);
+  margin-bottom: auto;
+  padding-right: 48px; /* keeps the number clear of the icon */
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  font-weight: 600;
   line-height: 1;
-  margin-bottom: 10px;
+  letter-spacing: -0.03em;
+  color: var(--surface);
+  font-variant-numeric: tabular-nums;
 }
 
 .stats__number-suffix {
-  font-size: 2rem;
-  color: var(--gold);
   margin-left: 2px;
+  font-size: 0.62em;
   font-weight: 500;
+  color: var(--accent-light);
 }
 
 .stats__label {
-  font-size: 1.15rem;
-  margin-bottom: 6px;
-  color: var(--white);
+  width: 100%;
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--surface) 24%, transparent);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
   font-weight: 600;
+  color: var(--surface);
 }
 
 .stats__detail {
-  font-size: 0.82rem;
-  color: var(--muted);
-  letter-spacing: 0.02em;
+  margin-top: 4px;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--surface) 78%, transparent);
 }
 
-/* ─── Card Overlay Pattern ─── */
+/* Faint dot pattern inside each card */
 .stats__card-grid-pattern {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 10px 10px;
-  opacity: 0.4;
-  pointer-events: none;
   z-index: 1;
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--surface) 8%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 12px 12px;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .stats__block,
+  .stats__card-icon {
+    transition: none;
+  }
 
-/* ─── Theme Configurations & Interactive Hover Glowing States ─── */
-
-/* Gold theme (Experience) */
-.color-gold .stats__card-icon {
-  color: var(--gold);
-  border-color: rgba(245, 166, 35, 0.15);
-  background: rgba(245, 166, 35, 0.05);
+  .stats__block:hover,
+  .stats__block:hover .stats__card-icon {
+    transform: none;
+  }
 }
-
-.color-gold:hover {
-  border-color: rgba(245, 166, 35, 0.25);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 0 25px rgba(245, 166, 35, 0.08);
-}
-
-.color-gold:hover .stats__card-corner {
-  border-color: var(--gold);
-}
-
-.color-gold .stats__number-suffix {
-  color: var(--gold);
-}
-
-/* Gold-Light theme (Awards) */
-.color-gold-light .stats__card-icon {
-  color: var(--gold-light);
-  border-color: rgba(255, 209, 102, 0.15);
-  background: rgba(255, 209, 102, 0.05);
-}
-
-.color-gold-light:hover {
-  border-color: rgba(255, 209, 102, 0.25);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 0 25px rgba(255, 209, 102, 0.08);
-}
-
-.color-gold-light:hover .stats__card-corner {
-  border-color: var(--gold-light);
-}
-
-.color-gold-light .stats__number-suffix {
-  color: var(--gold-light);
-}
-
-/* Green theme (Eco-Certified) */
-.color-green .stats__card-icon {
-  color: var(--accent-green);
-  border-color: rgba(6, 214, 160, 0.15);
-  background: rgba(6, 214, 160, 0.05);
-}
-
-.color-green:hover {
-  border-color: rgba(6, 214, 160, 0.25);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 0 25px rgba(6, 214, 160, 0.08);
-}
-
-.color-green:hover .stats__card-corner {
-  border-color: var(--accent-green);
-}
-
-.color-green .stats__number-suffix {
-  color: var(--accent-green);
-}
-
-/* White theme (Support) */
-.color-white .stats__card-icon {
-  color: var(--white);
-  border-color: rgba(248, 249, 255, 0.12);
-  background: rgba(248, 249, 255, 0.04);
-}
-
-.color-white:hover {
-  border-color: rgba(248, 249, 255, 0.2);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 0 25px rgba(248, 249, 255, 0.06);
-}
-
-.color-white:hover .stats__card-corner {
-  border-color: var(--white);
-}
-
-.color-white .stats__number-suffix {
-  color: var(--white);
-  opacity: 0.8;
-}
-
 
 /* ─── Responsive ─── */
-@media (max-width: 1100px) {
-  .stats__grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+@media (max-width: 960px) {
+  .stats__container {
+    grid-template-columns: 1fr;
+    gap: 40px;
   }
 
-  /* On 2-column layouts the horizontal connector math no longer matches the seams,
-     so we hide the network lines rather than show a broken/misaligned version */
-  .stats__network {
-    display: none;
+  section.stats {
+    background-image:
+      radial-gradient(
+        circle at 85% 12%,
+        color-mix(in srgb, var(--accent) 30%, transparent),
+        transparent 55%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--text) 86%, transparent),
+        color-mix(in srgb, var(--text) 64%, transparent)
+      ),
+      var(--stats-photo, none);
   }
 }
 
-@media (max-width: 600px) {
-  .stats {
-    padding: 80px 24px;
-  }
-
-  .stats__header {
-    margin-bottom: 44px;
-  }
-
+@media (max-width: 480px) {
   .stats__grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 14px;
   }
 
   .stats__block {
-    padding: 36px 20px 28px 20px;
-  }
-
-  .stats__number {
-    font-size: 2.6rem;
-  }
-
-  .stats__number-suffix {
-    font-size: 1.8rem;
+    min-height: 190px;
   }
 }

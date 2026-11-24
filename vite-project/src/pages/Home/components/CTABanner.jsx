@@ -49,7 +49,7 @@ const CTABanner = () => {
   const strokeOffset = 151 - (151 * fillPercentage) / 100;
 
   return (
-    <section className="cta-banner">
+    <section className="cta-banner" data-theme="light">
       <div className="cta-banner__container">
         <motion.div
           className="cta-banner__content"

@@ -1,16 +1,38 @@
 import { useEffect, useMemo, useState } from "react";
-import { Search,ShoppingCart } from "lucide-react";
+import { Search, Sun } from "lucide-react";
 import { fetchPublicProducts } from "../../api/productApi";
 import { Link } from "react-router-dom";
-import { useCart } from "../../contexts/CartContext";
 import "./ProductsCatalogue.css";
 
+/* Shows a neat placeholder when a product has no image or it fails to load */
+function ProductImage({ src, alt }) {
+    const [failed, setFailed] = useState(false);
+
+    if (!src || failed) {
+        return (
+            <div className="product-image-placeholder" aria-hidden="true">
+                <Sun size={40} />
+            </div>
+        );
+    }
+
+    return (
+        <img
+            src={src}
+            alt={alt}
+            className="product-image"
+            loading="lazy"
+            decoding="async"
+            onError={() => setFailed(true)}
+        />
+    );
+}
+
 function Products() {
-    const { cartItems } = useCart();
     const [products, setProducts] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("All");
-   
+
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -70,9 +92,28 @@ function Products() {
 
     if (loading) {
         return (
-            <main className="products-page">
-                <div className="products-page-loading">
-                    Loading products...
+            <main className="products-page" data-theme="light">
+                <div className="products-catalog" aria-busy="true">
+                    <p className="products-page-loading">
+                        Loading products...
+                    </p>
+
+                    <div className="products-page-grid" aria-hidden="true">
+                        {Array.from({ length: 8 }, (_, index) => (
+                            <div
+                                className="product-card product-card--skeleton"
+                                key={index}
+                            >
+                                <div className="product-image-wrapper pskel" />
+                                <div className="product-card-content">
+                                    <span className="pskel pskel-line pskel-short" />
+                                    <span className="pskel pskel-line pskel-title" />
+                                    <span className="pskel pskel-line" />
+                                    <span className="pskel pskel-line pskel-mid" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </main>
         );
@@ -80,7 +121,7 @@ function Products() {
 
     if (error) {
         return (
-            <main className="products-page">
+            <main className="products-page" data-theme="light">
                 <div className="products-page-error">
                     {error}
                 </div>
@@ -89,45 +130,25 @@ function Products() {
     }
 
     return (
-        <main className="products-page">
+        <main className="products-page" data-theme="light">
 
             <section className="products-page-hero">
-   <Link
-        to="/cart"
-        className="products-cart-btn"
-        aria-label="View shopping cart"
-    >
-        <ShoppingCart size={21} />
 
-      {cartItems.length > 0 && (
-    <span className="products-cart-badge">
-        {cartItems.reduce(
-            (total, item) => total + item.quantity,
-            0
-        )}
-    </span>
-)}
-    </Link>
+                <div className="products-page-hero__text">
 
-                <p className="products-page-eyebrow">
-                    OUR PRODUCTS
-                </p>
+                    <p className="products-page-eyebrow">
+                        OUR PRODUCTS
+                    </p>
 
-                <h1>
-                    Explore Our
-                    <span> Solar Products</span>
-                </h1>
+                    <h1>
+                        Explore Our
+                        <span> Solar Products</span>
+                    </h1>
 
-                <p className="products-page-intro">
-                    Discover reliable solar products designed to
-                    deliver efficient and dependable energy solutions.
-                </p>
-
-            </section>
-
-            <section className="products-catalog">
-
-                <div className="products-toolbar">
+                    <p className="products-page-intro">
+                        Discover reliable solar products designed to
+                        deliver efficient and dependable energy solutions.
+                    </p>
 
                     <div className="products-search">
 
@@ -143,6 +164,24 @@ function Products() {
                         />
 
                     </div>
+
+                </div>
+
+                <div
+                    className="products-page-hero__visual"
+                    aria-hidden="true"
+                >
+                    <div className="products-page-hero__chip">
+                        <strong>{products.length}</strong>
+                        <span>Products available</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <section className="products-catalog">
+
+                <div className="products-toolbar">
 
                     <div className="products-categories">
 
@@ -165,6 +204,11 @@ function Products() {
 
                     </div>
 
+                    <p className="products-count" aria-live="polite">
+                        Showing <strong>{filteredProducts.length}</strong> of{" "}
+                        {products.length} products
+                    </p>
+
                 </div>
 
                 {filteredProducts.length === 0 ? (
@@ -178,8 +222,10 @@ function Products() {
                 ) : (
                     <div className="products-page-grid">
 
-                        {filteredProducts.map((product) => (
+                        {filteredProducts.map((product) => {
+                            const inStock = Number(product.stock) > 0;
 
+                            return (
                             <article
                                 className="product-card"
                                 key={product.id}
@@ -187,10 +233,9 @@ function Products() {
 
                                 <div className="product-image-wrapper">
 
-                                    <img
+                                    <ProductImage
                                         src={product.image}
                                         alt={product.name}
-                                        className="product-image"
                                     />
 
                                 </div>
@@ -220,8 +265,12 @@ function Products() {
                                             ).toLocaleString()}
                                         </span>
 
-                                        <span className="product-stock">
-                                            {Number(product.stock) > 0
+                                        <span
+                                            className={`product-stock ${
+                                                inStock ? "is-in" : "is-out"
+                                            }`}
+                                        >
+                                            {inStock
                                                 ? "Available"
                                                 : "Out of Stock"}
                                         </span>
@@ -238,8 +287,8 @@ function Products() {
                                 </div>
 
                             </article>
-
-                        ))}
+                            );
+                        })}
 
                     </div>
                 )}

@@ -1,180 +1,156 @@
-import { useRef, useEffect, useState } from 'react';
-import { motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ShieldCheck, Cpu } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './About.css';
 
-const stats = [
-  { label: 'Solar Efficiency', value: 95, suffix: '%' },
-  { label: 'Customer Satisfaction', value: 98, suffix: '%' },
-  { label: 'On-time Delivery', value: 99, suffix: '%' },
+const STATS = [
+  { end: 12, suffix: 'K+', decimals: 0, label: 'Jobs completed' },
+  { end: 4.9, suffix: '/5', decimals: 1, label: 'Average rating' },
 ];
 
-const Counter = ({ value, suffix, inView, delay = 0 }) => {
-  const motionVal = useMotionValue(0);
-  const spring = useSpring(motionVal, { stiffness: 60, damping: 18 });
-  const display = useTransform(spring, (v) => Math.round(v));
-  const [text, setText] = useState('0');
-
-  useEffect(() => {
-    if (!inView) return;
-    const timer = setTimeout(() => motionVal.set(value), delay);
-    return () => clearTimeout(timer);
-  }, [inView, value, delay, motionVal]);
-
-  useEffect(() => {
-    const unsub = display.on('change', (v) => setText(String(v)));
-    return () => unsub();
-  }, [display]);
-
-  return (
-    <span className="about__stat-number">
-      {text}
-      <span className="about__stat-suffix">{suffix}</span>
-    </span>
-  );
-};
-
-const CircularProgress = ({ value, label, suffix, inView, delay }) => {
-  const strokeOffset = 176 - (176 * value) / 100;
-
-  return (
-    <div className="about__stat-circular">
-      <div className="about__stat-circle-wrapper">
-        <svg width="72" height="72" viewBox="0 0 72 72">
-          <circle cx="36" cy="36" r="28" className="about__circle-bg" />
-          <motion.circle
-            cx="36"
-            cy="36"
-            r="28"
-            className="about__circle-fill"
-            initial={{ strokeDashoffset: 176 }}
-            animate={inView ? { strokeDashoffset: strokeOffset } : { strokeDashoffset: 176 }}
-            transition={{ duration: 1.8, ease: "easeOut", delay: delay / 1000 }}
-          />
-        </svg>
-        <div className="about__circle-content">
-          <Counter value={value} suffix={suffix} inView={inView} delay={delay} />
-        </div>
-      </div>
-      <span className="about__stat-label">{label}</span>
-    </div>
-  );
-};
-
-const About = () => {
+/* Becomes true the first time the element scrolls into view */
+function useInView(threshold = 0.25) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.2 });
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    if (typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return [ref, inView];
+}
+
+function CountUp({ end, suffix = '', decimals = 0, start, duration = 1600 }) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (!start) return undefined;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setValue(end);
+      return undefined;
+    }
+
+    let frame;
+    const t0 = performance.now();
+    const tick = (now) => {
+      const progress = Math.min((now - t0) / duration, 1);
+      setValue(end * (1 - Math.pow(1 - progress, 3)));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [start, end, duration]);
 
   return (
-    <section id="about" className="about" ref={ref}>
+    <>
+      {value.toFixed(decimals)}
+      {suffix}
+    </>
+  );
+}
+
+/**
+ * Optional props: mainImage, detailImage (imported image assets).
+ * Without them, soft placeholder blocks are shown.
+ */
+export default function About({ mainImage = 'https://images.pexels.com/photos/17842832/pexels-photo-17842832.jpeg', detailImage = 'https://images.pexels.com/photos/8853537/pexels-photo-8853537.jpeg' }) {
+  const [ref, inView] = useInView();
+
+  return (
+    <section
+      id="about"
+      ref={ref}
+      className={`about ${inView ? 'about--visible' : ''}`}
+      aria-labelledby="about-heading"
+    >
       <div className="about__container">
-        <motion.div
-          className="about__text"
-          initial={{ opacity: 0, x: -60 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <span className="about__subtitle">Who We Are</span>
-          <h2>
-            Built on Trust, <span className="text-gold">Powered by the Sun</span>
+        {/* Left column */}
+        <div className="about__content">
+          <h2 id="about-heading" className="about__heading about__reveal">
+            About Us
           </h2>
-          <div className="about__underline" />
-          <p className="about__desc">
-            Since 2009, FixItNow has been Pakistan's most trusted solar energy partner.
-            We design, install, and maintain world-class solar systems for homes and
-            businesses — combining cutting-edge technology with unmatched customer care.
-          </p>
 
-          {/* Core Pillars */}
-          <div className="about__pillars">
-            <div className="about__pillar">
-              <div className="about__pillar-icon"><ShieldCheck size={18} /></div>
-              <div className="about__pillar-content">
-                <h4>Engineering Precision</h4>
-                <p>Tailored CAD system design by certified engineers.</p>
-              </div>
-            </div>
-            <div className="about__pillar">
-              <div className="about__pillar-icon"><Cpu size={18} /></div>
-              <div className="about__pillar-content">
-                <h4>Smart Grid Ready</h4>
-                <p>Intelligent real-time generation monitoring overlays.</p>
-              </div>
-            </div>
+        <div className="about__columns">
+  <p className="about__text about__reveal" style={{ '--delay': '120ms' }}>
+    We specialize in reliable solar energy solutions for homes and
+    businesses, providing expert solar panel installation, system
+    design, and energy-efficient solutions tailored to your needs.
+  </p>
+
+  <p className="about__text about__reveal" style={{ '--delay': '200ms' }}>
+    From installation to maintenance, our experienced team ensures
+    your solar system performs at its best. We are committed to
+    quality, long-term reliability, and helping you reduce electricity
+    costs while embracing a cleaner, more sustainable future.
+  </p>
+</div>
+
+          <div className="about__detail about__reveal" style={{ '--delay': '280ms' }}>
+            {detailImage ? (
+              <img src={detailImage} alt="Technician tools ready for a home repair" loading="lazy" />
+            ) : (
+              <div className="about__placeholder" aria-hidden="true" />
+            )}
           </div>
+        </div>
 
-          <div className="about__stats">
-            {stats.map((s, i) => (
-              <CircularProgress
-                key={i}
-                value={s.value}
-                label={s.label}
-                suffix={s.suffix}
-                inView={inView}
-                delay={200 + i * 180}
+        {/* Right column */}
+        <div className="about__visual about__reveal" style={{ '--delay': '160ms' }}>
+          <div className="about__main">
+            {mainImage ? (
+              <img
+                src={mainImage}
+                alt="FixItNow technician inspecting a home electrical panel"
+                loading="lazy"
               />
-            ))}
+            ) : (
+              <div className="about__placeholder" aria-hidden="true" />
+            )}
+            <div className="about__tint" aria-hidden="true" />
           </div>
-        </motion.div>
 
-        {/* Sunlight wipe reveal image container */}
-        <div className="about__image-container">
-          <div className="about__image">
-            <img
-              src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=900"
-              alt="Technician installing solar panels"
-              loading="lazy"
-            />
-            <motion.div
-              className="about__sun-wipe"
-              initial={{ clipPath: 'inset(0 0% 0 0)' }}
-              whileInView={{ clipPath: 'inset(0 100% 0 0)' }}
-              transition={{ duration: 1.4, ease: [0.65, 0, 0.35, 1] }}
-              viewport={{ once: true, amount: 0.2 }}
-            />
-            {/* Soft glow that travels with the wipe edge */}
-            <motion.div
-              className="about__sun-glow"
-              initial={{ left: '0%', opacity: 0.9 }}
-              whileInView={{ left: '100%', opacity: 0 }}
-              transition={{ duration: 1.4, ease: [0.65, 0, 0.35, 1] }}
-              viewport={{ once: true, amount: 0.2 }}
-            />
+          <div className="about__card">
+            <h3 className="about__card-title">Repairs you can trust</h3>
+            <p className="about__card-text">
+              Verified professionals, transparent prices and a service
+              guarantee on every visit.
+            </p>
 
-            {/* Floating Live Telemetry Widget Overlay */}
-            <motion.div
-              className="about__image-widget"
-              initial={{ opacity: 0, scale: 0.8, x: 20 }}
-              whileInView={{ opacity: 1, scale: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <div className="about__widget-header">
-                <span className="about__widget-pulse" />
-                <span className="about__widget-tag">NODE SYNC // ACTIVE</span>
-              </div>
-              <div className="about__widget-body">
-                <div className="about__widget-row">
-                  <span className="about__widget-label">Grid Mode</span>
-                  <span className="about__widget-val text-gold">Generating</span>
-                </div>
-                <div className="about__widget-row">
-                  <span className="about__widget-label">Solar Output</span>
-                  <span className="about__widget-val">9.4 kW</span>
-                </div>
-                <div className="about__widget-row">
-                  <span className="about__widget-label">Efficiency</span>
-                  <span className="about__widget-val text-green">Optimal</span>
-                </div>
-              </div>
-            </motion.div>
+            <ul className="about__stats">
+              {STATS.map((stat) => (
+                <li key={stat.label}>
+                  <strong className="about__stat-value">
+                    <CountUp {...stat} start={inView} />
+                  </strong>
+                  <span className="about__stat-label">{stat.label}</span>
+                </li>
+              ))}
+            </ul>
+
+            <Link to="/products" className="about__arrow" aria-label="Browse our products">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M7 17 17 7M8 7h9v9" />
+              </svg>
+            </Link>
           </div>
-          <div className="about__image-accent" />
         </div>
       </div>
     </section>
   );
-};
-
-export default About;
+}
