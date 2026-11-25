@@ -1,576 +1,413 @@
 /* ===============================
-   AMC FORM MAIN CONTAINER
+   AMC FORM (LIGHT THEME)
 ================================ */
 
-.booking-card {
-    width: 100%;
-    background: #111827;
-    border-radius: 18px;
-    padding: 30px;
-    color: #f9fafb;
-    border: 1px solid rgba(212, 175, 55, 0.25);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+.customer-dashboard .amc-form-card {
+  width: 100%;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  color: var(--dash-text, #202923);
+  border: none;
+  box-shadow: none;
 }
 
-
-/* ===============================
-   HEADER
-================================ */
-
-.booking-header {
-    text-align: center;
-    margin-bottom: 35px;
+.customer-dashboard .amc-form-card .booking-header {
+  text-align: left;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--dash-border, rgba(32, 41, 35, 0.08));
 }
 
-
-.booking-header h2 {
-
-    font-size: 28px;
-    color: #d4af37;
-    margin-bottom: 10px;
-
+.customer-dashboard .amc-form-card .amc-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--dash-accent-soft, rgba(217, 154, 53, 0.12));
+  color: #9A6612;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
 }
 
-
-.booking-header p {
-
-    color: #9ca3af;
-    font-size: 15px;
-    
-
+.customer-dashboard .amc-form-card .booking-header h2 {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dash-text, #202923);
+  margin: 0 0 6px;
 }
 
-
-
-/* ===============================
-   FORM SECTIONS
-================================ */
-
-.form-section,
-.amc-section {
-
-    background: #1f2937;
-    padding: 25px;
-    margin-bottom: 25px;
-    border-radius: 15px;
-    border:1px solid rgba(255,255,255,0.08);
-
+.customer-dashboard .amc-form-card .booking-header p {
+  color: var(--dash-muted, #73796F);
+  font-size: 14px;
+  margin: 0;
 }
 
-
-
-.form-section h3,
-.amc-section h3 {
-
-    color:#d4af37;
-    font-size:20px;
-    margin-bottom:20px;
-
+.customer-dashboard .amc-form-card .booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
-
-
-/* ===============================
-   GRID
-================================ */
-
-
-.form-grid {
-
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
-
+/* Form Sections */
+.customer-dashboard .amc-form-card .form-section,
+.customer-dashboard .amc-form-card .amc-section {
+  background: var(--dash-bg, #F7F6F2);
+  padding: 22px 24px;
+  margin-bottom: 0;
+  border-radius: 16px;
+  border: 1px solid var(--dash-border, rgba(32, 41, 35, 0.08));
 }
 
-
-
-.form-group {
-
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-
+.customer-dashboard .amc-form-card .amc-section-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--dash-border, rgba(32, 41, 35, 0.07));
+  color: var(--dash-accent, #D99A35);
 }
 
-
-
-.form-group label {
-
-    color:#e5e7eb;
-    font-size:14px;
-
+.customer-dashboard .amc-form-card .amc-section-title h3 {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  color: var(--dash-text, #202923);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
 }
 
-
-
-
-/* ===============================
- INPUTS
-================================ */
-
-
-.form-group input,
-.form-group select,
-textarea {
-
-
-    width:100%;
-    background:#111827;
-    color:#f9fafb;
-
-    border:1px solid rgba(212,175,55,0.35);
-
-    border-radius:10px;
-
-    padding:13px;
-
-    outline:none;
-
-    transition:.3s;
-
+/* Grids */
+.customer-dashboard .amc-form-card .form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
 }
 
-
-
-.form-group input:focus,
-.form-group select:focus,
-textarea:focus {
-
-    border-color:#d4af37;
-
-    box-shadow:0 0 10px rgba(212,175,55,.25);
-
+.customer-dashboard .amc-form-card .form-grid.amc-grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-
-
-/* ===============================
- TEXTAREA
-================================ */
-
-
-textarea {
-
-    resize:none;
-    min-height:120px;
-
+.customer-dashboard .amc-form-card .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
-
-
-/* ===============================
- AMC PLAN CARDS
-================================ */
-
-
-.plan-grid {
-
-
-    display:grid;
-
-    grid-template-columns:repeat(3,1fr);
-
-    gap:20px;
-
-
+.customer-dashboard .amc-form-card .form-group label {
+  color: var(--dash-text, #202923);
+  font-size: 13px;
+  font-weight: 600;
 }
 
-
-
-.plan-card {
-
-
-    position:relative;
-
-    background:#111827;
-
-    padding:25px;
-
-    border-radius:15px;
-
-    border:1px solid rgba(212,175,55,.25);
-
-    cursor:pointer;
-
-    transition:.3s;
-
-
+.customer-dashboard .amc-form-card .form-group input,
+.customer-dashboard .amc-form-card .form-group select,
+.customer-dashboard .amc-form-card textarea {
+  width: 100%;
+  min-height: 44px;
+  background: var(--dash-surface, #FFFFFF);
+  color: var(--dash-text, #202923);
+  border: 1px solid var(--dash-border-strong, rgba(32, 41, 35, 0.14));
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-family: var(--dash-font-body, 'Plus Jakarta Sans', system-ui, sans-serif);
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-
-
-
-.plan-card:hover {
-
-
-    transform:translateY(-5px);
-
-    border-color:#d4af37;
-
-    box-shadow:0 15px 30px rgba(0,0,0,.4);
-
+.customer-dashboard .amc-form-card .form-group input[readonly] {
+  background: var(--dash-surface-2, #ECEDE8);
+  color: var(--dash-muted, #73796F);
+  font-weight: 600;
 }
 
-
-
-
-.plan-card input {
-
-
-    accent-color:#d4af37;
-
-    margin-bottom:15px;
-
-
+.customer-dashboard .amc-form-card .form-group input:focus,
+.customer-dashboard .amc-form-card .form-group select:focus,
+.customer-dashboard .amc-form-card textarea:focus {
+  border-color: var(--dash-accent, #D99A35);
+  box-shadow: 0 0 0 3px rgba(217, 154, 53, 0.16);
 }
 
-
-
-
-.plan-card h4 {
-
-    color:#d4af37;
-
-    font-size:20px;
-
+.customer-dashboard .amc-form-card textarea {
+  resize: vertical;
+  min-height: 110px;
 }
 
-
-
-.plan-price {
-
-    display:block;
-
-    margin:15px 0;
-
-    color:white;
-
-    font-weight:bold;
-
+/* AMC Plan Cards */
+.customer-dashboard .amc-form-card .plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
 }
 
-
-
-.plan-card ul {
-
-    padding-left:0;
-
-    list-style:none;
-
-    color:#d1d5db;
-
-    line-height:2;
-
+.customer-dashboard .amc-form-card .plan-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--dash-surface, #FFFFFF);
+  padding: 22px 20px;
+  border-radius: 14px;
+  border: 1.5px solid var(--dash-border, rgba(32, 41, 35, 0.1));
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-
-
-
-.featured {
-
-
-    border:2px solid #d4af37;
-
+.customer-dashboard .amc-form-card .plan-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--dash-accent-border, rgba(217, 154, 53, 0.45));
+  box-shadow: var(--dash-shadow-sm);
 }
 
-
-
-.recommended-badge {
-
-
-    position:absolute;
-
-    top:-12px;
-
-    right:20px;
-
-    background:#d4af37;
-
-    color:#111827;
-
-    padding:5px 12px;
-
-    border-radius:20px;
-
-    font-size:12px;
-
-    font-weight:bold;
-
+.customer-dashboard .amc-form-card .plan-card.featured {
+  border-color: rgba(217, 154, 53, 0.4);
+  padding-top: 44px;
 }
 
-
-
-
-/* ===============================
- AGREEMENT BOX
-================================ */
-
-
-
-.agreement-box {
-
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:15px;
-
-
+.customer-dashboard .amc-form-card .plan-card.plan-selected {
+  border: 2px solid var(--dash-accent, #D99A35);
+  box-shadow: 0 0 0 3px rgba(217, 154, 53, 0.14);
 }
 
-
-
-.agreement-box label {
-
-
-    background:#111827;
-
-    padding:15px;
-
-    border-radius:10px;
-
-    border:1px solid rgba(255,255,255,.08);
-
-    color:#d1d5db;
-
-
+.customer-dashboard .amc-form-card .recommended-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--dash-accent, #D99A35);
+  color: #FFFFFF;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
-
-
-.agreement-box input {
-
-
-    margin-right:10px;
-
-    accent-color:#d4af37;
-
-
+.customer-dashboard .amc-form-card .plan-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-
-
-
-/* ===============================
- PURCHASE SUMMARY
-================================ */
-
-
-.amc-summary {
-
-
-    background:#111827;
-
-    padding:25px;
-
-    border-radius:15px;
-
-    border:1px solid rgba(212,175,55,.3);
-
-    margin-bottom:25px;
-
-
+.customer-dashboard .amc-form-card .plan-card input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--dash-accent, #D99A35);
+  cursor: pointer;
 }
 
-
-
-.summary-item,
-.summary-total {
-
-
-    display:flex;
-
-    justify-content:space-between;
-
-    padding:15px 0;
-
-    border-bottom:1px solid rgba(255,255,255,.08);
-
-
+.customer-dashboard .amc-form-card .plan-card h4 {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  color: var(--dash-text, #202923);
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
 }
 
-
-
-.summary-item span,
-.summary-total span {
-
-
-    color:#9ca3af;
-
+.customer-dashboard .amc-form-card .plan-price {
+  display: block;
+  margin: 0 0 14px;
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  color: #9A6612;
+  font-size: 16px;
+  font-weight: 700;
 }
 
-
-
-.summary-item strong,
-.summary-total strong {
-
-
-    color:#d4af37;
-
+.customer-dashboard .amc-form-card .plan-card ul {
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
 }
 
-
-
-.summary-total {
-
-
-    font-size:18px;
-
+.customer-dashboard .amc-form-card .plan-card li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--dash-text, #202923);
 }
 
-
-
-/* ===============================
- BUTTON
-================================ */
-
-
-
-.activate-amc-btn {
-
-
-    width:100%;
-
-    padding:16px;
-
-    border:none;
-
-    border-radius:12px;
-
-    background:#d4af37;
-
-    color:#111827;
-
-    font-size:17px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:.3s;
-
-
+.customer-dashboard .amc-form-card .plan-card li.amc-muted-item {
+  color: var(--dash-muted, #73796F);
 }
 
-
-
-.activate-amc-btn:hover {
-
-
-    background:#f5d76e;
-
-    transform:translateY(-2px);
-
-
+.customer-dashboard .amc-form-card .amc-check {
+  color: #0F7654;
+  flex-shrink: 0;
 }
 
-
-
-.activate-amc-btn:disabled {
-
-
-    opacity:.5;
-
-    cursor:not-allowed;
-
+.customer-dashboard .amc-form-card .amc-cross {
+  color: #B42318;
+  flex-shrink: 0;
 }
 
-
-
-/* ===============================
- RESPONSIVE
-================================ */
-
-
-
-@media(max-width:1000px){
-
-
-.form-grid,
-.plan-grid {
-
-    grid-template-columns:1fr 1fr;
-
+/* Agreement Box */
+.customer-dashboard .amc-form-card .agreement-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-
+.customer-dashboard .amc-form-card .agreement-box label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--dash-surface, #FFFFFF);
+  padding: 13px 15px;
+  border-radius: 10px;
+  border: 1px solid var(--dash-border, rgba(32, 41, 35, 0.09));
+  color: var(--dash-text, #202923);
+  font-size: 13.5px;
+  cursor: pointer;
 }
 
-
-
-@media(max-width:700px){
-
-
-.form-grid,
-.plan-grid {
-
-    grid-template-columns:1fr;
-
+.customer-dashboard .amc-form-card .agreement-box input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--dash-accent, #D99A35);
+  flex-shrink: 0;
 }
 
-
-.booking-card {
-
-    padding:15px;
-
+/* Purchase Summary */
+.customer-dashboard .amc-form-card .amc-summary {
+  background: var(--dash-surface, #FFFFFF);
+  padding: 22px 24px;
+  border-radius: 16px;
+  border: 1.5px solid var(--dash-accent-border, rgba(217, 154, 53, 0.35));
 }
 
-
+.customer-dashboard .amc-form-card .amc-summary h3 {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--dash-text, #202923);
 }
 
-.plan-card {
-    position: relative;
-    overflow: hidden; /* important */
-    padding: 25px;
+.customer-dashboard .amc-form-card .summary-item,
+.customer-dashboard .amc-form-card .summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--dash-border, rgba(32, 41, 35, 0.07));
+  font-size: 13.5px;
 }
 
-
-.recommended-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-
-    background: #d4af37;
-    color: #000;
-
-    padding: 6px 30px;
-
-    font-size: 11px;
-    font-weight: 700;
-
-    /* transform: rotate(45deg); */
-
-    letter-spacing: 0.5px;
-
-    z-index: 2;
+.customer-dashboard .amc-form-card .summary-total {
+  border-bottom: none;
+  padding-bottom: 0;
+  font-size: 16px;
 }
 
-
-/* Give premium card more top spacing */
-
-.plan-card.featured {
-    padding-top: 55px;
+.customer-dashboard .amc-form-card .summary-item span,
+.customer-dashboard .amc-form-card .summary-total span {
+  color: var(--dash-muted, #73796F);
 }
 
-@media (max-width: 768px) {
-  .recommended-badge {
-    top: 10px;
-    right: 10px;
-    font-size: 0.7rem;
-    padding: 4px 8px;
+.customer-dashboard .amc-form-card .summary-item strong {
+  color: var(--dash-text, #202923);
+  font-weight: 600;
+}
+
+.customer-dashboard .amc-form-card .amc-plan-cap {
+  text-transform: capitalize;
+}
+
+.customer-dashboard .amc-form-card .summary-total strong {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  color: #9A6612;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Actions */
+.customer-dashboard .amc-form-card .amc-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.customer-dashboard .amc-form-card .back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 13px 22px;
+  border-radius: 11px;
+  background: var(--dash-surface, #FFFFFF);
+  color: var(--dash-text, #202923);
+  border: 1px solid var(--dash-border-strong, rgba(32, 41, 35, 0.14));
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.customer-dashboard .amc-form-card .back-btn:hover {
+  background: var(--dash-surface-2, #ECEDE8);
+  border-color: var(--dash-accent, #D99A35);
+}
+
+.customer-dashboard .amc-form-card .activate-amc-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 22px;
+  border: none;
+  border-radius: 11px;
+  background: var(--dash-accent, #D99A35);
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(217, 154, 53, 0.25);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.customer-dashboard .amc-form-card .activate-amc-btn:hover:not(:disabled) {
+  background: var(--dash-accent-hover, #C48726);
+  transform: translateY(-2px);
+}
+
+.customer-dashboard .amc-form-card .activate-amc-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 1024px) {
+  .customer-dashboard .amc-form-card .form-grid,
+  .customer-dashboard .amc-form-card .plan-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-.plan-card {
-    display: flex;
+
+@media (max-width: 720px) {
+  .customer-dashboard .amc-form-card .form-section,
+  .customer-dashboard .amc-form-card .amc-section,
+  .customer-dashboard .amc-form-card .amc-summary {
+    padding: 18px;
+  }
+
+  .customer-dashboard .amc-form-card .form-grid,
+  .customer-dashboard .amc-form-card .form-grid.amc-grid-2,
+  .customer-dashboard .amc-form-card .plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-dashboard .amc-form-card .amc-actions {
     flex-direction: column;
-}
-
-.plan-card-body {
-    flex: 1;
-}
-
-.plan-card-footer {
-    margin-top: auto;
+  }
 }

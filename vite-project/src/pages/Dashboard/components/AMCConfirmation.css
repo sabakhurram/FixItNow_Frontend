@@ -1,145 +1,142 @@
-.amc-confirmation-card{
+/* ================================
+   AMC CONFIRMATION (LIGHT THEME)
+================================ */
 
-background:#111;
-
-border:1px solid #c9a227;
-
-border-radius:20px;
-
-padding:40px;
-
-max-width:700px;
-
-margin:auto;
-
-color:white;
-
-text-align:center;
-
-box-shadow:0 0 30px rgba(201,162,39,0.2);
-
+.customer-dashboard .amc-confirmation-card {
+  width: 100%;
+  max-width: 660px;
+  margin: 24px auto;
+  padding: 36px 32px;
+  background: var(--dash-bg, #F7F6F2);
+  border: 1px solid var(--dash-border, rgba(32, 41, 35, 0.09));
+  border-radius: 20px;
+  color: var(--dash-text, #202923);
+  text-align: center;
+  box-sizing: border-box;
 }
 
-
-
-.success-icon{
-
-width:70px;
-
-height:70px;
-
-border-radius:50%;
-
-background:#c9a227;
-
-color:#111;
-
-font-size:40px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-margin:auto;
-
-font-weight:bold;
-
+.customer-dashboard .amc-confirmation-card .success-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(15, 118, 84, 0.12);
+  color: #0F7654;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
 }
 
-
-
-.amc-confirmation-card h2{
-
-margin-top:20px;
-
-color:#c9a227;
-
+.customer-dashboard .amc-confirmation-card h2 {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  margin: 0 0 8px;
+  font-size: 25px;
+  font-weight: 700;
+  color: var(--dash-text, #202923);
 }
 
-
-
-.success-message{
-
-color:#ccc;
-
-line-height:1.7;
-
+.customer-dashboard .amc-confirmation-card .success-message {
+  color: var(--dash-muted, #73796F);
+  font-size: 14.5px;
+  line-height: 1.65;
+  margin: 0 0 26px;
 }
 
-
-
-.contract-details{
-
-margin-top:30px;
-
-background:#181818;
-
-padding:25px;
-
-border-radius:15px;
-
-text-align:left;
-
+.customer-dashboard .amc-confirmation-card .contract-details {
+  margin-top: 0;
+  margin-bottom: 24px;
+  background: var(--dash-surface, #FFFFFF);
+  border: 1px solid var(--dash-border, rgba(32, 41, 35, 0.08));
+  padding: 20px 22px;
+  border-radius: 14px;
+  text-align: left;
 }
 
-
-
-.contract-details h3{
-
-color:#c9a227;
-
-margin-bottom:20px;
-
+.customer-dashboard .amc-confirmation-card .contract-details h3 {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  color: var(--dash-text, #202923);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--dash-border, rgba(32, 41, 35, 0.07));
 }
 
-
-
-.contract-row{
-
-display:flex;
-
-justify-content:space-between;
-
-padding:12px 0;
-
-border-bottom:1px solid #333;
-
+.customer-dashboard .amc-confirmation-card .contract-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--dash-border, rgba(32, 41, 35, 0.06));
+  font-size: 13.5px;
 }
 
-
-
-.contract-row span{
-
-color:#aaa;
-
+.customer-dashboard .amc-confirmation-card .contract-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
-
-
-.active-status{
-
-color:#c9a227;
-
+.customer-dashboard .amc-confirmation-card .contract-row span {
+  color: var(--dash-muted, #73796F);
 }
 
+.customer-dashboard .amc-confirmation-card .contract-row strong {
+  color: var(--dash-text, #202923);
+  font-weight: 600;
+  text-align: right;
+}
 
+.customer-dashboard .amc-confirmation-card .amc-cap {
+  text-transform: capitalize;
+}
 
-.dashboard-btn{
+.customer-dashboard .amc-confirmation-card .active-status {
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: rgba(15, 118, 84, 0.12);
+  color: #0F7654 !important;
+  font-size: 12px;
+  font-weight: 700;
+}
 
-margin-top:30px;
+.customer-dashboard .amc-confirmation-card .dashboard-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 0;
+  background: var(--dash-accent, #D99A35);
+  color: #FFFFFF;
+  border: none;
+  padding: 13px 22px;
+  border-radius: 11px;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(217, 154, 53, 0.25);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
 
-background:#c9a227;
+.customer-dashboard .amc-confirmation-card .dashboard-btn:hover {
+  background: var(--dash-accent-hover, #C48726);
+  transform: translateY(-2px);
+}
 
-border:none;
+@media (max-width: 640px) {
+  .customer-dashboard .amc-confirmation-card {
+    padding: 24px 18px;
+    margin: 12px auto;
+  }
 
-padding:14px 30px;
+  .customer-dashboard .amc-confirmation-card .contract-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
 
-border-radius:10px;
-
-font-weight:600;
-
-cursor:pointer;
-
+  .customer-dashboard .amc-confirmation-card .contract-row strong {
+    text-align: left;
+  }
 }

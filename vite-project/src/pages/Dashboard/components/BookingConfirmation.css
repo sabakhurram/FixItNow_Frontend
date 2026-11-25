@@ -1,237 +1,167 @@
-.confirmation-card {
+/* ================================
+   BOOKING CONFIRMATION (LIGHT THEME)
+================================ */
 
-    width:100%;
-    max-width:650px;
-
-    margin:40px auto;
-
-    padding:40px;
-
-    background:
-    linear-gradient(
-        145deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.03)
-    );
-
-    border:1px solid rgba(255,255,255,0.12);
-
-    border-radius:24px;
-
-    color:white;
-
-    text-align:center;
-
-    backdrop-filter:blur(10px);
-
-    animation:fadeIn .4s ease;
-
+.customer-dashboard .confirmation-card {
+  width: 100%;
+  max-width: 640px;
+  margin: 24px auto;
+  padding: 36px 32px;
+  background: var(--dash-bg, #F7F6F2);
+  border: 1px solid var(--dash-border, rgba(32, 41, 35, 0.09));
+  border-radius: 20px;
+  color: var(--dash-text, #202923);
+  text-align: center;
+  box-sizing: border-box;
 }
 
-
-
-/* Success Icon */
-
-.confirmation-card svg {
-
-    color:#10b981;
-
-    margin-bottom:20px;
-
+.customer-dashboard .confirmation-icon-wrap {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: rgba(15, 118, 84, 0.12);
+  color: #0F7654;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-
-
-.confirmation-card h2 {
-
-    font-size:28px;
-
-    margin-bottom:12px;
-
-    color:#ffffff;
-
+.customer-dashboard .confirmation-card h2 {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--dash-text, #202923);
 }
 
-
-
-.confirmation-card > p {
-
-    color:#d1d5db;
-
-    font-size:15px;
-
-    line-height:1.6;
-
-    margin-bottom:30px;
-
+.customer-dashboard .confirmation-card > p {
+  color: var(--dash-muted, #73796F);
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin: 0 0 26px;
 }
 
-
-
-/* Booking Details Box */
-
-.confirmation-details {
-
-    background:rgba(255,255,255,0.04);
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    border-radius:16px;
-
-    padding:20px;
-
-    text-align:left;
-
-    margin-bottom:30px;
-
+.customer-dashboard .confirmation-details {
+  background: var(--dash-surface, #FFFFFF);
+  border: 1px solid var(--dash-border, rgba(32, 41, 35, 0.08));
+  border-radius: 14px;
+  padding: 18px 20px;
+  text-align: left;
+  margin-bottom: 24px;
 }
 
-
-
-.confirmation-details p {
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    padding:12px 0;
-
-    margin:0;
-
-    color:#d1d5db;
-
-    border-bottom:1px solid rgba(255,255,255,0.06);
-
+.customer-dashboard .confirmation-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--dash-border, rgba(32, 41, 35, 0.07));
+  font-size: 13.5px;
 }
 
-
-
-.confirmation-details p:last-child {
-
-    border-bottom:none;
-
+.customer-dashboard .confirmation-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
-
-
-.confirmation-details strong {
-
-    color:white;
-
+.customer-dashboard .confirmation-row span {
+  color: var(--dash-muted, #73796F);
 }
 
-
-
-/* Dashboard Button */
-
-.confirmation-card button {
-
-
-    width:100%;
-
-    padding:14px 25px;
-
-
-    background:#EF9F27;
-
-    color:white;
-
-
-    border:none;
-
-    border-radius:50px;
-
-
-    font-size:15px;
-
-    font-weight:700;
-
-
-    cursor:pointer;
-
-
-    transition:.3s;
-
-
+.customer-dashboard .confirmation-row strong {
+  color: var(--dash-text, #202923);
+  font-weight: 600;
+  text-align: right;
 }
 
-
-
-.confirmation-card button:hover {
-
-
-    background:#f3ad45;
-
-    transform:translateY(-2px);
-
-    box-shadow:0 8px 20px rgba(239,159,39,.25);
-
-
+.customer-dashboard .confirmation-status-pill {
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: rgba(217, 154, 53, 0.14);
+  color: #9A6612 !important;
+  font-size: 12px;
+  font-weight: 700;
 }
 
-
-
-/* Animation */
-
-@keyframes fadeIn {
-
-
-    from {
-
-        opacity:0;
-
-        transform:translateY(20px);
-
-    }
-
-
-    to {
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
-
-
+.customer-dashboard .confirmation-contract {
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--dash-bg, #F7F6F2);
+  border: 1px solid var(--dash-border, rgba(32, 41, 35, 0.07));
 }
 
-
-
-/* Mobile */
-
-@media(max-width:768px){
-
-
-.confirmation-card {
-
-    padding:25px;
-
-    margin:20px auto;
-
+.customer-dashboard .confirmation-contract h3 {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  margin: 0 0 12px;
+  font-size: 15px;
+  color: var(--dash-text, #202923);
 }
 
-
-.confirmation-card h2 {
-
-    font-size:22px;
-
+.customer-dashboard .confirmation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
-
-
-.confirmation-details p {
-
-    flex-direction:column;
-
-    align-items:flex-start;
-
-    gap:5px;
-
+.customer-dashboard .confirmation-grid div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
+.customer-dashboard .confirmation-grid span {
+  font-size: 11px;
+  color: var(--dash-muted, #73796F);
+}
 
+.customer-dashboard .confirmation-grid strong {
+  font-size: 13px;
+  color: var(--dash-text, #202923);
+}
 
+.customer-dashboard .confirmation-card button {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 22px;
+  background: var(--dash-accent, #D99A35);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 11px;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(217, 154, 53, 0.25);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.customer-dashboard .confirmation-card button:hover {
+  background: var(--dash-accent-hover, #C48726);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 640px) {
+  .customer-dashboard .confirmation-card {
+    padding: 24px 18px;
+    margin: 12px auto;
+  }
+
+  .customer-dashboard .confirmation-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .customer-dashboard .confirmation-row strong {
+    text-align: left;
+  }
+
+  .customer-dashboard .confirmation-grid {
+    grid-template-columns: 1fr;
+  }
 }

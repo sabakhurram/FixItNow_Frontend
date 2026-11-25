@@ -1,139 +1,315 @@
-/* ---------- Section ---------- */
+/* ================================
+   REPAIR FORM (LIGHT THEME)
+================================ */
 
-.form-section{
-
-    margin-top:40px;
-
-    padding:30px;
-
-    background:rgba(255,255,255,.04);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:20px;
-
+.customer-dashboard .repair-form-card {
+  width: 100%;
+  margin-top: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--dash-text, #202923);
 }
 
-/* ---------- Heading ---------- */
-
-.form-section h3{
-
-     color:#ffb000;
-
-    font-size:20px;
-
-    margin-bottom:25px;
-
-} 
-
-/* ---------- Labels ---------- */
-
-.field-label{
-
-    display:block;
-
-    margin-bottom:12px;
-
-    margin-top:20px;
-
-    color:white;
-
-    font-weight:600;
-
+.customer-dashboard .repair-form-card .rf-header {
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--dash-border, rgba(32, 41, 35, 0.08));
 }
 
-/* ---------- Radios ---------- */
-
-.radio-group{
-
-    display:flex;
-
-    gap:35px;
-
-    margin-top:10px;
-
-    margin-bottom:20px;
-
+.customer-dashboard .repair-form-card .rf-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--dash-accent-soft, rgba(217, 154, 53, 0.12));
+  color: #9A6612;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
 }
 
-.radio-option{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    color:#ddd;
-
-    cursor:pointer;
-
+.customer-dashboard .repair-form-card h2 {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dash-text, #202923);
 }
 
-.radio-option input{
-
-    width:18px;
-
-    height:18px;
-
-    accent-color:#ffb000;
-
+.customer-dashboard .repair-form-card .rf-header p {
+  margin: 0;
+  color: var(--dash-muted, #73796F);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
-/* ---------- Select ---------- */
-
-.form-section select{
-
-    width:100%;
-
-    padding:14px;
-
-    border-radius:12px;
-
-    background:#101522;
-
-    border:1px solid rgba(255,255,255,.12);
-
-    color:white;
-
-    outline:none;
-
-    margin-bottom:20px;
-
+.customer-dashboard .repair-form-card .booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
-.form-section select:focus{
-
-    border-color:#ffb000;
-
+.customer-dashboard .repair-form-card .form-section {
+  margin: 0;
+  padding: 22px 24px;
+  background: var(--dash-bg, #F7F6F2);
+  border: 1px solid var(--dash-border, rgba(32, 41, 35, 0.08));
+  border-radius: 16px;
 }
 
-/* ---------- Textarea ---------- */
-
-.form-section textarea{
-
-    width:100%;
-
-    min-height:120px;
-
-    padding:15px;
-
-    background:#101522;
-
-    border:1px solid rgba(255,255,255,.12);
-
-    color:white;
-
-    border-radius:12px;
-
-    resize:vertical;
-
-    outline:none;
-
+.customer-dashboard .repair-form-card .rf-section-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--dash-border, rgba(32, 41, 35, 0.07));
+  color: var(--dash-accent, #D99A35);
 }
 
-.form-section textarea:focus{
+.customer-dashboard .repair-form-card .rf-section-title h3 {
+  font-family: var(--dash-font-display, 'Space Grotesk', system-ui, sans-serif);
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--dash-text, #202923);
+  border: none;
+  padding: 0;
+}
 
-    border-color:#ffb000;
+.customer-dashboard .repair-form-card .rf-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
 
-}  
+.customer-dashboard .repair-form-card .rf-span-2 {
+  grid-column: 1 / -1;
+}
+
+.customer-dashboard .repair-form-card .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+}
+
+.customer-dashboard .repair-form-card .form-group label,
+.customer-dashboard .repair-form-card .field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dash-text, #202923);
+}
+
+.customer-dashboard .repair-form-card .field-label svg {
+  color: var(--dash-accent, #D99A35);
+}
+
+.customer-dashboard .repair-form-card .rf-required {
+  color: #B42318;
+}
+
+.customer-dashboard .repair-form-card input:not([type="radio"]):not([type="checkbox"]):not([type="file"]),
+.customer-dashboard .repair-form-card select,
+.customer-dashboard .repair-form-card textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 14px;
+  margin: 0;
+  background: var(--dash-surface, #FFFFFF);
+  border: 1px solid var(--dash-border-strong, rgba(32, 41, 35, 0.14));
+  border-radius: 10px;
+  color: var(--dash-text, #202923);
+  font-family: var(--dash-font-body, 'Plus Jakarta Sans', system-ui, sans-serif);
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.customer-dashboard .repair-form-card input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):focus,
+.customer-dashboard .repair-form-card select:focus,
+.customer-dashboard .repair-form-card textarea:focus {
+  border-color: var(--dash-accent, #D99A35);
+  box-shadow: 0 0 0 3px rgba(217, 154, 53, 0.16);
+}
+
+.customer-dashboard .repair-form-card textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.customer-dashboard .repair-form-card .radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+
+.customer-dashboard .repair-form-card .radio-group:last-child {
+  margin-bottom: 0;
+}
+
+.customer-dashboard .repair-form-card .radio-option,
+.customer-dashboard .repair-form-card .radio-group > label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  background: var(--dash-surface, #FFFFFF);
+  border: 1px solid var(--dash-border-strong, rgba(32, 41, 35, 0.12));
+  color: var(--dash-text, #202923);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.customer-dashboard .repair-form-card .radio-option:hover,
+.customer-dashboard .repair-form-card .radio-group > label:hover {
+  border-color: rgba(217, 154, 53, 0.45);
+}
+
+.customer-dashboard .repair-form-card .radio-option input,
+.customer-dashboard .repair-form-card .radio-group > label input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--dash-accent, #D99A35);
+  cursor: pointer;
+}
+
+.customer-dashboard .repair-form-card .rf-battery-fields {
+  margin-top: 14px;
+}
+
+.customer-dashboard .repair-form-card .file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dash-text, #202923);
+}
+
+.customer-dashboard .repair-form-card input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  background: var(--dash-surface, #FFFFFF);
+  border: 1px dashed rgba(32, 41, 35, 0.22);
+  border-radius: 10px;
+  color: var(--dash-muted, #73796F);
+  font-size: 13px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.customer-dashboard .repair-form-card input[type="file"]::file-selector-button {
+  background: var(--dash-surface-2, #ECEDE8);
+  color: var(--dash-text, #202923);
+  border: 1px solid var(--dash-border, rgba(32, 41, 35, 0.1));
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12.5px;
+  margin-right: 12px;
+  cursor: pointer;
+}
+
+.customer-dashboard .repair-form-card .rf-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.customer-dashboard .repair-form-card .checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--dash-surface, #FFFFFF);
+  border: 1px solid var(--dash-border, rgba(32, 41, 35, 0.09));
+  color: var(--dash-text, #202923);
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.customer-dashboard .repair-form-card .checkbox-row input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--dash-accent, #D99A35);
+  flex-shrink: 0;
+}
+
+.customer-dashboard .repair-form-card .booking-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.customer-dashboard .repair-form-card .back-btn,
+.customer-dashboard .repair-form-card .submit-booking-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.customer-dashboard .repair-form-card .back-btn {
+  background: var(--dash-surface, #FFFFFF);
+  color: var(--dash-text, #202923);
+  border: 1px solid var(--dash-border-strong, rgba(32, 41, 35, 0.14));
+}
+
+.customer-dashboard .repair-form-card .back-btn:hover {
+  background: var(--dash-surface-2, #ECEDE8);
+  border-color: var(--dash-accent, #D99A35);
+}
+
+.customer-dashboard .repair-form-card .submit-booking-btn {
+  flex: 1;
+  background: var(--dash-accent, #D99A35);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 3px 10px rgba(217, 154, 53, 0.25);
+}
+
+.customer-dashboard .repair-form-card .submit-booking-btn:hover {
+  background: var(--dash-accent-hover, #C48726);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 720px) {
+  .customer-dashboard .repair-form-card .form-section {
+    padding: 18px;
+  }
+
+  .customer-dashboard .repair-form-card .rf-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-dashboard .repair-form-card .radio-group {
+    flex-direction: column;
+  }
+
+  .customer-dashboard .repair-form-card .booking-actions {
+    flex-direction: column;
+  }
+}

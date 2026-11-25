@@ -756,11 +756,13 @@ const services = [
   {
     id: "inspection",
     title: "Inspection Service",
-    icon: <Search size={42} />,
+    icon: <Search size={20} />,
     badge: "Most Requested",
     duration: "45–60 mins",
     feature: "Certified Engineers",
     price: "Starting from PKR 5,000",
+    image: "https://images.pexels.com/photos/4254157/pexels-photo-4254157.jpeg",
+    imageAlt: "Solar engineer inspecting rooftop photovoltaic panels and system performance",
     description:
       "Complete inspection of panels, inverter, wiring and system performance."
   },
@@ -768,11 +770,13 @@ const services = [
   {
     id: "repair",
     title: "Repair Service",
-    icon: <Wrench size={42} />,
+    icon: <Wrench size={20} />,
     badge: "Emergency Support",
     duration: "Fast Response",
     feature: "Expert Technicians",
     price: "Starting from PKR 5,000",
+    image: "https://images.pexels.com/photos/8853537/pexels-photo-8853537.jpeg",
+    imageAlt: "Solar technician diagnosing and repairing electrical solar equipment",
     description:
       "Professional diagnosis and repair for all solar system issues."
   },
@@ -780,11 +784,13 @@ const services = [
   {
     id: "amc",
     title: "Annual Maintenance Contract",
-    icon: <ShieldCheck size={42} />,
+    icon: <ShieldCheck size={20} />,
     badge: "Best Value",
     duration: "12 Months",
     feature: "Priority Support",
     price: "Starting from PKR 15,000/year",
+    image: "https://images.pexels.com/photos/9875405/pexels-photo-9875405.jpeg",
+    imageAlt: "Modern rooftop solar panel installation maintained year-round",
     description:
       "Scheduled maintenance with priority support and performance reports."
   }
@@ -1255,9 +1261,8 @@ if(loading){
     return (
 
         <div className="dashboard-loading">
-
-            Loading dashboard...
-
+            <div className="dashboard-loading-spinner" aria-hidden="true" />
+            <span>Loading dashboard...</span>
         </div>
 
     );
@@ -1289,6 +1294,14 @@ const sidebarItems = [
   return (
   <div className="customer-dashboard">
 
+   {sidebarOpen && (
+     <div
+       className="sidebar-backdrop"
+       onClick={() => setSidebarOpen(false)}
+       aria-hidden="true"
+     />
+   )}
+
    <aside
   className={`customer-sidebar ${
     sidebarOpen ? "sidebar-open" : ""
@@ -1299,62 +1312,70 @@ const sidebarItems = [
   onClick={() => setSidebarOpen(false)}
   aria-label="Close sidebar"
 >
-  <X size={22} />
+  <X size={20} />
 </button>
 
       {/* Logo */}
      <div className="sidebar-logo">
-  <img src={logo} alt="FixItNow"  className="sidebar-logo-image"/>
-  <span>Fixitnow</span>
+  <img src={logo} alt="FixItNow" className="sidebar-logo-image"/>
+  <div className="sidebar-brand-text">
+    <span>FixItNow</span>
+    <small>Customer Portal</small>
+  </div>
 </div>
       {/* Navigation */}
-      <nav className="sidebar-nav">
+      <div className="sidebar-nav-section">
+        <span className="sidebar-nav-label">Menu</span>
+        <nav className="sidebar-nav">
 
-        {sidebarItems.map((item) => {
-          const Icon = item.icon;
+          {sidebarItems.map((item) => {
+            const Icon = item.icon;
 
-          return (
-            <button
-              key={item.id}
-              className={`sidebar-nav-item ${
-                activeTab === item.id ? "active" : ""
-              }`}
-              onClick={() => {
-  setActiveTab(item.id);
-  setSidebarOpen(false);
-}}
-            >
-              <Icon size={20} />
+            return (
+              <button
+                key={item.id}
+                className={`sidebar-nav-item ${
+                  activeTab === item.id ? "active" : ""
+                }`}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setSidebarOpen(false);
+                }}
+              >
+                <Icon size={19} />
 
-              <span>{item.label}</span>
+                <span>{item.label}</span>
 
-              {item.id === "requests" &&
-                serviceRequests.length > 0 && (
-                  <span className="sidebar-count">
-                    {serviceRequests.length}
-                  </span>
-                )}
-            </button>
-          );
-        })}
+                {item.id === "requests" &&
+                  serviceRequests.length > 0 && (
+                    <span className="sidebar-count">
+                      {serviceRequests.length}
+                    </span>
+                  )}
+              </button>
+            );
+          })}
 
-      </nav>
+        </nav>
+      </div>
 
-      {/* Bottom help card */}
-     <button
-  className="sidebar-signout"
-  onClick={async () => {
-    try {
-      await doSignOut();
-      navigate("/signin");
-    } catch (error) {
-      console.error("Sign out failed:", error);
-    }
-  }}
->
-  <LogOut size={19} />
-  <span>Sign Out</span>
-</button>
+      {/* Bottom sign out */}
+      <div className="sidebar-footer">
+        <button
+          className="sidebar-signout"
+          onClick={async () => {
+            try {
+              await doSignOut();
+              navigate("/signin");
+            } catch (error) {
+              console.error("Sign out failed:", error);
+            }
+          }}
+        >
+          <LogOut size={18} />
+          <span>Sign Out</span>
+        </button>
+      </div>
 
     </aside>
 
@@ -1369,7 +1390,7 @@ const sidebarItems = [
   onClick={() => setSidebarOpen((prev) => !prev)}
   aria-label="Toggle sidebar"
 >
-  {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
+  {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
 </button>
 
 
@@ -1391,7 +1412,7 @@ const sidebarItems = [
             title="Notifications"
             style={{ position: "relative" }}
           >
-            <Bell size={20} />
+            <Bell size={19} />
             {userNotifications.length > 0 && (
               <span className="notif-badge">{userNotifications.length}</span>
             )}
@@ -1439,7 +1460,6 @@ const sidebarItems = [
 
 
       {/* PAGE CONTENT */}
-   {/* PAGE CONTENT */}
 <div className="dashboard-page-content">
 
   {/* =========================
@@ -1451,13 +1471,37 @@ const sidebarItems = [
       {/* Welcome */}
       <header className="dash-header">
         <div className="dash-welcome">
+          <span className="dash-date-badge">
+            <Calendar size={13} />
+            <span>{currentDate}</span>
+          </span>
           <h1>
-            Welcome back, {currentUser?.displayName || "User"} 
+            Welcome back, {currentUser?.displayName || "User"}
           </h1>
 
           <p>
             Here's what's happening with your account today.
           </p>
+        </div>
+
+        <div className="dash-header-actions">
+          <button
+            type="button"
+            className="dash-action-secondary"
+            onClick={() => setActiveTab("requests")}
+          >
+            <ClipboardList size={16} />
+            <span>View Requests</span>
+          </button>
+
+          <button
+            type="button"
+            className="dash-action-primary"
+            onClick={() => navigate("/products")}
+          >
+            <ShoppingBag size={16} />
+            <span>Browse Products</span>
+          </button>
         </div>
       </header>
 
@@ -1466,13 +1510,14 @@ const sidebarItems = [
       <div className="dash-stats-row">
 
         <div className="dash-kpi-card">
-          <div className="kpi-icon-wrapper requests-icon">
-            <ClipboardList size={20} />
+          <div className="kpi-card-top">
+            <span className="kpi-label">Active Requests</span>
+            <div className="kpi-icon-wrapper requests-icon">
+              <ClipboardList size={19} />
+            </div>
           </div>
 
           <div className="kpi-info">
-            <span className="kpi-label">Active Requests</span>
-
             <span className="kpi-val">
               {serviceRequests.length}
             </span>
@@ -1485,13 +1530,14 @@ const sidebarItems = [
 
 
         <div className="dash-kpi-card">
-          <div className="kpi-icon-wrapper amc-icon">
-            <ShieldCheck size={20} />
+          <div className="kpi-card-top">
+            <span className="kpi-label">AMC Contracts</span>
+            <div className="kpi-icon-wrapper amc-icon">
+              <ShieldCheck size={19} />
+            </div>
           </div>
 
           <div className="kpi-info">
-            <span className="kpi-label">AMC Contracts</span>
-
             <span className="kpi-val">
               {amcContracts.length}
             </span>
@@ -1504,13 +1550,14 @@ const sidebarItems = [
 
 
         <div className="dash-kpi-card">
-          <div className="kpi-icon-wrapper orders-icon">
-            <ShoppingBag size={20} />
+          <div className="kpi-card-top">
+            <span className="kpi-label">Product Orders</span>
+            <div className="kpi-icon-wrapper orders-icon">
+              <ShoppingBag size={19} />
+            </div>
           </div>
 
           <div className="kpi-info">
-            <span className="kpi-label">Product Orders</span>
-
             <span className="kpi-val">
               {orders.length}
             </span>
@@ -1522,23 +1569,24 @@ const sidebarItems = [
         </div>
 
 
-      <div className="dash-kpi-card">
-  <div className="kpi-icon-wrapper health-icon">
-    <Wrench size={20} />
-  </div>
+        <div className="dash-kpi-card">
+          <div className="kpi-card-top">
+            <span className="kpi-label">Total Services</span>
+            <div className="kpi-icon-wrapper health-icon">
+              <Wrench size={19} />
+            </div>
+          </div>
 
-  <div className="kpi-info">
-    <span className="kpi-label">Total Services</span>
+          <div className="kpi-info">
+            <span className="kpi-val">
+              {serviceRequests.length + amcContracts.length}
+            </span>
 
-    <span className="kpi-val">
-      {serviceRequests.length + amcContracts.length}
-    </span>
-
-    <span className="kpi-trend">
-      Requested Services
-    </span>
-  </div>
-</div>
+            <span className="kpi-trend">
+              Requested Services
+            </span>
+          </div>
+        </div>
 
       </div>
     {/* Main Services Area */}
@@ -1638,48 +1686,58 @@ const sidebarItems = [
           <p>Everything you need, in one place.</p>
         </div>
 
-        <button
-          className="quick-action-item"
-          onClick={() => navigate("/products")}
-        >
-          <div className="quick-action-icon products-action">
-            <ShoppingBag size={20} />
-          </div>
+        <div className="quick-actions-list">
+          <button
+            type="button"
+            className="quick-action-item"
+            onClick={() => navigate("/products")}
+          >
+            <div className="quick-action-icon products-action">
+              <ShoppingBag size={20} />
+            </div>
 
-          <div className="quick-action-content">
-            <span>Browse Products</span>
-            <small>Explore solar products</small>
-          </div>
+            <div className="quick-action-content">
+              <span>Browse Products</span>
+              <small>Explore solar products</small>
+            </div>
 
-          <ArrowRight size={18} className="quick-action-arrow" />
-        </button>
+            <ArrowRight size={17} className="quick-action-arrow" />
+          </button>
 
-        <button className="quick-action-item"
-           onClick={() => navigate("/#contact")}>
-          <div className="quick-action-icon support-action">
-            <Headset size={20} />
-          </div>
+          <button
+            type="button"
+            className="quick-action-item"
+            onClick={() => navigate("/#contact")}
+          >
+            <div className="quick-action-icon support-action">
+              <Headset size={20} />
+            </div>
 
-          <div className="quick-action-content">
-            <span>Get Support</span>
-            <small>We're here to help</small>
-          </div>
+            <div className="quick-action-content">
+              <span>Get Support</span>
+              <small>We're here to help</small>
+            </div>
 
-          <ArrowRight size={18} className="quick-action-arrow" />
-        </button>
-<button className="quick-action-item"
-   onClick={() => navigate("/#testimonials")}>
-  <div className="quick-action-icon reviews-action">
-    <Star size={20} />
-  </div>
+            <ArrowRight size={17} className="quick-action-arrow" />
+          </button>
 
-  <div className="quick-action-content">
-    <span>Customer Reviews</span>
-    <small>See what our customers say</small>
-  </div>
+          <button
+            type="button"
+            className="quick-action-item"
+            onClick={() => navigate("/#testimonials")}
+          >
+            <div className="quick-action-icon reviews-action">
+              <Star size={20} />
+            </div>
 
-  <ArrowRight size={18} className="quick-action-arrow" />
-</button>
+            <div className="quick-action-content">
+              <span>Customer Reviews</span>
+              <small>See what our customers say</small>
+            </div>
+
+            <ArrowRight size={17} className="quick-action-arrow" />
+          </button>
+        </div>
       </aside>
     )}
 
@@ -1690,7 +1748,8 @@ const sidebarItems = [
   <div className="service-promo-content">
 
     <span className="service-promo-label">
-      SOLAR CARE
+      <Sun size={13} />
+      <span>SOLAR CARE</span>
     </span>
 
     <h2>
@@ -1703,22 +1762,26 @@ const sidebarItems = [
     </p>
 
     <button
+      type="button"
       className="service-promo-button"
       onClick={() => navigate("/#about")}
     >
-      Learn More
-      <ArrowRight size={17} />
+      <span>Learn More</span>
+      <ArrowRight size={16} />
     </button>
 
   </div>
 
   <div className="service-promo-visual">
-    <div className="promo-solar-icon">
-      <Zap size={46} />
+    <img
+      src="https://images.pexels.com/photos/11645013/pexels-photo-11645013.jpeg"
+      alt="Clean rooftop solar panels generating optimal sunlight energy"
+      loading="lazy"
+    />
+    <div className="promo-solar-badge">
+      <Zap size={16} />
+      <span>Peak Solar Efficiency</span>
     </div>
-
-    <div className="promo-circle promo-circle-one"></div>
-    <div className="promo-circle promo-circle-two"></div>
   </div>
 
 </div>
@@ -1743,94 +1806,156 @@ const sidebarItems = [
       AMC CONTRACTS TAB
   ========================= */}
  {activeTab === "amc" && (
-  <div className="tab-page">
+  <div className="tab-page amc-contracts-section">
 
-    <div className="request-header">
-      <Sparkles size={14} />
-      <span>MY AMC CONTRACTS</span>
+    <div className="tab-section-header">
+      <div className="tab-section-title-group">
+        <span className="tab-section-eyebrow">
+          <ShieldCheck size={14} />
+          <span>MY AMC CONTRACTS</span>
+        </span>
+        <h2>Annual Maintenance Contracts</h2>
+        <p>Track your solar maintenance coverage, active status, and renewal dates.</p>
+      </div>
+      <span className="tab-count-pill">
+        {amcContracts.length} {amcContracts.length === 1 ? "Contract" : "Contracts"}
+      </span>
     </div>
 
 
     {amcContracts.length === 0 ? (
 
-      <div className="empty-request">
-        No AMC contracts yet.
+      <div className="tab-empty-state">
+        <div className="tab-empty-icon">
+          <ShieldCheck size={30} />
+        </div>
+        <h3>No AMC contracts yet</h3>
+        <p>Protect your solar investment with scheduled maintenance and priority support.</p>
       </div>
 
     ) : (
 
-      <div className="request-list">
+      <div className="amc-contracts-grid">
 
-        {amcContracts.map((contract) => (
+        {amcContracts.map((contract) => {
+          const rawStart = contract.contract_start_date || contract.start_date;
+          const startDateObj = rawStart ? new Date(rawStart) : null;
+          const hasValidStart = startDateObj && !isNaN(startDateObj.getTime());
+          let expiryDateObj = null;
+          let progressPct = null;
 
-          <div
-            className="request-card"
-            key={contract.id}
-            onClick={() => setSelectedAMC(contract)}
-          >
+          if (hasValidStart) {
+            expiryDateObj = new Date(startDateObj);
+            expiryDateObj.setFullYear(expiryDateObj.getFullYear() + 1);
+            const totalMs = expiryDateObj.getTime() - startDateObj.getTime();
+            const elapsedMs = Date.now() - startDateObj.getTime();
+            if (totalMs > 0) {
+              progressPct = Math.min(100, Math.max(0, Math.round((elapsedMs / totalMs) * 100)));
+            }
+          }
 
-            <div className="request-top">
+          return (
+            <div
+              className="amc-contract-card"
+              key={contract.id}
+              onClick={() => setSelectedAMC(contract)}
+            >
+              <div className="amc-card-top">
+                <div className="amc-card-identity">
+                  <div className="amc-card-icon">
+                    <ShieldCheck size={20} />
+                  </div>
+                  <div>
+                    <h3>
+                      {contract.plan
+                        ? `${contract.plan
+                            .charAt(0)
+                            .toUpperCase()}${contract.plan.slice(1)} AMC`
+                        : "AMC Contract"}
+                    </h3>
+                    <span className="amc-card-id">
+                      Contract #{String(contract.id).slice(0, 8).toUpperCase()}
+                    </span>
+                  </div>
+                </div>
 
-              <h3>
-                {contract.plan
-                  ? `${contract.plan
-                      .charAt(0)
-                      .toUpperCase()}${contract.plan.slice(1)} AMC`
-                  : "AMC Contract"}
-              </h3>
+                <span
+                  className={`status-badge ${
+                    (contract.status || "pending").toLowerCase()
+                  }`}
+                >
+                  {contract.status
+                    ?.replaceAll("_", " ")
+                    .replace(/\b\w/g, (letter) =>
+                      letter.toUpperCase()
+                    )}
+                </span>
+              </div>
 
-              <span
-                className={`status-badge ${
-                  contract.status || "pending"
-                }`}
-              >
-                {contract.status
-                  ?.replaceAll("_", " ")
-                  .replace(/\b\w/g, (letter) =>
-                    letter.toUpperCase()
-                  )}
-              </span>
+              <div className="amc-dates-panel">
+                <div className="amc-date-col">
+                  <span className="amc-date-label">Start Date</span>
+                  <strong>
+                    {hasValidStart
+                      ? startDateObj.toLocaleDateString()
+                      : "Not provided"}
+                  </strong>
+                </div>
 
+                <div className="amc-date-col">
+                  <span className="amc-date-label">Expiry Date</span>
+                  <strong className="amc-expiry-highlight">
+                    {expiryDateObj
+                      ? expiryDateObj.toLocaleDateString()
+                      : "Not provided"}
+                  </strong>
+                </div>
+
+                <div className="amc-date-col">
+                  <span className="amc-date-label">Duration</span>
+                  <strong>
+                    {contract.contract_duration || "Not provided"}
+                  </strong>
+                </div>
+              </div>
+
+              {progressPct !== null && (
+                <div className="amc-progress-wrap">
+                  <div className="amc-progress-header">
+                    <span>Coverage Progress</span>
+                    <span>{progressPct}%</span>
+                  </div>
+                  <div className="amc-progress-track">
+                    <div
+                      className="amc-progress-fill"
+                      style={{ width: `${progressPct}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="amc-meta-list">
+                <div className="amc-meta-row">
+                  <MapPin size={15} />
+                  <span>
+                    {contract.service_address || "Not provided"}
+                  </span>
+                </div>
+                <div className="amc-meta-row">
+                  <FileText size={15} />
+                  <span>
+                    {contract.cost || "Included in Plan"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="amc-card-footer">
+                <span>View Full Contract Details</span>
+                <ArrowRight size={16} />
+              </div>
             </div>
-
-
-            <div className="request-details">
-
-              <p>
-                Contract ID: {contract.id}
-              </p>
-
-              <p>
-                Start Date:{" "}
-                {contract.contract_start_date
-                  ? new Date(
-                      contract.contract_start_date
-                    ).toLocaleDateString()
-                  : "Not provided"}
-              </p>
-
-              <p>
-                Duration:{" "}
-                {contract.contract_duration ||
-                  "Not provided"}
-              </p>
-
-              <p>
-                Service Address:{" "}
-                {contract.service_address ||
-                  "Not provided"}
-              </p>
-
-            </div>
-
-
-            <div className="request-view-details">
-              View Full Contract Details →
-            </div>
-
-          </div>
-
-        ))}
+          );
+        })}
 
       </div>
 
@@ -2247,71 +2372,89 @@ const sidebarItems = [
       PRODUCT ORDERS TAB
   ========================= */}
   {activeTab === "orders" && (
-    <div className="tab-page">
+    <div className="tab-page orders-section">
 
-      <div className="request-header">
-        <ShoppingBag size={14} />
-        <span>MY PRODUCT ORDERS</span>
+      <div className="tab-section-header">
+        <div className="tab-section-title-group">
+          <span className="tab-section-eyebrow">
+            <ShoppingBag size={14} />
+            <span>MY PRODUCT ORDERS</span>
+          </span>
+          <h2>Product Orders</h2>
+          <p>Review your solar hardware purchases, shipping addresses, and order status.</p>
+        </div>
+        <span className="tab-count-pill">
+          {orders.length} {orders.length === 1 ? "Order" : "Orders"}
+        </span>
       </div>
 
       {orders.length === 0 ? (
-        <div className="empty-request">
-          No product orders yet.
+        <div className="tab-empty-state">
+          <div className="tab-empty-icon">
+            <Package size={30} />
+          </div>
+          <h3>No product orders yet</h3>
+          <p>When you order solar inverters, panels, or accessories, they will appear here.</p>
         </div>
       ) : (
-        <div className="request-list">
+        <div className="orders-list">
           {orders.map((order) => (
             <div
-              className="request-card"
+              className="order-card"
               key={order.id}
             >
-              <div className="request-top">
-                <h3>
-                  Order #
-                  {order.id
-                    .slice(0, 8)
-                    .toUpperCase()}
-                </h3>
+              <div className="order-card-header">
+                <div className="order-id-block">
+                  <div className="order-icon-chip">
+                    <Package size={18} />
+                  </div>
+                  <div>
+                    <h3>
+                      Order #{order.id.slice(0, 8).toUpperCase()}
+                    </h3>
+                    <span className="order-date-meta">
+                      <Calendar size={13} />
+                      {new Date(order.created_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
 
-                <span
-                  className={`status-badge ${
-                    order.status.toLowerCase()
-                  }`}
-                >
-                  {order.status}
-                </span>
+                <div className="order-header-right">
+                  <span
+                    className={`status-badge ${
+                      order.status.toLowerCase()
+                    }`}
+                  >
+                    {order.status}
+                  </span>
+                  <div className="order-total-amount">
+                    <span>Total</span>
+                    <strong>
+                      Rs. {Number(order.total_amount).toLocaleString()}
+                    </strong>
+                  </div>
+                </div>
               </div>
 
-              <div className="request-details">
+              <div className="order-card-body">
+                <div className="order-info-block">
+                  <span className="order-info-label">Items Ordered</span>
+                  <div className="order-items-pills">
+                    {order.items.map((item, idx) => (
+                      <span key={idx} className="order-item-pill">
+                        {item.name} <strong>×{item.quantity}</strong>
+                      </span>
+                    ))}
+                  </div>
+                </div>
 
-                <p>
-                  Total: Rs.{" "}
-                  {Number(
-                    order.total_amount
-                  ).toLocaleString()}
-                </p>
-
-                <p>
-                  Date:{" "}
-                  {new Date(
-                    order.created_at
-                  ).toLocaleDateString()}
-                </p>
-
-                <p>
-                  Items:{" "}
-                  {order.items
-                    .map(
-                      (item) =>
-                        `${item.name} (x${item.quantity})`
-                    )
-                    .join(", ")}
-                </p>
-
-                <p>
-                  Address: {order.shipping_address}
-                </p>
-
+                <div className="order-info-block">
+                  <span className="order-info-label">Shipping Address</span>
+                  <p className="order-address-text">
+                    <MapPin size={14} />
+                    <span>{order.shipping_address}</span>
+                  </p>
+                </div>
               </div>
             </div>
           ))}

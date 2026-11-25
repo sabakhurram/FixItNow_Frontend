@@ -19,7 +19,10 @@ import {
   Star,
   UserCheck,
   CheckCircle2,
-  Loader2
+  Loader2,
+  Search,
+  ClipboardList,
+  ArrowRight
 } from "lucide-react";
 
 import { submitTechnicianReview } from "../../../api/reviewApi";
@@ -617,16 +620,29 @@ const ServiceRequests = ({ serviceRequests = [] }) => {
 
     <div className="service-request-section">
 
-      <div className="request-header">
-        <Sparkles size={14} />
-        <span>MY SERVICE REQUESTS</span>
+      <div className="tab-section-header">
+        <div className="tab-section-title-group">
+          <span className="tab-section-eyebrow">
+            <ClipboardList size={14} />
+            <span>MY SERVICE REQUESTS</span>
+          </span>
+          <h2>Service Requests</h2>
+          <p>View submitted solar inspection, repair, and maintenance requests.</p>
+        </div>
+        <span className="tab-count-pill">
+          {serviceRequests.length} {serviceRequests.length === 1 ? "Request" : "Requests"}
+        </span>
       </div>
 
 
       {serviceRequests.length === 0 ? (
 
-        <div className="empty-request">
-          No service requests yet.
+        <div className="tab-empty-state">
+          <div className="tab-empty-icon">
+            <ClipboardList size={30} />
+          </div>
+          <h3>No service requests yet</h3>
+          <p>Book a solar inspection, repair, or AMC plan from the Overview tab to track it here.</p>
         </div>
 
       ) : (
@@ -645,7 +661,23 @@ const ServiceRequests = ({ serviceRequests = [] }) => {
 
               <div className="request-top">
 
-                <h3>{request.type}</h3>
+                <div className="request-title-group">
+                  <div className="request-type-icon">
+                    {request.type === "Repair Request" ? (
+                      <Wrench size={18} />
+                    ) : request.type === "AMC Contract" ? (
+                      <ShieldCheck size={18} />
+                    ) : (
+                      <Search size={18} />
+                    )}
+                  </div>
+                  <div>
+                    <h3>{request.type}</h3>
+                    <span className="request-id-sub">
+                      ID #{String(request.id).slice(0, 12).toUpperCase()}
+                    </span>
+                  </div>
+                </div>
 
                 <span
                   className={getStatusClass(
@@ -660,32 +692,53 @@ const ServiceRequests = ({ serviceRequests = [] }) => {
               </div>
 
 
-              <div className="request-details">
+              <div className="request-details-grid">
 
-                <p>
-                  Request ID: {request.id}
-                </p>
+                <div className="request-meta-cell">
+                  <span className="request-meta-label">
+                    <Calendar size={13} />
+                    Submitted
+                  </span>
+                  <strong>
+                    {formatDate(
+                      request.created_at ||
+                      request.date
+                    )}
+                  </strong>
+                </div>
 
-                <p>
-                  Submitted:{" "}
-                  {formatDate(
-                    request.created_at ||
-                    request.date
-                  )}
-                </p>
+                <div className="request-meta-cell">
+                  <span className="request-meta-label">
+                    <Clock size={13} />
+                    Schedule
+                  </span>
+                  <strong>
+                    {request.preferred_date
+                      ? formatDate(request.preferred_date)
+                      : request.preferred_time || "Pending schedule"}
+                  </strong>
+                </div>
 
-                <p>
-                  Status:{" "}
-                  {formatStatus(
-                    request.status
-                  )}
-                </p>
+                <div className="request-meta-cell">
+                  <span className="request-meta-label">
+                    <MapPin size={13} />
+                    Location
+                  </span>
+                  <strong>
+                    {request.city ||
+                      request.address ||
+                      request.street_address ||
+                      request.service_address ||
+                      "On file"}
+                  </strong>
+                </div>
 
               </div>
 
 
               <div className="request-view-details">
-                View Full Details →
+                <span>View Full Details</span>
+                <ArrowRight size={15} />
               </div>
 
             </div>
