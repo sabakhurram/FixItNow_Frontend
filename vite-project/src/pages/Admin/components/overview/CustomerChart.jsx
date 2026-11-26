@@ -51,7 +51,7 @@ function CustomerChart({ data, thisMonth }) {
 
                         <CartesianGrid
                             strokeDasharray="3 3"
-                            stroke="rgba(255,255,255,0.06)"
+                            stroke="rgba(10,14,26,0.08)"
                             vertical={false}
                         />
 
@@ -61,7 +61,7 @@ function CustomerChart({ data, thisMonth }) {
                             axisLine={false}
                             tickLine={false}
                             tick={{
-                                fill: "#666",
+                                fill: "#5B6478",
                                 fontSize: 11,
                             }}
                         />
@@ -71,7 +71,7 @@ function CustomerChart({ data, thisMonth }) {
                             axisLine={false}
                             tickLine={false}
                             tick={{
-                                fill: "#666",
+                                fill: "#5B6478",
                                 fontSize: 11,
                             }}
                         />
@@ -79,13 +79,14 @@ function CustomerChart({ data, thisMonth }) {
 
                         <Tooltip
                             cursor={{
-                                fill: "rgba(212,175,55,0.05)",
+                                fill: "rgba(255,199,44,0.12)",
                             }}
                             contentStyle={{
-                                background: "#161616",
-                                border: "1px solid rgba(212,175,55,0.25)",
-                                borderRadius: "10px",
-                                color: "#ffffff",
+                                background: "#FFFFFF",
+                                border: "1px solid rgba(10,14,26,0.10)",
+                                borderRadius: "12px",
+                                boxShadow: "0 12px 28px rgba(10,14,26,0.12)",
+                                color: "#0A0E1A",
                             }}
                             formatter={(value) => [
                                 value,
@@ -96,7 +97,7 @@ function CustomerChart({ data, thisMonth }) {
 
                         <Bar
                             dataKey="customers"
-                            fill="#D4AF37"
+                            fill="#F5A623"
                             radius={[5, 5, 0, 0]}
                             barSize={18}
                         />

@@ -1,3 +1,4 @@
+
 import {
     ClipboardCheck,
     Wrench,
@@ -8,7 +9,7 @@ import "./ServiceCards.css";
 
 function ServiceCards({
     onServiceSelect,
-    serviceData,
+    serviceData = {},
     loading
 }) {
 
@@ -34,67 +35,54 @@ function ServiceCards({
     ];
 
     return (
-        <div className="service-cards">
+        <div className="fixit-service-cards">
 
             {services.map((service) => {
 
                 const Icon = service.icon;
 
                 const requestCount =
-                    serviceData[service.id]?.length || 0;
+                    serviceData?.[service.id]?.length || 0;
 
                 return (
                     <button
                         key={service.id}
-                        className="service-card"
-                        onClick={() =>
-                            onServiceSelect(service.id)
-                        }
+                        type="button"
+                        className="fixit-service-card"
+                        onClick={() => onServiceSelect(service.id)}
                     >
 
-                        <div className="service-card-icon">
+                        <div className="fixit-service-icon">
+                            <Icon size={23} strokeWidth={1.9} />
+                        </div>
 
-                            <Icon
-                                size={24}
-                                strokeWidth={1.7}
-                            />
+                        <div className="fixit-service-content">
+
+                            <h2>{service.name}</h2>
+
+                            <p>{service.description}</p>
 
                         </div>
 
-                        <div className="service-card-content">
+                        <div className="fixit-service-footer">
 
-                            <h2>
-                                {service.name}
-                            </h2>
+                            <span className="fixit-request-count">
+                                {loading
+                                    ? "Loading..."
+                                    : `${requestCount} Request${
+                                        requestCount !== 1 ? "s" : ""
+                                    }`
+                                }
+                            </span>
 
-                            <p>
-                                {service.description}
-                            </p>
-
-                           <div className="service-card-footer">
-
-    <span className="service-request-count">
-        {loading
-            ? "Loading..."
-            : `${requestCount} Request${
-                requestCount !== 1
-                    ? "s"
-                    : ""
-            }`
-        }
-    </span>
-
-    <span className="service-card-link">
-        View →
-    </span>
-
-</div>
+                            <span className="fixit-service-link">
+                                View Details 
+                            </span>
 
                         </div>
 
                     </button>
                 );
-
             })}
 
         </div>

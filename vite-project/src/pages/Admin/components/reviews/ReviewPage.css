@@ -1,7 +1,11 @@
+/* =====================================================
+   ReviewPage.css  –  Light Theme
+   ===================================================== */
+
 .review-page {
   padding: 10px 0;
-  font-family: 'Poppins', sans-serif;
-  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #0A0E1A;
 }
 
 .review-toolbar {
@@ -11,20 +15,22 @@
 }
 
 .filter-tab {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.7);
+  background: #F7F7F7;
+  border: 1px solid rgba(10, 14, 26, 0.10);
+  color: #5B6478;
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 13px;
+  font-weight: 600;
   transition: all 0.2s ease;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .filter-tab.active, .filter-tab:hover {
-  background: rgba(239, 159, 39, 0.15);
-  border-color: #EF9F27;
-  color: #EF9F27;
+  background: rgba(255, 199, 44, 0.18);
+  border-color: #F5A623;
+  color: #9A5B00;
 }
 
 .review-grid {
@@ -34,13 +40,14 @@
 }
 
 .review-admin-card {
-  background: #0d1320;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  background: #FFFFFF;
+  border: 1px solid rgba(10, 14, 26, 0.08);
+  border-radius: 14px;
   padding: 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(10, 14, 26, 0.05);
 }
 
 .review-card-header {
@@ -53,12 +60,12 @@
 .author-title {
   font-weight: 600;
   font-size: 14px;
-  color: #ffffff;
+  color: #0A0E1A;
 }
 
 .author-email {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: #5B6478;
 }
 
 .stars-badge {
@@ -69,8 +76,9 @@
 .type-badge {
   display: inline-block;
   font-size: 11px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #EF9F27;
+  font-weight: 600;
+  background: rgba(255, 199, 44, 0.16);
+  color: #9A5B00;
   padding: 3px 8px;
   border-radius: 4px;
   margin-bottom: 12px;
@@ -79,8 +87,8 @@
 
 .review-comment {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.4;
+  color: rgba(10, 14, 26, 0.80);
+  line-height: 1.5;
   margin-bottom: 16px;
   flex-grow: 1;
 }
@@ -89,13 +97,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(10, 14, 26, 0.07);
   padding-top: 12px;
 }
 
 .review-date {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: #5B6478;
 }
 
 .review-actions {
@@ -116,21 +124,21 @@
 }
 
 .btn-approve.approved {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
+  background: rgba(6, 214, 160, 0.12);
+  color: #0D7A4E;
 }
 
 .btn-approve.pending {
-  background: rgba(239, 159, 39, 0.15);
-  color: #EF9F27;
+  background: rgba(255, 199, 44, 0.18);
+  color: #9A5B00;
 }
 
 .btn-delete {
   display: flex;
   align-items: center;
   gap: 4px;
-  background: rgba(239, 68, 68, 0.12);
-  color: #ef4444;
+  background: rgba(239, 68, 68, 0.10);
+  color: #C0392B;
   border: none;
   padding: 5px 10px;
   border-radius: 6px;
@@ -145,7 +153,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(10, 14, 26, 0.45);
+  backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,17 +162,19 @@
 }
 
 .modal-box {
-  background: #0d1320;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
+  background: #FFFFFF;
+  border: 1px solid rgba(10, 14, 26, 0.10);
+  border-radius: 16px;
   padding: 24px;
   width: 420px;
   max-width: 90%;
+  box-shadow: 0 20px 60px rgba(10, 14, 26, 0.18);
 }
 
 .modal-box h3 {
   margin-top: 0;
-  color: #EF9F27;
+  font-family: 'Space Grotesk', sans-serif;
+  color: #0A0E1A;
 }
 
 .form-group {
@@ -173,18 +184,20 @@
 .form-group label {
   display: block;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  color: #5B6478;
   margin-bottom: 4px;
 }
 
 .form-group input, .form-group select, .form-group textarea {
   width: 100%;
-  background: #111827;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  background: #F7F7F7;
+  border: 1px solid rgba(10, 14, 26, 0.12);
+  border-radius: 8px;
   padding: 8px 12px;
-  color: #ffffff;
+  color: #0A0E1A;
   box-sizing: border-box;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .modal-actions {
@@ -195,20 +208,21 @@
 }
 
 .btn-cancel {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  background: #F7F7F7;
+  border: 1px solid rgba(10, 14, 26, 0.12);
+  color: #5B6478;
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .btn-submit {
-  background: #EF9F27;
+  background: #F5A623;
   border: none;
-  color: #000000;
-  font-weight: 600;
+  color: #0A0E1A;
+  font-weight: 700;
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
 }

@@ -1,9 +1,8 @@
-/* =========================
-   PRODUCT TOOLBAR
-========================= */
+/* =========================================
+   PRODUCT TOOLBAR  –  Light Theme
+========================================= */
 
 .product-toolbar {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -11,39 +10,28 @@
     margin: 24px 0;
 }
 
-
 /* =========================
    SEARCH
 ========================= */
 
 .product-search {
     flex: 1;
-
     max-width: 420px;
-
     height: 42px;
-
     display: flex;
     align-items: center;
-
     gap: 9px;
-
     padding: 0 13px;
-
-    background: #111111;
-
-    border: 1px solid rgba(255, 255, 255, 0.07);
-
+    background: #FFFFFF;
+    border: 1px solid rgba(10, 14, 26, 0.10);
     border-radius: 10px;
-
-    color: #666;
-
+    color: #5B6478;
     transition: 0.25s ease;
 }
 
 .product-search:focus-within {
-    border-color: #d4af37;
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
+    border-color: #F5A623;
+    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.12);
 }
 
 .product-search svg {
@@ -53,21 +41,17 @@
 .product-search input {
     width: 100%;
     height: 100%;
-
     border: none;
     outline: none;
-
     background: transparent;
-
-    color: #f1f1f1;
-
+    color: #0A0E1A;
     font-size: 14px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .product-search input::placeholder {
-    color: #686e78;
+    color: #8892A4;
 }
-
 
 /* =========================
    TOOLBAR ACTIONS
@@ -77,16 +61,11 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-
     gap: 10px;
-
     margin-left: auto;
-
     flex-shrink: 0;
-
     white-space: nowrap;
 }
-
 
 /* =========================
    FILTER + SORT WRAPPERS
@@ -97,62 +76,48 @@
     position: relative;
 }
 
-
 /* =========================
    FILTER + SORT BUTTONS
 ========================= */
 
-
- .product-filter-btn,
+.product-filter-btn,
 .product-sort-btn {
     height: 42px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     gap: 7px;
-
     padding: 0 13px;
-
-    background: #111111;
-
-    border: 1px solid rgba(255, 255, 255, 0.07);
-
+    background: #FFFFFF;
+    border: 1px solid rgba(10, 14, 26, 0.10);
     border-radius: 10px;
-
-    color: #999;
-
+    color: #5B6478;
     font-size: 12px;
-
+    font-weight: 500;
     cursor: pointer;
-
     transition: 0.25s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
-
 
 .product-filter-btn:hover,
 .product-sort-btn:hover {
-    color: #ffffff;
-
-    border-color: rgba(212, 175, 55, 0.35);
+    color: #0A0E1A;
+    border-color: rgba(245, 166, 35, 0.45);
 }
 
 .product-filter-btn svg,
 .product-sort-btn svg {
-    color: #9da3ad;
+    color: #5B6478;
 }
-
 
 /* =========================
    ACTIVE FILTER
 ========================= */
 
 .product-filter-btn.active {
-    border-color: #d4af37;
-    color: #d4af37;
+    border-color: #F5A623;
+    color: #9A5B00;
 }
-
 
 /* =========================
    DROPDOWN MENUS
@@ -161,25 +126,16 @@
 .product-filter-menu,
 .product-sort-menu {
     position: absolute;
-
     top: calc(100% + 8px);
     right: 0;
-
     min-width: 165px;
-
     padding: 6px;
-
-    background: #111318;
-
-    border: 1px solid #292e37;
+    background: #FFFFFF;
+    border: 1px solid rgba(10, 14, 26, 0.10);
     border-radius: 10px;
-
-    box-shadow:
-        0 14px 35px rgba(0, 0, 0, 0.4);
-
+    box-shadow: 0 14px 35px rgba(10, 14, 26, 0.12);
     z-index: 50;
 }
-
 
 /* =========================
    DROPDOWN BUTTONS
@@ -188,35 +144,25 @@
 .product-filter-menu button,
 .product-sort-menu button {
     width: 100%;
-
     display: flex;
     align-items: center;
-
     padding: 9px 11px;
-
     border: none;
     border-radius: 7px;
-
     background: transparent;
-
-    color: #aeb3bc;
-
+    color: #5B6478;
     font-size: 13px;
     text-align: left;
-
     cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .product-filter-menu button:hover,
 .product-sort-menu button:hover {
-    background: #1b1f26;
-    color: #ffffff;
+    background: rgba(10, 14, 26, 0.04);
+    color: #0A0E1A;
 }
-
 
 /* =========================
    SELECTED OPTION
@@ -224,17 +170,53 @@
 
 .product-filter-menu button.selected,
 .product-sort-menu button.selected {
-    background: rgba(212, 175, 55, 0.1);
-    color: #d4af37;
+    background: rgba(255, 199, 44, 0.16);
+    color: #9A5B00;
+    font-weight: 600;
 }
 
+/* =========================
+   ADD PRODUCT BUTTON
+========================= */
+
+.add-product-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 42px;
+    padding: 0 14px;
+    flex-shrink: 0;
+    border: 1px solid rgba(245, 166, 35, 0.35);
+    border-radius: 10px;
+    background: rgba(255, 199, 44, 0.16);
+    color: #9A5B00;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.add-product-btn:hover {
+    background: rgba(255, 199, 44, 0.24);
+    border-color: rgba(245, 166, 35, 0.55);
+    transform: translateY(-1px);
+}
+
+.add-product-btn:active {
+    transform: translateY(0);
+}
 
 /* =========================
    TABLET
 ========================= */
 
 @media (max-width: 768px) {
-
     .product-toolbar {
         flex-direction: column;
         align-items: stretch;
@@ -259,16 +241,13 @@
     .product-sort-btn {
         width: 100%;
     }
-
 }
-
 
 /* =========================
    MOBILE
 ========================= */
 
 @media (max-width: 480px) {
-
     .product-toolbar {
         margin: 18px 0;
     }
@@ -292,49 +271,4 @@
     .product-sort-menu {
         min-width: 150px;
     }
-
-}
-.add-product-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 7px;
-
-    height: 42px;
-
-    padding: 0 14px;
-
-    flex-shrink: 0;
-
-    border: 1px solid rgba(212, 175, 55, 0.35);
-    border-radius: 10px;
-
-    background: rgba(212, 175, 55, 0.10);
-
-    color: #d4af37;
-
-    font-size: 12px;
-    font-weight: 500;
-
-    white-space: nowrap;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.add-product-btn:hover {
-    background: rgba(212, 175, 55, 0.16);
-
-    border-color: rgba(212, 175, 55, 0.55);
-
-    transform: translateY(-1px);
-}
-
-.add-product-btn:active {
-    transform: translateY(0);
 }

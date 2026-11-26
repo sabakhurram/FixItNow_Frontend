@@ -58,20 +58,21 @@ const totalRequests = serviceChart?.total || 0;
                                 stroke="none"
                             >
 
-                                <Cell fill="#D4AF37" />
-                                <Cell fill="#8C7A3B" />
-                                <Cell fill="#555555" />
-                                <Cell fill="#292929" />
+                                <Cell fill="#F5A623" />
+                                <Cell fill="#2E7DD1" />
+                                <Cell fill="#06D6A0" />
+                                <Cell fill="#B8BEC9" />
 
                             </Pie>
 
 
                             <Tooltip
                                 contentStyle={{
-                                    background: "#161616",
-                                    border: "1px solid rgba(212,175,55,0.25)",
-                                    borderRadius: "10px",
-                                    color: "#ffffff",
+                                    background: "#FFFFFF",
+                                    border: "1px solid rgba(10,14,26,0.10)",
+                                    borderRadius: "12px",
+                                    boxShadow: "0 12px 28px rgba(10,14,26,0.12)",
+                                    color: "#0A0E1A",
                                 }}
                             />
 

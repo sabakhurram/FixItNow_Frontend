@@ -4,44 +4,91 @@
   align-items: center;
 }
 
+
+/* ==========================================
+   FIXITNOW NOTIFICATION BELL
+========================================== */
+
+.notif-bell-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
 .notif-bell-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: #64748b;
-  transition: all 0.2s ease;
+    position: relative !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    padding: 0 !important;
+
+    border: none !important;
+    border-radius: 50% !important;
+
+    background: transparent !important;
+    color: #64748b !important;
+
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Remove unwanted decorative circles */
+.notif-bell-btn::before,
+.notif-bell-btn::after {
+    content: none !important;
+    display: none !important;
 }
 
 .notif-bell-btn:hover {
-  background: rgba(2, 132, 199, 0.08);
-  color: #0284c7;
+    background: #FFF3D6 !important;
+    color: #B66A00 !important;
 }
 
-.notif-badge {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  background: #ef4444;
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
-  min-width: 18px;
-  height: 18px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-  border: 2px solid #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+/* Bell icon */
+.notif-bell-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
 }
+
+/* Orange notification count */
+.notif-badge {
+    position: absolute !important;
+
+    top: 0px !important;
+    right: 0px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    min-width: 19px !important;
+    height: 19px !important;
+    padding: 0 5px !important;
+
+    border: 2px solid #FFFFFF !important;
+    border-radius: 20px !important;
+
+    background: #F5A623 !important;
+    color: #171717 !important;
+
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+
+    box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+
+    z-index: 5;
+    white-space: nowrap;
+}
+
 
 .notif-dropdown {
   position: absolute;

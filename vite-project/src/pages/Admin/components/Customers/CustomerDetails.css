@@ -1,11 +1,15 @@
+/* =========================================
+   CUSTOMER DETAILS MODAL  –  Light Theme
+========================================= */
+
 .customer-modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
+  background: rgba(10, 14, 26, 0.45);
+  backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,15 +22,15 @@
   width: 820px;
   max-width: 95vw;
   max-height: 88vh;
-  background: #080d18;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #FFFFFF;
+  border: 1px solid rgba(10, 14, 26, 0.10);
   border-radius: 20px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 25px 50px rgba(10, 14, 26, 0.18);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-family: 'Poppins', sans-serif;
-  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #0A0E1A;
   animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -40,7 +44,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 24px 28px 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(10, 14, 26, 0.08);
 }
 
 .customer-header-left {
@@ -53,32 +57,34 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #EF9F27, #b87a14);
-  color: #000000;
+  background: linear-gradient(135deg, #F5A623, #FFD166);
+  color: #0A0E1A;
   font-weight: 700;
   font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(239, 159, 39, 0.3);
+  box-shadow: 0 4px 15px rgba(245, 166, 35, 0.25);
 }
 
 .customer-header-left h2 {
   margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 1.35rem;
   font-weight: 700;
+  color: #0A0E1A;
 }
 
 .customer-modal-sub {
   margin: 4px 0 0 0;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: #5B6478;
 }
 
 .customer-modal-close {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: #F7F7F7;
+  border: 1px solid rgba(10, 14, 26, 0.10);
+  color: #5B6478;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -90,8 +96,8 @@
 }
 
 .customer-modal-close:hover {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  color: #C0392B;
 }
 
 /* Modal Tabs */
@@ -99,8 +105,8 @@
   display: flex;
   gap: 12px;
   padding: 16px 28px 0;
-  background: rgba(255, 255, 255, 0.02);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: #F7F7F7;
+  border-bottom: 1px solid rgba(10, 14, 26, 0.08);
 }
 
 .modal-tab {
@@ -110,7 +116,7 @@
   background: transparent;
   border: none;
   border-bottom: 3px solid transparent;
-  color: rgba(255, 255, 255, 0.6);
+  color: #5B6478;
   padding: 12px 16px;
   font-size: 0.88rem;
   font-weight: 600;
@@ -119,12 +125,12 @@
 }
 
 .modal-tab:hover {
-  color: #ffffff;
+  color: #0A0E1A;
 }
 
 .modal-tab.active {
-  color: #EF9F27;
-  border-bottom-color: #EF9F27;
+  color: #9A5B00;
+  border-bottom-color: #F5A623;
 }
 
 /* Modal Body Content */
@@ -137,7 +143,7 @@
 .activity-loading, .tab-empty {
   padding: 40px 20px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.45);
+  color: #5B6478;
   font-size: 0.9rem;
 }
 
@@ -148,8 +154,8 @@
 }
 
 .activity-item-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #F7F7F7;
+  border: 1px solid rgba(10, 14, 26, 0.08);
   border-radius: 14px;
   padding: 16px;
   display: flex;
@@ -157,10 +163,10 @@
   justify-content: space-between;
 }
 
-.activity-item-card.inspection-border { border-left: 4px solid #EF9F27; }
-.activity-item-card.repair-border { border-left: 4px solid #3b82f6; }
-.activity-item-card.amc-border { border-left: 4px solid #10b981; }
-.activity-item-card.order-border { border-left: 4px solid #8b5cf6; }
+.activity-item-card.inspection-border { border-left: 4px solid #F5A623; }
+.activity-item-card.repair-border { border-left: 4px solid #2E7DD1; }
+.activity-item-card.amc-border { border-left: 4px solid #06D6A0; }
+.activity-item-card.order-border { border-left: 4px solid #7C3AED; }
 
 .card-top {
   display: flex;
@@ -178,14 +184,14 @@
   border-radius: 6px;
 }
 
-.tag-inspection { background: rgba(239, 159, 39, 0.15); color: #EF9F27; }
-.tag-repair { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
-.tag-amc { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-.tag-order { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; }
+.tag-inspection { background: rgba(255, 199, 44, 0.18); color: #9A5B00; }
+.tag-repair { background: rgba(46, 125, 209, 0.12); color: #2E7DD1; }
+.tag-amc { background: rgba(6, 214, 160, 0.14); color: #0D7A4E; }
+.tag-order { background: rgba(124, 58, 237, 0.12); color: #7C3AED; }
 
 .card-body {
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #0A0E1A;
   line-height: 1.5;
 }
 
@@ -195,19 +201,21 @@
 
 .card-body .notes {
   font-style: italic;
-  color: rgba(255, 255, 255, 0.5);
+  color: #5B6478;
   margin-top: 8px;
 }
 
 .order-price {
   font-size: 0.95rem;
-  color: #EF9F27;
+  color: #9A5B00;
+  font-weight: 700;
   margin-bottom: 6px !important;
 }
 
 .order-items-list {
   margin-top: 8px;
-  background: rgba(0, 0, 0, 0.2);
+  background: #FFFFFF;
+  border: 1px solid rgba(10, 14, 26, 0.06);
   padding: 8px 12px;
   border-radius: 8px;
 }
@@ -216,14 +224,14 @@
   margin: 4px 0 0 0;
   padding-left: 16px;
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: #5B6478;
 }
 
 .card-foot {
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: #5B6478;
   margin-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  border-top: 1px solid rgba(10, 14, 26, 0.06);
   padding-top: 8px;
 }
 
@@ -235,8 +243,8 @@
 }
 
 .info-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #F7F7F7;
+  border: 1px solid rgba(10, 14, 26, 0.08);
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -245,39 +253,39 @@
 }
 
 .info-card svg {
-  color: #EF9F27;
+  color: #9A5B00;
 }
 
 .info-card span {
   display: block;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: #5B6478;
 }
 
 .info-card strong {
   display: block;
   font-size: 0.9rem;
-  color: #ffffff;
+  color: #0A0E1A;
   margin-top: 2px;
 }
 
 /* Modal Footer */
 .customer-modal-footer {
   padding: 16px 28px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(10, 14, 26, 0.08);
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  background: rgba(255, 255, 255, 0.01);
+  background: #F7F7F7;
 }
 
 .btn-email-customer {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(239, 159, 39, 0.15);
-  border: 1px solid #EF9F27;
-  color: #EF9F27;
+  background: rgba(255, 199, 44, 0.16);
+  border: 1px solid #F5A623;
+  color: #9A5B00;
   padding: 8px 16px;
   border-radius: 8px;
   font-weight: 600;
@@ -286,11 +294,12 @@
 }
 
 .btn-close-modal {
-  background: rgba(255, 255, 255, 0.08);
-  border: none;
-  color: #ffffff;
+  background: #FFFFFF;
+  border: 1px solid rgba(10, 14, 26, 0.12);
+  color: #0A0E1A;
   padding: 8px 20px;
   border-radius: 8px;
   font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
 }

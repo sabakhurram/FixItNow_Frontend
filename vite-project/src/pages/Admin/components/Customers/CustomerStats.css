@@ -4,14 +4,10 @@
 
 .customer-stats-grid {
     display: grid;
-
     grid-template-columns: repeat(4, 1fr);
-
     gap: 16px;
-
     margin-bottom: 24px;
 }
-
 
 /* =========================================
    STAT CARD
@@ -19,28 +15,19 @@
 
 .customer-stat-card {
     min-width: 0;
-
     padding: 18px;
-
-    background: #111111;
-
-    border: 1px solid rgba(255, 255, 255, 0.07);
-
+    background: #FFFFFF;
+    border: 1px solid rgba(10, 14, 26, 0.08);
     border-radius: 14px;
-
+    box-shadow: 0 1px 3px rgba(10, 14, 26, 0.05);
     transition: 0.25s ease;
 }
 
-
 .customer-stat-card:hover {
-    border-color: rgba(212, 175, 55, 0.3);
-
+    border-color: rgba(245, 166, 35, 0.40);
     transform: translateY(-2px);
-
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 25px rgba(10, 14, 26, 0.08);
 }
-
 
 /* =========================================
    ICON
@@ -49,21 +36,14 @@
 .customer-stat-icon {
     width: 38px;
     height: 38px;
-
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     border-radius: 10px;
-
-    background: rgba(212, 175, 55, 0.1);
-
-    color: #d4af37;
-
+    background: rgba(255, 199, 44, 0.16);
+    color: #9A5B00;
     margin-bottom: 16px;
 }
-
 
 /* =========================================
    CONTENT
@@ -71,76 +51,56 @@
 
 .customer-stat-content p {
     margin: 0;
-
-    color: #777777;
-
+    color: #5B6478;
     font-size: 12px;
 }
 
-
 .customer-stat-content h3 {
     margin: 5px 0 5px;
-
-    color: #ffffff;
-
+    color: #0A0E1A;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 24px;
-
     font-weight: 600;
-
     letter-spacing: -0.5px;
 }
 
-
 .customer-stat-content span {
-    color: #555555;
-
+    color: #5B6478;
     font-size: 11px;
 }
-
 
 /* =========================================
    TABLET
 ========================================= */
 
 @media (max-width: 1100px) {
-
     .customer-stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
 }
-
 
 /* =========================================
    MOBILE
 ========================================= */
 
 @media (max-width: 767px) {
-
     .customer-stats-grid {
         grid-template-columns: 1fr;
-
         gap: 12px;
-
         margin-bottom: 18px;
     }
-
 
     .customer-stat-card {
         padding: 16px;
     }
 
-
     .customer-stat-icon {
         width: 36px;
         height: 36px;
-
         margin-bottom: 12px;
     }
-
 
     .customer-stat-content h3 {
         font-size: 22px;
     }
-
 }

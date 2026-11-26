@@ -1,10 +1,11 @@
 /* ========================================
-   Technician Page
+   Technician Page  –  Light Theme
 ======================================== */
 
 .technician-page {
   width: 100%;
-  color: #f5f5f5;
+  color: #0A0E1A;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* ========================================
@@ -19,6 +20,7 @@
   padding: 20px 0;
   background: transparent;
 }
+
 .technician-title-row {
   display: flex;
   align-items: center;
@@ -27,20 +29,21 @@
 }
 
 .technician-title-row svg {
-  color: #d4af37;
+  color: #9A5B00;
 }
 
 .technician-title-row h1 {
   margin: 0;
-  color: #ffffff;
+  color: #0A0E1A;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 25px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.4px;
 }
 
 .technician-header > div > p {
   margin: 0;
-  color: #858d9d;
+  color: #5B6478;
   font-size: 13px;
 }
 
@@ -54,13 +57,13 @@
   justify-content: center;
   gap: 8px;
   padding: 11px 17px;
-  border: 1px solid #d4af37;
+  border: 1px solid #F5A623;
   border-radius: 8px;
-  background: #d4af37;
-  color: #080b10;
+  background: #F5A623;
+  color: #0A0E1A;
   font-family: inherit;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition:
     background 0.2s ease,
@@ -69,8 +72,8 @@
 }
 
 .add-technician-btn:hover {
-  background: #e1bd45;
-  border-color: #e1bd45;
+  background: #FFD166;
+  border-color: #FFD166;
   transform: translateY(-1px);
 }
 
@@ -81,11 +84,12 @@
 .add-technician-btn.secondary {
   margin-top: 8px;
   background: transparent;
-  color: #d4af37;
+  color: #9A5B00;
+  border-color: rgba(245, 166, 35, 0.35);
 }
 
 .add-technician-btn.secondary:hover {
-  background: rgba(212, 175, 55, 0.08);
+  background: rgba(255, 199, 44, 0.14);
 }
 
 /* ========================================
@@ -103,15 +107,15 @@
 }
 
 .technician-message.error {
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  background: rgba(239, 68, 68, 0.07);
-  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  background: rgba(239, 68, 68, 0.08);
+  color: #C0392B;
 }
 
 .technician-message.success {
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  background: rgba(34, 197, 94, 0.07);
-  color: #86efac;
+  border: 1px solid rgba(6, 214, 160, 0.25);
+  background: rgba(6, 214, 160, 0.12);
+  color: #0D7A4E;
 }
 
 /* ========================================
@@ -126,33 +130,28 @@
   min-width: 190px;
   padding: 14px 18px;
   margin-bottom: 20px;
-
-  background: #111111;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #FFFFFF;
+  border: 1px solid rgba(10, 14, 26, 0.08);
   border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(10, 14, 26, 0.05);
 }
 
 .technician-summary-icon {
   width: 36px;
   height: 36px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 50%;
-
-  background: rgba(212, 175, 55, 0.12);
-  border: 1px solid rgba(212, 175, 55, 0.15);
-
-  color: #d4af37;
+  background: rgba(255, 199, 44, 0.18);
+  border: 1px solid rgba(245, 166, 35, 0.22);
+  color: #9A5B00;
 }
 
 .technician-summary span {
   display: block;
   margin-bottom: 3px;
-
-  color: #666666;
+  color: #5B6478;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -160,21 +159,23 @@
 
 .technician-summary strong {
   display: block;
-
-  color: #ffffff;
+  color: #0A0E1A;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 700;
 }
+
 /* ========================================
    Technician Section
 ======================================== */
 
 .technician-section {
   width: 100%;
-  background: #111111;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #FFFFFF;
+  border: 1px solid rgba(10, 14, 26, 0.08);
   border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(10, 14, 26, 0.05);
 }
 
 .technician-section-header {
@@ -182,21 +183,24 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.015);
+  border-bottom: 1px solid rgba(10, 14, 26, 0.08);
+  background: #F7F7F7;
 }
+
 .technician-section-header h2 {
   margin: 0 0 5px;
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 500;
+  color: #0A0E1A;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .technician-section-header p {
   margin: 0;
-  color: #555555;
-  font-size: 10px;
+  color: #5B6478;
+  font-size: 11px;
 }
+
 /* ========================================
    Table
 ======================================== */
@@ -211,47 +215,17 @@
   border-collapse: collapse;
   min-width: 700px;
 }
-.technician-table th {
-  padding: 13px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  color: #737c8c;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.7px;
-  text-align: left;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
 
-.technician-table td {
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
-  color: #c8ccd4;
-  font-size: 12px;
-  vertical-align: middle;
-}
-
-.technician-table tbody tr {
-  transition: background 0.2s ease;
-}
-
-.technician-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.technician-table tbody tr:last-child td {
-  border-bottom: none;
-}
 .technician-table thead {
-  background: rgba(255, 255, 255, 0.015);
+  background: #F7F7F7;
 }
 
 .technician-table th {
   padding: 14px 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  color: #666666;
-  font-size: 10px;
-  font-weight: 500;
+  border-bottom: 1px solid rgba(10, 14, 26, 0.08);
+  color: #5B6478;
+  font-size: 10.5px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   text-align: left;
@@ -260,9 +234,9 @@
 
 .technician-table td {
   padding: 15px 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
-  color: #ffffff;
-  font-size: 12px;
+  border-bottom: 1px solid rgba(10, 14, 26, 0.06);
+  color: #0A0E1A;
+  font-size: 12.5px;
   vertical-align: middle;
 }
 
@@ -271,12 +245,13 @@
 }
 
 .technician-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(10, 14, 26, 0.03);
 }
 
 .technician-table tbody tr:last-child td {
   border-bottom: none;
 }
+
 /* ========================================
    Technician User
 ======================================== */
@@ -295,25 +270,25 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 50%;
-  background: rgba(212, 175, 55, 0.12);
-  border: 1px solid rgba(212, 175, 55, 0.15);
-  color: #d4af37;
+  background: rgba(255, 199, 44, 0.18);
+  border: 1px solid rgba(245, 166, 35, 0.22);
+  color: #9A5B00;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .technician-user strong {
   display: block;
   margin-bottom: 3px;
-  color: #eeeeee;
-  font-size: 12px;
-  font-weight: 500;
+  color: #0A0E1A;
+  font-size: 12.5px;
+  font-weight: 600;
 }
 
 .technician-user span {
   display: block;
-  color: #626b7b;
-  font-size: 10px;
+  color: #5B6478;
+  font-size: 10.5px;
 }
 
 /* ========================================
@@ -325,14 +300,15 @@
   align-items: center;
   gap: 7px;
   min-width: 210px;
-  color: #777777;
+  color: #5B6478;
   white-space: nowrap;
 }
 
 .technician-email svg {
   flex-shrink: 0;
-  color: #777777;
+  color: #5B6478;
 }
+
 /* ========================================
    Role
 ======================================== */
@@ -343,15 +319,15 @@
   gap: 6px;
   padding: 5px 9px;
   border-radius: 7px;
-  background: rgba(212, 175, 55, 0.08);
-  color: #d4af37;
+  background: rgba(255, 199, 44, 0.16);
+  color: #9A5B00;
   font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
 }
 
 .technician-role svg {
-  color: #d4af37;
+  color: #9A5B00;
 }
 
 /* ========================================
@@ -364,12 +340,12 @@
   align-items: center;
   justify-content: center;
   gap: 9px;
-  color: #7d8594;
+  color: #5B6478;
   font-size: 12px;
 }
 
 .technician-loading .spin {
-  color: #d4af37;
+  color: #9A5B00;
 }
 
 /* ========================================
@@ -388,20 +364,20 @@
 
 .technician-empty > svg {
   margin-bottom: 12px;
-  color: #555e6e;
+  color: rgba(10, 14, 26, 0.25);
 }
 
 .technician-empty h3 {
   margin: 0 0 6px;
-  color: #dfe2e7;
+  color: #0A0E1A;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .technician-empty p {
   margin: 0 0 10px;
-  color: #737c8b;
-  font-size: 11px;
+  color: #5B6478;
+  font-size: 11.5px;
 }
 
 /* ========================================
@@ -416,8 +392,8 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(6px);
+  background: rgba(10, 14, 26, 0.45);
+  backdrop-filter: blur(4px);
 }
 
 /* ========================================
@@ -429,10 +405,10 @@
   max-width: 450px;
   max-height: calc(100vh - 40px);
   overflow-y: auto;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 14px;
-  background: #0b1019;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(10, 14, 26, 0.10);
+  border-radius: 16px;
+  background: #FFFFFF;
+  box-shadow: 0 25px 70px rgba(10, 14, 26, 0.18);
 }
 
 /* ========================================
@@ -445,20 +421,21 @@
   justify-content: space-between;
   gap: 20px;
   padding: 20px 22px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(10, 14, 26, 0.08);
 }
 
 .technician-modal-header h2 {
   margin: 0 0 5px;
-  color: #ffffff;
+  color: #0A0E1A;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .technician-modal-header p {
   margin: 0;
-  color: #747d8c;
-  font-size: 11px;
+  color: #5B6478;
+  font-size: 11.5px;
 }
 
 .technician-close-btn {
@@ -468,17 +445,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(10, 14, 26, 0.10);
   border-radius: 7px;
-  background: transparent;
-  color: #818a99;
+  background: #F7F7F7;
+  color: #5B6478;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .technician-close-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background: rgba(10, 14, 26, 0.08);
+  color: #0A0E1A;
 }
 
 .technician-close-btn:disabled {
@@ -501,9 +478,9 @@
 .form-group label {
   display: block;
   margin-bottom: 7px;
-  color: #c4c9d2;
-  font-size: 11px;
-  font-weight: 500;
+  color: #0A0E1A;
+  font-size: 11.5px;
+  font-weight: 600;
 }
 
 .form-group input {
@@ -511,24 +488,25 @@
   box-sizing: border-box;
   padding: 11px 12px;
   outline: none;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 7px;
-  background: #080c13;
-  color: #ffffff;
+  border: 1px solid rgba(10, 14, 26, 0.12);
+  border-radius: 8px;
+  background: #F7F7F7;
+  color: #0A0E1A;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 12.5px;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
 }
 
 .form-group input::placeholder {
-  color: #555e6c;
+  color: #8892A4;
 }
 
 .form-group input:focus {
-  border-color: rgba(212, 175, 55, 0.55);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.06);
+  border-color: #F5A623;
+  box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.12);
+  background: #FFFFFF;
 }
 
 .form-group input:disabled {
@@ -546,18 +524,18 @@
   gap: 8px;
   margin: 4px 0 17px;
   padding: 10px 11px;
-  border: 1px solid rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(245, 166, 35, 0.25);
   border-radius: 7px;
-  background: rgba(212, 175, 55, 0.04);
-  color: #8f96a4;
-  font-size: 10px;
+  background: rgba(255, 199, 44, 0.12);
+  color: #5B6478;
+  font-size: 10.5px;
   line-height: 1.5;
 }
 
 .technician-form-note svg {
   flex-shrink: 0;
   margin-top: 1px;
-  color: #d4af37;
+  color: #9A5B00;
 }
 
 /* ========================================
@@ -570,10 +548,10 @@
   gap: 7px;
   margin-bottom: 15px;
   padding: 10px 11px;
-  border: 1px solid rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.22);
   border-radius: 7px;
-  background: rgba(239, 68, 68, 0.06);
-  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.08);
+  color: #C0392B;
   font-size: 11px;
 }
 
@@ -596,23 +574,23 @@
 .create-technician-btn {
   min-height: 37px;
   padding: 9px 15px;
-  border-radius: 7px;
+  border-radius: 8px;
   font-family: inherit;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .cancel-btn {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: transparent;
-  color: #9299a7;
+  border: 1px solid rgba(10, 14, 26, 0.12);
+  background: #F7F7F7;
+  color: #5B6478;
 }
 
 .cancel-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background: rgba(10, 14, 26, 0.06);
+  color: #0A0E1A;
 }
 
 .create-technician-btn {
@@ -621,14 +599,15 @@
   justify-content: center;
   gap: 7px;
   min-width: 140px;
-  border: 1px solid #d4af37;
-  background: #d4af37;
-  color: #080b10;
+  border: 1px solid #F5A623;
+  background: #F5A623;
+  color: #0A0E1A;
+  font-weight: 700;
 }
 
 .create-technician-btn:hover:not(:disabled) {
-  background: #e1bd45;
-  border-color: #e1bd45;
+  background: #FFD166;
+  border-color: #FFD166;
 }
 
 .cancel-btn:disabled,
@@ -649,7 +628,6 @@
   from {
     transform: rotate(0deg);
   }
-
   to {
     transform: rotate(360deg);
   }

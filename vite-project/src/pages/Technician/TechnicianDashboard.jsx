@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -27,8 +27,21 @@ import {
   FileText,
   Loader2,
   RefreshCw,
-  Sparkles
+  Sparkles,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
+import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip
+} from "recharts";
 
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
@@ -44,6 +57,234 @@ import {
 } from "../../api/technicianApi";
 
 import "./TechnicianDashboard.css";
+
+/* ------------------------------------------------------------
+   Small helpers (display only)
+------------------------------------------------------------ */
+
+const STATUS_COLORS = {
+  assigned: "#F5A623",
+  in_progress: "#2E7DD1",
+  completed: "#06D6A0",
+  other: "#B8BEC9"
+};
+
+const STATUS_LABELS = {
+  assigned: "Assigned",
+  in_progress: "In Progress",
+  completed: "Completed",
+  other: "Other"
+};
+
+const pad = (n) => String(n).padStart(2, "0");
+
+const keyFromDate = (d) =>
+  `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+// Turns a job date (plain date or ISO timestamp) into a local YYYY-MM-DD key
+const toDateKey = (value) => {
+  if (!value) return "";
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  return keyFromDate(d);
+};
+
+const percent = (part, total) =>
+  total > 0 ? Math.min(100, Math.round((part / total) * 100)) : 0;
+
+const greeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+};
+
+const JOB_STEPS = ["assigned", "in_progress", "completed"];
+
+/* ------------------------------------------------------------
+   Schedule calendar: month view with dots on days that have jobs
+------------------------------------------------------------ */
+
+const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
+
+const ScheduleCalendar = ({ services, onViewDetails }) => {
+  const today = new Date();
+  const todayKey = keyFromDate(today);
+
+  const [month, setMonth] = useState(
+    new Date(today.getFullYear(), today.getMonth(), 1)
+  );
+  const [selectedKey, setSelectedKey] = useState(todayKey);
+
+  const jobsByDate = useMemo(() => {
+    const map = {};
+    services.forEach((service) => {
+      const key = toDateKey(service.preferredDate);
+      if (!key) return;
+      if (!map[key]) map[key] = [];
+      map[key].push(service);
+    });
+    return map;
+  }, [services]);
+
+  const year = month.getFullYear();
+  const monthIndex = month.getMonth();
+  const firstWeekday = new Date(year, monthIndex, 1).getDay();
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+
+  const cells = [
+    ...Array(firstWeekday).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1)
+  ];
+
+  const monthLabel = month.toLocaleDateString(undefined, {
+    month: "long",
+    year: "numeric"
+  });
+
+  const selectedJobs = jobsByDate[selectedKey] || [];
+  const [sy, sm, sd] = selectedKey.split("-").map(Number);
+  const selectedLabel = new Date(sy, sm - 1, sd).toLocaleDateString(undefined, {
+    weekday: "long",
+    day: "numeric",
+    month: "short"
+  });
+
+  const goToToday = () => {
+    setMonth(new Date(today.getFullYear(), today.getMonth(), 1));
+    setSelectedKey(todayKey);
+  };
+
+  return (
+    <div className="schedule-calendar">
+      <div className="calendar-head">
+        <h3>Schedule</h3>
+
+        <div className="calendar-nav">
+          <button
+            type="button"
+            aria-label="Previous month"
+            onClick={() => setMonth(new Date(year, monthIndex - 1, 1))}
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <span>{monthLabel}</span>
+          <button
+            type="button"
+            aria-label="Next month"
+            onClick={() => setMonth(new Date(year, monthIndex + 1, 1))}
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+
+      <div className="calendar-weekdays" aria-hidden="true">
+        {WEEKDAYS.map((d, i) => (
+          <span key={i}>{d}</span>
+        ))}
+      </div>
+
+      <div className="calendar-grid">
+        {cells.map((day, i) => {
+          if (!day) return <span key={`empty-${i}`} className="calendar-empty" />;
+
+          const key = `${year}-${pad(monthIndex + 1)}-${pad(day)}`;
+          const jobs = jobsByDate[key] || [];
+          const hasActive = jobs.some(
+            (j) => j.status !== "completed" && j.status !== "cancelled"
+          );
+
+          return (
+            <button
+              type="button"
+              key={key}
+              onClick={() => setSelectedKey(key)}
+              className={[
+                "calendar-day",
+                key === todayKey ? "is-today" : "",
+                key === selectedKey ? "is-selected" : "",
+                jobs.length ? "has-jobs" : ""
+              ].join(" ")}
+              aria-label={`${day} ${monthLabel}, ${jobs.length} jobs`}
+              aria-pressed={key === selectedKey}
+            >
+              <span>{day}</span>
+              {jobs.length > 0 && (
+                <i className={hasActive ? "dot-active" : "dot-done"} />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="calendar-day-list">
+        <div className="calendar-day-list__head">
+          <strong>{selectedLabel}</strong>
+          <span>
+            {selectedJobs.length} {selectedJobs.length === 1 ? "job" : "jobs"}
+          </span>
+          {selectedKey !== todayKey && (
+            <button type="button" onClick={goToToday}>
+              Today
+            </button>
+          )}
+        </div>
+
+        {selectedJobs.length === 0 ? (
+          <p className="calendar-day-list__empty">No jobs scheduled for this day.</p>
+        ) : (
+          <ul>
+            {selectedJobs.map((job) => (
+              <li key={job.id}>
+                <button type="button" onClick={() => onViewDetails(job)}>
+                  <span className="calendar-job__time">
+                    {job.preferredTime || "Flexible"}
+                  </span>
+                  <span className="calendar-job__info">
+                    <strong>{job.title}</strong>
+                    <small>{job.customerName}</small>
+                  </span>
+                  <span className={`status-badge ${job.status}`}>
+                    {String(job.status).replace("_", " ")}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/* ------------------------------------------------------------
+   Loading placeholders
+------------------------------------------------------------ */
+
+const DashboardSkeleton = () => (
+  <div className="dash-skeleton" aria-busy="true" aria-label="Loading dashboard">
+    <div className="skeleton-block skeleton-banner" />
+    <div className="stats-grid">
+      {[0, 1, 2, 3].map((i) => (
+        <div className="skeleton-block skeleton-kpi" key={i} />
+      ))}
+    </div>
+    <div className="dash-grid">
+      <div className="skeleton-block skeleton-panel" />
+      <div className="skeleton-block skeleton-panel" />
+    </div>
+  </div>
+);
+
+const ListSkeleton = () => (
+  <>
+    {[0, 1, 2].map((i) => (
+      <div className="service-card skeleton-block skeleton-row" key={i} aria-hidden="true" />
+    ))}
+  </>
+);
 
 const TechnicianDashboard = () => {
   const { currentUser } = useAuth();
@@ -259,8 +500,83 @@ const TechnicianDashboard = () => {
     }
   };
 
+  /* ----------------------------------------------------------
+     Values for the dashboard widgets (derived from your data)
+  ---------------------------------------------------------- */
+
+  const activeServices = useMemo(
+    () => services.filter(s => s.status !== "completed" && s.status !== "cancelled"),
+    [services]
+  );
+
+  const statusData = useMemo(() => {
+    const counts = { assigned: 0, in_progress: 0, completed: 0, other: 0 };
+    services.forEach((s) => {
+      if (counts[s.status] !== undefined) counts[s.status] += 1;
+      else counts.other += 1;
+    });
+    return Object.keys(counts)
+      .filter((key) => counts[key] > 0)
+      .map((key) => ({
+        key,
+        name: STATUS_LABELS[key],
+        value: counts[key],
+        color: STATUS_COLORS[key]
+      }));
+  }, [services]);
+
+  const workloadData = useMemo(() => {
+    const base = new Date();
+    base.setHours(0, 0, 0, 0);
+
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(base);
+      d.setDate(base.getDate() + i);
+      const key = keyFromDate(d);
+
+      return {
+        key,
+        day: i === 0 ? "Today" : d.toLocaleDateString(undefined, { weekday: "short" }),
+        jobs: activeServices.filter((s) => toDateKey(s.preferredDate) === key).length,
+        isToday: i === 0
+      };
+    });
+  }, [activeServices]);
+
+  const ratingCounts = useMemo(
+    () =>
+      [5, 4, 3, 2, 1].map((star) => ({
+        star,
+        count: (Array.isArray(reviews) ? reviews : []).filter(
+          (r) => Math.round(Number(r.rating)) === star
+        ).length
+      })),
+    [reviews]
+  );
+
+  const todayKey = keyFromDate(new Date());
+  const totalAssigned = stats.totalAssigned || services.length;
+  const inProgressCount = stats.inProgressJobs || 0;
+  const completedCount = stats.completedJobs || 0;
+  const ratingValue = stats.averageRating || 5.0;
+  const reviewCount = stats.totalReviews || reviews.length;
+  const completionRate = percent(completedCount, totalAssigned);
+  const urgentCount = activeServices.filter(
+    (s) => String(s.urgency || "").toLowerCase() === "urgent"
+  ).length;
+  const todayCount = activeServices.filter(
+    (s) => toDateKey(s.preferredDate) === todayKey
+  ).length;
+  const todayLabel = new Date().toLocaleDateString(undefined, {
+    weekday: "long",
+    day: "numeric",
+    month: "long"
+  });
+  const showSkeleton = loading && services.length === 0;
+  const chartTotal = statusData.reduce((sum, item) => sum + item.value, 0);
+
   return (
-    <div className="technician-dashboard">
+    <div className="technician-dashboard" data-theme="light">
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div className="technician-overlay" onClick={() => setSidebarOpen(false)} />
@@ -276,7 +592,7 @@ const TechnicianDashboard = () => {
             <h2>FixItNow</h2>
             <span>Technician Portal</span>
           </div>
-          <button className="sidebar-close" onClick={() => setSidebarOpen(false)}>
+          <button className="sidebar-close" onClick={() => setSidebarOpen(false)} aria-label="Close menu">
             <X size={22} />
           </button>
         </div>
@@ -296,6 +612,9 @@ const TechnicianDashboard = () => {
           >
             <ClipboardList size={19} />
             <span>Assigned Services</span>
+            {activeServices.length > 0 && (
+              <em className="nav-badge">{activeServices.length}</em>
+            )}
           </button>
 
           <button
@@ -333,7 +652,7 @@ const TechnicianDashboard = () => {
       <main className="technician-main">
         {/* Header with Global Notification Bell */}
         <header className="technician-header">
-          <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)}>
+          <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
             <Menu size={23} />
           </button>
 
@@ -348,7 +667,26 @@ const TechnicianDashboard = () => {
             <p>Manage on-site diagnostics, inspections, maintenance, and client communication.</p>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          {/* Quick search: opens Assigned Services with your search text */}
+          <form
+            className="header-search"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setActiveTab("services");
+              loadDashboardData();
+            }}
+          >
+            <Search size={16} />
+            <input
+              type="text"
+              placeholder="Search jobs, customers, tickets..."
+              aria-label="Search jobs"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </form>
+
+          <div className="header-actions">
             {/* Feature 8: Global In-App Notifications */}
             <NotificationBell />
 
@@ -370,96 +708,330 @@ const TechnicianDashboard = () => {
               VIEW 1: DASHBOARD OVERVIEW & STATS (FEATURE 5)
           ========================================================== */}
           {activeTab === "dashboard" && (
-            <>
-              {/* Welcome Banner */}
-              <div className="welcome-section">
-                <div>
-                  <span className="welcome-label">SMART SOLAR FIELD PORTAL</span>
-                  <h2>Welcome back, {technicianName}</h2>
-                  <p>Here is your real-time operational status and customer schedule for today.</p>
-                </div>
-                <div className="welcome-icon">
-                  <Wrench size={32} />
-                </div>
-              </div>
+            showSkeleton ? (
+              <DashboardSkeleton />
+            ) : (
+              <>
+                {/* Welcome Banner */}
+                <div className="welcome-section">
+                  <div className="welcome-copy">
+                    <span className="welcome-label">{todayLabel}</span>
+                    <h2>{greeting()}, {technicianName}</h2>
+                    <p>
+                      You have <strong>{activeServices.length}</strong> active{" "}
+                      {activeServices.length === 1 ? "job" : "jobs"}
+                      {todayCount > 0 && <> · <strong>{todayCount}</strong> scheduled today</>}
+                      {urgentCount > 0 && <> · <strong>{urgentCount}</strong> urgent</>}.
+                    </p>
+                    <button
+                      type="button"
+                      className="welcome-btn"
+                      onClick={() => setActiveTab("services")}
+                    >
+                      View assigned jobs <ArrowRight size={16} />
+                    </button>
+                  </div>
 
-              {/* KPI Statistics Grid */}
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <div className="stat-icon" style={{ background: "rgba(2, 132, 199, 0.15)", color: "#0284c7" }}>
-                    <ClipboardList size={22} />
-                  </div>
-                  <div>
-                    <span>Total Assigned</span>
-                    <strong>{stats.totalAssigned || services.length}</strong>
-                  </div>
-                </div>
-
-                <div className="stat-card">
-                  <div className="stat-icon" style={{ background: "rgba(245, 158, 11, 0.15)", color: "#f59e0b" }}>
-                    <CircleDot size={22} />
-                  </div>
-                  <div>
-                    <span>In Progress</span>
-                    <strong>{stats.inProgressJobs || 0}</strong>
-                  </div>
-                </div>
-
-                <div className="stat-card">
-                  <div className="stat-icon" style={{ background: "rgba(16, 185, 129, 0.15)", color: "#10b981" }}>
-                    <CheckCircle2 size={22} />
-                  </div>
-                  <div>
-                    <span>Completed</span>
-                    <strong>{stats.completedJobs || 0}</strong>
-                  </div>
-                </div>
-
-                <div className="stat-card">
-                  <div className="stat-icon" style={{ background: "rgba(250, 204, 21, 0.15)", color: "#facc15" }}>
-                    <Star size={22} />
-                  </div>
-                  <div>
-                    <span>Customer Rating</span>
-                    <strong>{stats.averageRating || 5.0} ★</strong>
-                  </div>
-                </div>
-              </div>
-
-              {/* Today's Active Work Section */}
-              <div className="services-section">
-                <div className="section-heading">
-                  <div>
-                    <span className="section-label">ACTIVE JOBS</span>
-                    <h2>Current Queue</h2>
-                  </div>
-                  <button className="view-all-btn" onClick={() => setActiveTab("services")}>
-                    View All Filtered <ArrowRight size={16} />
-                  </button>
-                </div>
-
-                <div className="services-list">
-                  {services.filter(s => s.status !== "completed" && s.status !== "cancelled").slice(0, 4).map(service => (
-                    <ServiceCard
-                      key={service.id}
-                      service={service}
-                      onStart={() => handleStartJob(service)}
-                      onComplete={() => handleOpenCompleteModal(service)}
-                      onReminder={() => handleOpenReminderModal(service)}
-                      onViewDetails={() => setSelectedTicket(service)}
-                    />
-                  ))}
-
-                  {services.filter(s => s.status !== "completed" && s.status !== "cancelled").length === 0 && (
-                    <div className="tech-empty-state">
-                      <CheckCircle2 size={36} color="#10b981" />
-                      <h3>All Caught Up!</h3>
-                      <p>You have no active pending jobs right now. Check back when Admin assigns new tickets.</p>
+                  <div
+                    className="welcome-ring"
+                    style={{ "--p": completionRate }}
+                    role="img"
+                    aria-label={`Completion rate ${completionRate} percent`}
+                  >
+                    <div>
+                      <strong>{completionRate}%</strong>
+                      <span>Completed</span>
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
-            </>
+
+                {/* KPI Statistics Grid */}
+                <div className="stats-grid">
+                  <div className="stat-card">
+                    <div className="stat-card__top">
+                      <div className="stat-icon tone-blue">
+                        <ClipboardList size={20} />
+                      </div>
+                      <span>Total Assigned</span>
+                    </div>
+                    <strong>{totalAssigned}</strong>
+                    <div className="stat-progress tone-blue">
+                      <span style={{ width: `${totalAssigned ? 100 : 0}%` }} />
+                    </div>
+                    <small>{activeServices.length} still active</small>
+                  </div>
+
+                  <div className="stat-card">
+                    <div className="stat-card__top">
+                      <div className="stat-icon tone-yellow">
+                        <CircleDot size={20} />
+                      </div>
+                      <span>In Progress</span>
+                    </div>
+                    <strong>{inProgressCount}</strong>
+                    <div className="stat-progress tone-yellow">
+                      <span style={{ width: `${percent(inProgressCount, totalAssigned)}%` }} />
+                    </div>
+                    <small>{percent(inProgressCount, totalAssigned)}% of your jobs</small>
+                  </div>
+
+                  <div className="stat-card">
+                    <div className="stat-card__top">
+                      <div className="stat-icon tone-green">
+                        <CheckCircle2 size={20} />
+                      </div>
+                      <span>Completed</span>
+                    </div>
+                    <strong>{completedCount}</strong>
+                    <div className="stat-progress tone-green">
+                      <span style={{ width: `${completionRate}%` }} />
+                    </div>
+                    <small>{completionRate}% completion rate</small>
+                  </div>
+
+                  <div className="stat-card">
+                    <div className="stat-card__top">
+                      <div className="stat-icon tone-gold">
+                        <Star size={20} />
+                      </div>
+                      <span>Customer Rating</span>
+                    </div>
+                    <strong>{ratingValue} ★</strong>
+                    <div className="stat-progress tone-gold">
+                      <span style={{ width: `${(ratingValue / 5) * 100}%` }} />
+                    </div>
+                    <small>
+                      {reviewCount > 0
+                        ? `${reviewCount} ${reviewCount === 1 ? "review" : "reviews"}`
+                        : "No reviews yet"}
+                    </small>
+                  </div>
+                </div>
+
+                <div className="dash-grid">
+                  {/* ---------- Main column ---------- */}
+                  <div className="dash-main">
+                    <div className="dash-charts">
+                      {/* Status breakdown (donut) */}
+                      <div className="dash-card">
+                        <div className="dash-card__head">
+                          <h3>Job Status</h3>
+                          <span>{chartTotal} total</span>
+                        </div>
+
+                        <div className="chart-donut">
+                          <ResponsiveContainer width="100%" height={190}>
+                            <PieChart>
+                              <Pie
+                                data={
+                                  statusData.length
+                                    ? statusData
+                                    : [{ key: "none", name: "No jobs", value: 1, color: "#E6E8EC" }]
+                                }
+                                dataKey="value"
+                                nameKey="name"
+                                innerRadius="66%"
+                                outerRadius="92%"
+                                paddingAngle={statusData.length > 1 ? 3 : 0}
+                                stroke="none"
+                              >
+                                {(statusData.length
+                                  ? statusData
+                                  : [{ key: "none", color: "#E6E8EC" }]
+                                ).map((item) => (
+                                  <Cell key={item.key} fill={item.color} />
+                                ))}
+                              </Pie>
+                              {statusData.length > 0 && (
+                                <Tooltip
+                                  formatter={(value, name) => [value, name]}
+                                  contentStyle={{
+                                    borderRadius: 12,
+                                    border: "1px solid rgba(10,14,26,0.1)",
+                                    boxShadow: "0 12px 28px rgba(10,14,26,0.12)",
+                                    fontSize: 12
+                                  }}
+                                />
+                              )}
+                            </PieChart>
+                          </ResponsiveContainer>
+
+                          <div className="chart-donut__center">
+                            <strong>{chartTotal}</strong>
+                            <span>Jobs</span>
+                          </div>
+                        </div>
+
+                        <ul className="chart-legend">
+                          {statusData.map((item) => (
+                            <li key={item.key}>
+                              <i style={{ background: item.color }} />
+                              <span>{item.name}</span>
+                              <strong>{item.value}</strong>
+                            </li>
+                          ))}
+                          {statusData.length === 0 && (
+                            <li className="chart-legend__empty">No jobs to show yet.</li>
+                          )}
+                        </ul>
+                      </div>
+
+                      {/* Workload for the next 7 days (bars) */}
+                      <div className="dash-card">
+                        <div className="dash-card__head">
+                          <h3>Next 7 Days</h3>
+                          <span>Active jobs per day</span>
+                        </div>
+
+                      
+
+<div className="chart-bars">
+    <ResponsiveContainer width="100%" height={230}>
+        <BarChart
+            data={workloadData}
+            margin={{ top: 12, right: 4, left: 4, bottom: 0 }}
+        >
+            <XAxis
+                dataKey="day"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 11, fill: "#5B6478" }}
+            />
+
+            <YAxis
+                hide
+                allowDecimals={false}
+                domain={[0, "dataMax + 1"]}
+            />
+
+            <Tooltip
+                cursor={{ fill: "rgba(245,166,35,0.10)" }}
+                formatter={(value) => [value, "Jobs"]}
+                contentStyle={{
+                    borderRadius: 12,
+                    border: "1px solid rgba(10,14,26,0.1)",
+                    boxShadow: "0 12px 28px rgba(10,14,26,0.12)",
+                    fontSize: 12
+                }}
+            />
+
+            <Bar
+                dataKey="jobs"
+                radius={[8, 8, 0, 0]}
+                maxBarSize={34}
+            >
+                {workloadData.map((d) => (
+                    <Cell
+                        key={d.key}
+                        fill={d.isToday ? "#F5A623" : "#FFD166"}
+                    />
+                ))}
+            </Bar>
+        </BarChart>
+    </ResponsiveContainer>
+</div>
+
+
+                      </div>
+                    </div>
+
+                    {/* Today's Active Work Section */}
+                    <div className="services-section">
+                      <div className="section-heading">
+                        <div>
+                          <span className="section-label">ACTIVE JOBS</span>
+                          <h2>Current Queue</h2>
+                        </div>
+                        <button className="view-all-btn" onClick={() => setActiveTab("services")}>
+                          View All Filtered <ArrowRight size={16} />
+                        </button>
+                      </div>
+
+                      <div className="services-list">
+                        {services.filter(s => s.status !== "completed" && s.status !== "cancelled").slice(0, 4).map(service => (
+                          <ServiceCard
+                            key={service.id}
+                            service={service}
+                            onStart={() => handleStartJob(service)}
+                            onComplete={() => handleOpenCompleteModal(service)}
+                            onReminder={() => handleOpenReminderModal(service)}
+                            onViewDetails={() => setSelectedTicket(service)}
+                          />
+                        ))}
+
+                        {services.filter(s => s.status !== "completed" && s.status !== "cancelled").length === 0 && (
+                          <div className="tech-empty-state">
+                            <CheckCircle2 size={36} className="icon-success" />
+                            <h3>All Caught Up!</h3>
+                            <p>You have no active pending jobs right now. Check back when Admin assigns new tickets.</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ---------- Side column ---------- */}
+                  <aside className="dash-side">
+                    <div className="dash-card">
+                      <ScheduleCalendar
+                        services={services}
+                        onViewDetails={(job) => setSelectedTicket(job)}
+                      />
+                    </div>
+
+                    <div className="dash-card">
+                      <div className="dash-card__head">
+                        <h3>Customer Satisfaction</h3>
+                        <button
+                          type="button"
+                          className="dash-card__link"
+                          onClick={() => setActiveTab("reviews")}
+                        >
+                          All reviews
+                        </button>
+                      </div>
+
+                      <div className="satisfaction-score">
+                        <strong>{ratingValue}</strong>
+                        <div>
+                          <span className="stars-row">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <Star
+                                key={i}
+                                size={16}
+                                className="star-icon"
+                                fill={i <= Math.round(ratingValue) ? "currentColor" : "none"}
+                              />
+                            ))}
+                          </span>
+                          <small>
+                            {reviewCount > 0
+                              ? `Based on ${reviewCount} ${reviewCount === 1 ? "review" : "reviews"}`
+                              : "No reviews yet"}
+                          </small>
+                        </div>
+                      </div>
+
+                      <ul className="rating-bars">
+                        {ratingCounts.map(({ star, count }) => (
+                          <li key={star}>
+                            <span>{star} ★</span>
+                            <span className="rating-bars__track">
+                              <span
+                                style={{
+                                  width: `${percent(count, reviews.length)}%`
+                                }}
+                              />
+                            </span>
+                            <span>{count}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </aside>
+                </div>
+              </>
+            )
           )}
 
           {/* =========================================================
@@ -525,6 +1097,8 @@ const TechnicianDashboard = () => {
 
               {/* Service Cards List */}
               <div className="services-list">
+                {showSkeleton && <ListSkeleton />}
+
                 {services.map(service => (
                   <ServiceCard
                     key={service.id}
@@ -536,7 +1110,7 @@ const TechnicianDashboard = () => {
                   />
                 ))}
 
-                {services.length === 0 && (
+                {services.length === 0 && !showSkeleton && (
                   <div className="tech-empty-state">
                     <ClipboardList size={36} />
                     <h3>No Services Found</h3>
@@ -552,12 +1126,12 @@ const TechnicianDashboard = () => {
           ========================================================== */}
           {activeTab === "customers" && (
             <div>
-              <div className="section-heading" style={{ marginBottom: "16px" }}>
+              <div className="section-heading">
                 <div>
                   <span className="section-label">CLIENT RELATIONSHIPS</span>
                   <h2>My Customer Directory</h2>
                 </div>
-                <span style={{ fontSize: "13px", color: "#94a3b8" }}>
+                <span className="customers-count">
                   {customers.length} total clients served
                 </span>
               </div>
@@ -567,7 +1141,7 @@ const TechnicianDashboard = () => {
                   <div className="tech-customer-card" key={idx}>
                     <div className="customer-card-header">
                       <div className="customer-avatar-box">
-                        {c.name.charAt(0).toUpperCase()}
+                        {(c.name || "?").charAt(0).toUpperCase()}
                       </div>
                       <div className="customer-header-text">
                         <h3>{c.name}</h3>
@@ -603,17 +1177,16 @@ const TechnicianDashboard = () => {
                       </div>
                       <div className="stat-chip">
                         <span>Active</span>
-                        <strong style={{ color: "#38bdf8" }}>{c.activeServices}</strong>
+                        <strong className="is-active">{c.activeServices}</strong>
                       </div>
                       <div className="stat-chip">
                         <span>Completed</span>
-                        <strong style={{ color: "#4ade80" }}>{c.completedServices}</strong>
+                        <strong className="is-done">{c.completedServices}</strong>
                       </div>
                     </div>
 
                     <button
-                      className="btn-send-reminder"
-                      style={{ width: "100%", justifyContent: "center" }}
+                      className="btn-send-reminder btn-block"
                       onClick={() => handleOpenReminderModal(c)}
                     >
                       <Send size={14} /> Send Service Reminder
@@ -622,7 +1195,7 @@ const TechnicianDashboard = () => {
                 ))}
 
                 {customers.length === 0 && (
-                  <div className="tech-empty-state" style={{ gridColumn: "1/-1" }}>
+                  <div className="tech-empty-state tech-empty-state--wide">
                     <Users size={36} />
                     <h3>No Customers Yet</h3>
                     <p>When service requests are assigned to you by Admin, your clients will appear here.</p>
@@ -637,7 +1210,7 @@ const TechnicianDashboard = () => {
           ========================================================== */}
           {activeTab === "history" && (
             <div>
-              <div className="section-heading" style={{ marginBottom: "16px" }}>
+              <div className="section-heading">
                 <div>
                   <span className="section-label">RESOLVED JOBS</span>
                   <h2>Completed Service History</h2>
@@ -645,6 +1218,8 @@ const TechnicianDashboard = () => {
               </div>
 
               <div className="services-list">
+                {showSkeleton && <ListSkeleton />}
+
                 {services.filter(s => s.status === "completed").map(service => (
                   <ServiceCard
                     key={service.id}
@@ -656,7 +1231,7 @@ const TechnicianDashboard = () => {
                   />
                 ))}
 
-                {services.filter(s => s.status === "completed").length === 0 && (
+                {services.filter(s => s.status === "completed").length === 0 && !showSkeleton && (
                   <div className="tech-empty-state">
                     <History size={36} />
                     <h3>No Completed History Yet</h3>
@@ -681,23 +1256,34 @@ const TechnicianDashboard = () => {
                       <Star
                         key={i}
                         size={18}
-                        fill={i <= Math.round(stats.averageRating || 5) ? "#facc15" : "none"}
+                        className="star-icon"
+                        fill={i <= Math.round(stats.averageRating || 5) ? "currentColor" : "none"}
                       />
                     ))}
                   </div>
-                  <span style={{ fontSize: "12px", color: "#94a3b8" }}>
+                  <span className="big-rating-count">
                     Based on {reviews?.length || 0} reviews
                   </span>
                 </div>
 
-                <div>
-                  <h3 style={{ margin: "0 0 6px 0", fontSize: "18px", color: "#f8fafc" }}>
-                    Customer Satisfaction Score
-                  </h3>
-                  <p style={{ margin: 0, fontSize: "14px", color: "#94a3b8", lineHeight: "1.5" }}>
+                <div className="reviews-summary-text">
+                  <h3>Customer Satisfaction Score</h3>
+                  <p>
                     Verified feedback left by property owners after you complete solar panel inspection, maintenance, or inverter repair visits.
                   </p>
                 </div>
+
+                <ul className="rating-bars reviews-summary-bars">
+                  {ratingCounts.map(({ star, count }) => (
+                    <li key={star}>
+                      <span>{star} ★</span>
+                      <span className="rating-bars__track">
+                        <span style={{ width: `${percent(count, reviews.length)}%` }} />
+                      </span>
+                      <span>{count}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               {/* Review Cards List */}
@@ -705,19 +1291,25 @@ const TechnicianDashboard = () => {
                 {(Array.isArray(reviews) ? reviews : []).map((r, i) => (
                   <div className="review-card-item" key={i}>
                     <div className="review-card-header">
-                      <div>
-                        <span className="reviewer-name">{r.author_name || "Customer"}</span>
-                        <span style={{ marginLeft: "8px", fontSize: "11px", color: "#0284c7", background: "rgba(2, 132, 199, 0.1)", padding: "2px 6px", borderRadius: "4px" }}>
-                          {r.service_type?.toUpperCase()}
+                      <div className="review-card-who">
+                        <span className="review-avatar" aria-hidden="true">
+                          {(r.author_name || "C").charAt(0).toUpperCase()}
                         </span>
+                        <span className="reviewer-name">{r.author_name || "Customer"}</span>
+                        {r.service_type && (
+                          <span className="review-type-tag">
+                            {r.service_type.toUpperCase()}
+                          </span>
+                        )}
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <div style={{ display: "flex", gap: "2px", color: "#facc15" }}>
+                      <div className="review-card-meta">
+                        <div className="stars-row">
                           {[1, 2, 3, 4, 5].map(s => (
                             <Star
                               key={s}
                               size={14}
-                              fill={s <= r.rating ? "#facc15" : "none"}
+                              className="star-icon"
+                              fill={s <= r.rating ? "currentColor" : "none"}
                             />
                           ))}
                         </div>
@@ -732,7 +1324,7 @@ const TechnicianDashboard = () => {
 
                 {(!reviews || reviews.length === 0) && (
                   <div className="tech-empty-state">
-                    <Star size={36} color="#facc15" />
+                    <Star size={36} className="icon-gold" />
                     <h3>No Reviews Received Yet</h3>
                     <p>After you complete services, customers receive a prompt to rate your field visit.</p>
                   </div>
@@ -751,14 +1343,14 @@ const TechnicianDashboard = () => {
           <div className="tech-modal-card">
             <div className="tech-modal-header">
               <h3>Send Reminder Email to Client</h3>
-              <button className="tech-modal-close" onClick={() => setReminderModalOpen(false)}>
+              <button className="tech-modal-close" onClick={() => setReminderModalOpen(false)} aria-label="Close">
                 <X size={20} />
               </button>
             </div>
 
             <div className="tech-modal-body">
               {reminderSuccess && (
-                <div style={{ padding: "10px", background: "rgba(16, 185, 129, 0.15)", color: "#34d399", borderRadius: "8px", fontSize: "13px" }}>
+                <div className="tech-modal-success">
                   {reminderSuccess}
                 </div>
               )}
@@ -788,7 +1380,7 @@ const TechnicianDashboard = () => {
                 </select>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div className="tech-modal-grid">
                 <div>
                   <label className="tech-input-label">Target Date</label>
                   <input
@@ -846,13 +1438,13 @@ const TechnicianDashboard = () => {
           <div className="tech-modal-card">
             <div className="tech-modal-header">
               <h3>Complete Service Job: {selectedTicket.ticketNumber}</h3>
-              <button className="tech-modal-close" onClick={() => setCompleteModalOpen(false)}>
+              <button className="tech-modal-close" onClick={() => setCompleteModalOpen(false)} aria-label="Close">
                 <X size={20} />
               </button>
             </div>
 
             <div className="tech-modal-body">
-              <p style={{ margin: "0", fontSize: "13px", color: "#94a3b8" }}>
+              <p className="tech-modal-note">
                 Customer: <strong>{selectedTicket.customerName}</strong> ({selectedTicket.address})
               </p>
 
@@ -884,7 +1476,6 @@ const TechnicianDashboard = () => {
               </button>
               <button
                 className="btn-modal-submit"
-                style={{ background: "#10b981" }}
                 onClick={submitCompleteJob}
                 disabled={isSubmittingComplete}
               >
@@ -904,29 +1495,29 @@ const TechnicianDashboard = () => {
           <div className="tech-modal-card">
             <div className="tech-modal-header">
               <h3>{selectedTicket.title}</h3>
-              <button className="tech-modal-close" onClick={() => setSelectedTicket(null)}>
+              <button className="tech-modal-close" onClick={() => setSelectedTicket(null)} aria-label="Close">
                 <X size={20} />
               </button>
             </div>
 
             <div className="tech-modal-body">
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "13px", color: "#94a3b8" }}>Ticket ID: {selectedTicket.ticketNumber}</span>
+              <div className="tech-modal-ticketrow">
+                <span>Ticket ID: {selectedTicket.ticketNumber}</span>
                 <span className={`status-badge ${selectedTicket.status}`}>{selectedTicket.status.toUpperCase()}</span>
               </div>
 
-              <div style={{ background: "#141b29", padding: "14px", borderRadius: "8px", fontSize: "13px" }}>
-                <p style={{ margin: "4px 0" }}><strong>Client:</strong> {selectedTicket.customerName}</p>
-                <p style={{ margin: "4px 0" }}><strong>Phone:</strong> {selectedTicket.customerPhone || "N/A"}</p>
-                <p style={{ margin: "4px 0" }}><strong>Email:</strong> {selectedTicket.customerEmail || "N/A"}</p>
-                <p style={{ margin: "4px 0" }}><strong>Address:</strong> {selectedTicket.address} {selectedTicket.city}</p>
-                <p style={{ margin: "4px 0" }}><strong>Date / Time:</strong> {selectedTicket.preferredDate} ({selectedTicket.preferredTime || "Flexible"})</p>
+              <div className="tech-modal-detail-box">
+                <p><strong>Client:</strong> {selectedTicket.customerName}</p>
+                <p><strong>Phone:</strong> {selectedTicket.customerPhone || "N/A"}</p>
+                <p><strong>Email:</strong> {selectedTicket.customerEmail || "N/A"}</p>
+                <p><strong>Address:</strong> {selectedTicket.address} {selectedTicket.city}</p>
+                <p><strong>Date / Time:</strong> {selectedTicket.preferredDate} ({selectedTicket.preferredTime || "Flexible"})</p>
               </div>
 
               {selectedTicket.additionalNotes && (
                 <div>
                   <label className="tech-input-label">Customer Problem / Service Notes</label>
-                  <div style={{ background: "#141b29", padding: "12px", borderRadius: "8px", fontSize: "13px", color: "#cbd5e1" }}>
+                  <div className="tech-modal-detail-box">
                     {selectedTicket.additionalNotes}
                   </div>
                 </div>
@@ -935,7 +1526,7 @@ const TechnicianDashboard = () => {
               {selectedTicket.resolutionNotes && (
                 <div>
                   <label className="tech-input-label">Technician Resolution Notes</label>
-                  <div style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.2)", padding: "12px", borderRadius: "8px", fontSize: "13px", color: "#a7f3d0" }}>
+                  <div className="tech-modal-detail-box is-success">
                     {selectedTicket.resolutionNotes}
                   </div>
                 </div>
@@ -956,18 +1547,21 @@ const TechnicianDashboard = () => {
 
 // Reusable Service Card Component
 const ServiceCard = ({ service, onStart, onComplete, onReminder, onViewDetails }) => {
+  const stepIndex = Math.max(0, JOB_STEPS.indexOf(service.status));
+  const urgency = String(service.urgency || "standard");
+
   return (
     <div className="service-card">
       <div className="service-main">
-        <div className="service-icon">
+        {/* <div className="service-icon">
           <Wrench size={20} />
-        </div>
+        </div> */}
 
         <div className="service-info">
           <div className="service-title-row">
             <h3>{service.title}</h3>
             <span className={`status-badge ${service.status}`}>
-              {service.status.replace("_", " ").toUpperCase()}
+              {String(service.status).replace("_", " ").toUpperCase()}
             </span>
           </div>
 
@@ -995,10 +1589,23 @@ const ServiceCard = ({ service, onStart, onComplete, onReminder, onViewDetails }
             <span>{service.preferredTime}</span>
           </div>
         )}
-        <span className={`service-type ${service.urgency.toLowerCase()}`}>
-          {service.urgency}
+        <span className={`service-type ${urgency.toLowerCase()}`}>
+          {urgency}
         </span>
       </div>
+
+      {/* Job progress: assigned -> in progress -> completed */}
+      <ol className="job-steps" aria-label="Job progress">
+        {JOB_STEPS.map((step, i) => (
+          <li
+            key={step}
+            className={i < stepIndex ? "is-done" : i === stepIndex ? "is-current" : ""}
+          >
+            <i />
+            <span>{STATUS_LABELS[step]}</span>
+          </li>
+        ))}
+      </ol>
 
       {/* Feature 3 Action Buttons */}
       <div className="card-actions-row">

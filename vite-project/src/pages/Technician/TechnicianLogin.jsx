@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 import { doSignInWithEmailAndPassword } from "../../firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { auth } from "../../firebase/firebase";
 import { getApiBaseUrl } from "../../config/apiConfig";
 import "./TechnicianLogin.css";
@@ -92,9 +92,14 @@ const TechnicianLogin = () => {
   };
 
   return (
-    <div className="technician-login-page">
+    <div className="technician-login-page" data-theme="light">
 
       <div className="technician-login-card">
+
+        <Link to="/" className="technician-login-back">
+          <ArrowLeft size={16} />
+          Back to website
+        </Link>
 
         <div className="technician-logo">
           <h1>FixItNow</h1>
@@ -107,9 +112,10 @@ const TechnicianLogin = () => {
         >
 
           <div className="input-group">
-            <label>Email Address</label>
+            <label htmlFor="technician-email">Email Address</label>
 
             <input
+              id="technician-email"
               type="email"
               placeholder="Enter your email"
               value={email}
@@ -121,9 +127,10 @@ const TechnicianLogin = () => {
           </div>
 
           <div className="input-group">
-            <label>Password</label>
+            <label htmlFor="technician-password">Password</label>
 
             <input
+              id="technician-password"
               type="password"
               placeholder="Enter your password"
               value={password}
@@ -146,11 +153,28 @@ const TechnicianLogin = () => {
 
         </form>
 
+        <p className="technician-login-note">
+          Not a technician?{" "}
+          <Link to="/signin">Customer sign in</Link>
+        </p>
+
       </div>
+
+      {/* Photo panel with a short message */}
+      <aside className="technician-login-visual">
+        <div className="technician-login-visual__content">
+          <h2>
+            Your jobs, <span>all in one place.</span>
+          </h2>
+          <p>
+            Sign in to see your assigned work and keep every service request
+            moving.
+          </p>
+        </div>
+      </aside>
 
     </div>
   );
 };
 
 export default TechnicianLogin;
-

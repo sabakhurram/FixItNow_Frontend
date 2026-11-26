@@ -175,15 +175,15 @@ function ServiceRequestDetails({
                         </strong>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.6)" }}>Update: </span>
+                        <span style={{ fontSize: "12px", color: "#5B6478" }}>Update: </span>
                         <select
                             value={String(currentStatus).toLowerCase()}
                             onChange={(e) => handleStatusChange(e.target.value)}
                             disabled={isUpdating}
                             style={{
-                                background: "#111827",
-                                color: "#ffffff",
-                                border: "1px solid rgba(255, 255, 255, 0.15)",
+                                background: "#F7F7F7",
+                                color: "#0A0E1A",
+                                border: "1px solid rgba(10, 14, 26, 0.12)",
                                 borderRadius: "8px",
                                 padding: "6px 12px",
                                 fontSize: "13px",
@@ -204,17 +204,17 @@ function ServiceRequestDetails({
                 <div style={{
                     margin: "14px 0",
                     padding: "16px",
-                    background: "rgba(2, 132, 199, 0.08)",
-                    border: "1px solid rgba(2, 132, 199, 0.2)",
+                    background: "rgba(255, 199, 44, 0.12)",
+                    border: "1px solid rgba(245, 166, 35, 0.25)",
                     borderRadius: "10px"
                 }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <UserCheck size={18} color="#38bdf8" />
-                            <strong style={{ fontSize: "14px", color: "#f8fafc" }}>Assign Field Technician</strong>
+                            <UserCheck size={18} color="#9A5B00" />
+                            <strong style={{ fontSize: "14px", color: "#0A0E1A" }}>Assign Field Technician</strong>
                         </div>
                         {assignSuccess && (
-                            <span style={{ fontSize: "12px", color: "#4ade80", display: "flex", alignItems: "center", gap: "4px" }}>
+                            <span style={{ fontSize: "12px", color: "#0D7A4E", display: "flex", alignItems: "center", gap: "4px" }}>
                                 <CheckCircle2 size={14} /> Assigned successfully!
                             </span>
                         )}
@@ -227,9 +227,9 @@ function ServiceRequestDetails({
                             style={{
                                 flex: "1",
                                 minWidth: "220px",
-                                background: "#0f172a",
-                                color: "#f8fafc",
-                                border: "1px solid rgba(255, 255, 255, 0.2)",
+                                background: "#FFFFFF",
+                                color: "#0A0E1A",
+                                border: "1px solid rgba(10, 14, 26, 0.14)",
                                 borderRadius: "8px",
                                 padding: "8px 12px",
                                 fontSize: "13px"
@@ -247,13 +247,13 @@ function ServiceRequestDetails({
                             onClick={handleAssignTechnician}
                             disabled={isAssigning || !selectedTechId}
                             style={{
-                                background: "#0284c7",
-                                color: "#ffffff",
+                                background: "#F5A623",
+                                color: "#0A0E1A",
                                 border: "none",
                                 borderRadius: "8px",
                                 padding: "8px 16px",
                                 fontSize: "13px",
-                                fontWeight: "600",
+                                fontWeight: "700",
                                 cursor: isAssigning ? "not-allowed" : "pointer",
                                 opacity: !selectedTechId || isAssigning ? 0.6 : 1,
                                 transition: "all 0.2s"
@@ -264,8 +264,8 @@ function ServiceRequestDetails({
                     </div>
 
                     {request.technician_id && (
-                        <p style={{ margin: "8px 0 0 0", fontSize: "12px", color: "#94a3b8" }}>
-                            Currently Assigned: <span style={{ color: "#38bdf8", fontWeight: "600" }}>
+                        <p style={{ margin: "8px 0 0 0", fontSize: "12px", color: "#5B6478" }}>
+                            Currently Assigned: <span style={{ color: "#9A5B00", fontWeight: "600" }}>
                                 {technicians.find(t => t.id === request.technician_id)?.display_name || request.technician_id}
                             </span>
                         </p>

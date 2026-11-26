@@ -1,6 +1,11 @@
+/* =====================================================
+   OrderPage.css  –  Light Theme
+   ===================================================== */
+
 .admin-orders-page {
     padding: 10px;
     font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #0A0E1A;
 }
 
 .orders-header {
@@ -8,13 +13,13 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 35px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(10, 14, 26, 0.08);
     padding-bottom: 20px;
 }
 
 .orders-header h2 {
     font-size: 1.8rem;
-    color: var(--white);
+    color: #0A0E1A;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     margin: 0 0 6px 0;
@@ -22,7 +27,7 @@
 
 .orders-header .subtitle {
     font-size: 0.9rem;
-    color: var(--muted);
+    color: #5B6478;
     margin: 0;
 }
 
@@ -30,9 +35,9 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(245, 166, 35, 0.05);
-    border: 1px solid rgba(245, 166, 35, 0.15);
-    color: var(--gold);
+    background: rgba(255, 199, 44, 0.18);
+    border: 1px solid rgba(245, 166, 35, 0.30);
+    color: #9A5B00;
     padding: 8px 16px;
     border-radius: 50px;
     font-size: 0.85rem;
@@ -41,8 +46,8 @@
 
 .orders-error-alert {
     background: rgba(239, 68, 68, 0.08);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.22);
+    color: #C0392B;
     padding: 12px 16px;
     border-radius: 12px;
     font-size: 0.9rem;
@@ -51,21 +56,21 @@
 
 .orders-empty-state {
     text-align: center;
-    background: rgba(255, 255, 255, 0.015);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: #FFFFFF;
+    border: 1px solid rgba(10, 14, 26, 0.08);
     border-radius: 16px;
     padding: 60px 40px;
 }
 
 .orders-empty-state h3 {
     font-size: 1.3rem;
-    color: var(--white);
+    color: #0A0E1A;
     margin: 0 0 8px 0;
     font-family: 'Space Grotesk', sans-serif;
 }
 
 .orders-empty-state p {
-    color: var(--muted);
+    color: #5B6478;
     font-size: 0.92rem;
     margin: 0;
 }
@@ -78,20 +83,22 @@
 }
 
 .admin-order-card {
-    background: rgba(255, 255, 255, 0.012);
-    border: 1px solid rgba(255, 255, 255, 0.035);
+    background: #FFFFFF;
+    border: 1px solid rgba(10, 14, 26, 0.08);
     border-radius: 16px;
     overflow: hidden;
-    transition: transform 0.3s, border-color 0.3s;
+    box-shadow: 0 1px 3px rgba(10, 14, 26, 0.05);
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
 .admin-order-card:hover {
-    border-color: rgba(255, 255, 255, 0.07);
+    border-color: rgba(10, 14, 26, 0.16);
+    box-shadow: 0 4px 16px rgba(10, 14, 26, 0.08);
 }
 
 .order-card-header {
-    background: rgba(255, 255, 255, 0.01);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    background: #F7F7F7;
+    border-bottom: 1px solid rgba(10, 14, 26, 0.08);
     padding: 20px 25px;
     display: flex;
     justify-content: space-between;
@@ -101,7 +108,7 @@
 .order-id-meta h3 {
     font-size: 1.15rem;
     font-family: 'Space Grotesk', sans-serif;
-    color: var(--white);
+    color: #0A0E1A;
     margin: 0 0 6px 0;
     font-weight: 700;
     letter-spacing: 0.5px;
@@ -112,7 +119,7 @@
     align-items: center;
     gap: 6px;
     font-size: 0.8rem;
-    color: var(--muted);
+    color: #5B6478;
 }
 
 .order-status-control {
@@ -122,14 +129,14 @@
 
 .updating-loader {
     font-size: 0.82rem;
-    color: var(--gold);
+    color: #9A5B00;
     font-weight: 600;
 }
 
 .status-select {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: var(--white);
+    background: #FFFFFF;
+    border: 1px solid rgba(10, 14, 26, 0.12);
+    color: #0A0E1A;
     padding: 8px 16px;
     border-radius: 50px;
     font-size: 0.82rem;
@@ -138,37 +145,38 @@
     outline: none;
     transition: all 0.3s;
     text-transform: capitalize;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .status-select option {
-    background: #0d111b;
-    color: var(--white);
+    background: #FFFFFF;
+    color: #0A0E1A;
 }
 
 /* Status dropdown variations */
 .status-select.pending {
-    border-color: rgba(239, 159, 39, 0.25);
-    color: #EF9F27;
+    border-color: rgba(245, 166, 35, 0.35);
+    color: #9A5B00;
 }
 
 .status-select.processing {
-    border-color: rgba(59, 130, 246, 0.25);
-    color: #3b82f6;
+    border-color: rgba(46, 125, 209, 0.35);
+    color: #2E7DD1;
 }
 
 .status-select.shipped {
-    border-color: rgba(139, 92, 246, 0.25);
-    color: #8b5cf6;
+    border-color: rgba(139, 92, 246, 0.35);
+    color: #7C3AED;
 }
 
 .status-select.delivered {
-    border-color: rgba(16, 185, 129, 0.25);
-    color: #10b981;
+    border-color: rgba(6, 214, 160, 0.35);
+    color: #0D7A4E;
 }
 
 .status-select.cancelled {
-    border-color: rgba(239, 68, 68, 0.25);
-    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #C0392B;
 }
 
 /* Card Body */
@@ -182,10 +190,10 @@
 .order-card-body h4 {
     font-size: 0.95rem;
     font-family: 'Space Grotesk', sans-serif;
-    color: var(--white);
+    color: #0A0E1A;
     margin: 0 0 16px 0;
-    font-weight: 600;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+    font-weight: 700;
+    border-bottom: 1px solid rgba(10, 14, 26, 0.06);
     padding-bottom: 8px;
 }
 
@@ -208,8 +216,8 @@
     height: 44px;
     object-fit: cover;
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: #F7F7F7;
+    border: 1px solid rgba(10, 14, 26, 0.08);
 }
 
 .item-info {
@@ -219,13 +227,13 @@
 
 .item-name {
     font-size: 0.88rem;
-    color: var(--white);
+    color: #0A0E1A;
     font-weight: 600;
 }
 
 .item-pricing {
     font-size: 0.78rem;
-    color: var(--muted);
+    color: #5B6478;
 }
 
 .order-total-amount {
@@ -233,17 +241,17 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 15px;
-    border-top: 1px dashed rgba(255, 255, 255, 0.04);
+    border-top: 1px dashed rgba(10, 14, 26, 0.10);
 }
 
 .order-total-amount span {
     font-size: 0.88rem;
-    color: var(--muted);
+    color: #5B6478;
 }
 
 .order-total-amount strong {
     font-size: 1.15rem;
-    color: var(--gold);
+    color: #9A5B00;
     font-family: 'Space Grotesk', sans-serif;
 }
 
@@ -261,7 +269,7 @@
 }
 
 .info-icon {
-    color: var(--muted);
+    color: #5B6478;
     margin-top: 3px;
     flex-shrink: 0;
 }
@@ -274,7 +282,7 @@
 
 .info-detail-item span {
     font-size: 0.72rem;
-    color: var(--muted);
+    color: #5B6478;
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -282,14 +290,14 @@
 
 .info-detail-item strong {
     font-size: 0.88rem;
-    color: var(--white);
+    color: #0A0E1A;
     font-weight: 600;
     line-height: 1.35;
 }
 
 .email-small {
     font-size: 0.75rem;
-    color: var(--muted);
+    color: #5B6478;
 }
 
 /* Loading state */
@@ -303,7 +311,7 @@
 }
 
 .admin-orders-loading .spinner {
-    color: var(--gold);
+    color: #9A5B00;
     animation: orderSpin 1.2s linear infinite;
 }
 
@@ -315,7 +323,7 @@
 
 .admin-orders-loading p {
     font-size: 0.92rem;
-    color: var(--muted);
+    color: #5B6478;
     margin: 0;
 }
 
