@@ -4,18 +4,33 @@
    pointing it at your file (path is relative to this CSS file).
    Without a photo you get a dark gradient with a yellow glow. */
 
+
+/* Full-width contact section background */
+
 .contact {
   --contact-photo: url('../../../assets/image.png');
 
-  padding: var(--space-section) 5%;
-  background: var(--bg);
   position: relative;
+  isolation: isolate;
+  padding: var(--space-section) 5%;
+  background:
+    radial-gradient(circle at 85% 15%,
+      color-mix(in srgb, var(--accent) 25%, transparent),
+      transparent 45%),
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--text) 88%, transparent),
+      color-mix(in srgb, var(--text) 65%, transparent)),
+    var(--contact-photo);
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* ─── Rounded photo panel ─── */
+/* Remove the rounded background panel */
+
 .contact__container {
   position: relative;
-  overflow: hidden;
   display: grid;
   grid-template-columns: 1fr 1.15fr;
   gap: clamp(32px, 5vw, 80px);
@@ -24,27 +39,11 @@
   width: 100%;
   margin: 0 auto;
   padding: clamp(28px, 5vw, 64px);
-  border-radius: var(--radius-xl, 32px);
   color: var(--surface);
-  background-color: var(--text);
-  background-image:
-    /* faint yellow glow that ties the photo to the brand colour */
-    radial-gradient(
-      circle at 88% 12%,
-      color-mix(in srgb, var(--accent) 28%, transparent),
-      transparent 55%
-    ),
-    /* dark overlay: keeps white text readable on any photo */
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--text) 90%, transparent) 0%,
-      color-mix(in srgb, var(--text) 74%, transparent) 50%,
-      color-mix(in srgb, var(--text) 52%, transparent) 100%
-    ),
-    var(--contact-photo, none);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
 }
 
 /* ─── Left column: contact details ─── */
@@ -250,7 +249,7 @@
 .contact__textarea {
   width: 100%;
   padding: 13px 16px;
- background: var(--surface-2);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   color: var(--text);
@@ -372,10 +371,8 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background-image: radial-gradient(
-    color-mix(in srgb, var(--text) 6%, transparent) 1px,
-    transparent 1px
-  );
+  background-image: radial-gradient(color-mix(in srgb, var(--text) 6%, transparent) 1px,
+      transparent 1px);
   background-size: 12px 12px;
   opacity: 0.5;
   pointer-events: none;
@@ -389,6 +386,7 @@
 
 /* ─── Reduced motion ─── */
 @media (prefers-reduced-motion: reduce) {
+
   .contact__item-link,
   .contact__item-icon,
   .contact__submit-btn,
@@ -414,21 +412,27 @@
 }
 
 @media (max-width: 900px) {
-  .contact__container {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    background-image:
-      radial-gradient(
-        circle at 88% 8%,
-        color-mix(in srgb, var(--accent) 28%, transparent),
-        transparent 55%
-      ),
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--text) 86%, transparent),
-        color-mix(in srgb, var(--text) 66%, transparent)
-      ),
-      var(--contact-photo, none);
+
+  @media (max-width: 900px) {
+    .contact {
+      background:
+        radial-gradient(circle at 85% 10%,
+          color-mix(in srgb, var(--accent) 25%, transparent),
+          transparent 45%),
+        linear-gradient(180deg,
+          color-mix(in srgb, var(--text) 88%, transparent),
+          color-mix(in srgb, var(--text) 68%, transparent)),
+        var(--contact-photo);
+
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .contact__container {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
   }
 
   .contact__info {

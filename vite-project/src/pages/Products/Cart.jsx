@@ -10,7 +10,7 @@ import {
 
 import { useCart } from "../../contexts/CartContext";
 import "./Cart.css";
-
+import Footer from "../../components/layout/Footer/Footer";
 function Cart() {
     const {
         cartItems,
@@ -105,6 +105,8 @@ function Cart() {
     }
 
     return (
+        <>
+
         <main className="cart-page">
             <div className="cart-container">
 
@@ -286,6 +288,8 @@ function Cart() {
                 </div>
             </div>
         </main>
+        <Footer />
+        </>
     );
 }
 

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { PhoneCall, Calculator, TrendingDown } from 'lucide-react';
+import { PhoneCall, Calculator, TrendingDown, ArrowDown } from 'lucide-react';
 import './CTABanner.css';
 
 /*
@@ -36,7 +36,22 @@ const AnimatedNumber = ({ value, decimals = 0, stiffness = 90, damping = 20 }) =
 
 const CTABanner = () => {
   const [bill, setBill] = useState(240);
+  const calculatorRef = useRef(null);
 
+  const handleScrollToCalculator = () => {
+    const target = calculatorRef.current;
+    if (!target) return;
+
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    target.scrollIntoView({
+      behavior: reduceMotion ? 'auto' : 'smooth',
+      block: 'center',
+    });
+    target.focus({ preventScroll: true });
+  };
   // realistic solar output formulas
   const annualSavings = Math.round(bill * 12 * 0.88);
   const systemSize = bill / 32;
@@ -49,7 +64,34 @@ const CTABanner = () => {
   const strokeOffset = 151 - (151 * fillPercentage) / 100;
 
   return (
+
+
     <section className="cta-banner" data-theme="light">
+      <motion.div
+        className="cta-banner__preview"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        viewport={{ once: true, amount: 0.4 }}
+      >
+        <span className="cta-banner__preview-icon" aria-hidden="true">
+          <Calculator size={22} />
+        </span>
+        <div className="cta-banner__preview-text">
+          <span className="cta-banner__preview-badge">Free estimate</span>
+          <h2 className="cta-banner__preview-title">How much could you save?</h2>
+          <p className="cta-banner__preview-desc">
+            Slide your monthly bill and see your solar savings instantly.
+          </p>
+        </div>
+        <button
+          type="button"
+          className="cta-banner__preview-btn"
+          onClick={handleScrollToCalculator}
+        >
+          Try the calculator <ArrowDown size={16} aria-hidden="true" />
+        </button>
+      </motion.div>
       <div className="cta-banner__container">
         <motion.div
           className="cta-banner__content"
@@ -73,6 +115,8 @@ const CTABanner = () => {
 
         {/* Dynamic Calculator Widget */}
         <motion.div
+          ref={calculatorRef}
+          tabIndex={-1}
           className="cta-banner__calculator"
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -162,6 +206,7 @@ const CTABanner = () => {
         </motion.div>
       </div>
     </section>
+
   );
 };
 

@@ -3,8 +3,19 @@
    .t-card styles. Replace your old Testimonials.css with this file. */
 
 .client-reviews {
+  /* pale yellow section; the edge fades below reuse this exact colour */
+  --reviews-bg: color-mix(in srgb, var(--accent-light) 26%, var(--surface));
+
+  position: relative;
   padding: var(--space-section) 0;
-  background: var(--bg);
+  background-color: var(--reviews-bg);
+  background-image:
+    radial-gradient(700px 420px at 8% 0%,
+      color-mix(in srgb, var(--accent) 22%, transparent),
+      transparent 70%),
+    radial-gradient(600px 380px at 96% 100%,
+      color-mix(in srgb, var(--accent) 18%, transparent),
+      transparent 70%);
   color: var(--text);
   overflow: hidden;
 }
@@ -43,7 +54,13 @@
 .client-reviews__marquee {
   position: relative;
   overflow: hidden;
-  padding-block: 28px; /* room for card shadows */
+  padding-block: 40px;
+  /* room for card shadows */
+  /* yellow band behind the cards: the cards stick out above and below it */
+  background: linear-gradient(180deg,
+      transparent 0 24%,
+      var(--accent) 24% 76%,
+      transparent 76% 100%);
 }
 
 /* Soft fades at both edges */
@@ -60,12 +77,12 @@
 
 .client-reviews__marquee::before {
   left: 0;
-  background: linear-gradient(90deg, var(--bg), transparent);
+  background: linear-gradient(90deg, var(--reviews-bg), transparent);
 }
 
 .client-reviews__marquee::after {
   right: 0;
-  background: linear-gradient(270deg, var(--bg), transparent);
+  background: linear-gradient(270deg, var(--reviews-bg), transparent);
 }
 
 .client-reviews__track {
@@ -90,7 +107,8 @@
   list-style: none;
   display: flex;
   gap: 24px;
-  padding-right: 24px; /* equals the gap so the loop is seamless */
+  padding-right: 24px;
+  /* equals the gap so the loop is seamless */
 }
 
 .client-reviews__item {
@@ -109,7 +127,7 @@
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--card-shadow);
+  box-shadow: 0 18px 40px rgba(10, 14, 26, 0.14), 0 2px 6px rgba(10, 14, 26, 0.06);
 }
 
 .client-reviews__top {

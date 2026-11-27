@@ -2,7 +2,10 @@
    Light theme via your tokens. Replace your whole CTABanner.css with this. */
 
 .cta-banner {
-  background: var(--bg);
+  /* fades from the testimonials' pale yellow into white, so there is no hard edge */
+  background: linear-gradient(180deg,
+      color-mix(in srgb, var(--accent-light) 26%, var(--surface)) 0,
+      var(--bg) 240px);
   padding: var(--space-section) 5%;
   position: relative;
   overflow: hidden;
@@ -42,6 +45,11 @@
 .cta-banner__calculator {
   position: relative;
   z-index: 1;
+}
+
+/* the calculator is focused (not tabbable) after "Try the calculator" */
+.cta-banner__calculator:focus {
+  outline: none;
 }
 
 /* Amber text on white surfaces, dark green for the eco icon */
@@ -234,6 +242,7 @@
   0% {
     box-shadow: 0 0 0 0 color-mix(in srgb, var(--success-text) 45%, transparent);
   }
+
   100% {
     box-shadow: 0 0 0 8px transparent;
   }
@@ -445,10 +454,8 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background-image: radial-gradient(
-    color-mix(in srgb, var(--text) 7%, transparent) 1px,
-    transparent 1px
-  );
+  background-image: radial-gradient(color-mix(in srgb, var(--text) 7%, transparent) 1px,
+      transparent 1px);
   background-size: 12px 12px;
   opacity: 0.5;
   pointer-events: none;
@@ -535,6 +542,173 @@
   }
 
   .cta-banner__buttons .btn {
+    width: 100%;
+  }
+}
+
+/* ─── Savings teaser (above the calculator panel) ─── */
+.cta-banner__preview {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  max-width: var(--container, 1200px);
+  width: 100%;
+  min-height: 174px;
+
+  margin: 0 auto 24px;
+  padding: 22px 28px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.62) 0%,
+      rgba(255, 255, 255, 0.40) 50%,
+      rgba(255, 255, 255, 0.22) 100%
+    ),
+    url('https://images.pexels.com/photos/4254164/pexels-photo-4254164.jpeg')
+    center / cover no-repeat;
+
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 14px 34px rgba(10, 14, 26, 0.1);
+}
+
+.cta-banner__preview > * {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-banner__preview-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.cta-banner__preview > * {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-banner__preview-text {
+  flex: 1;
+  min-width: 0;
+}
+.cta-banner__preview-icon {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 8px 20px rgba(245, 166, 35, 0.4);
+}
+
+.cta-banner__preview-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.cta-banner__preview-badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cta-banner__preview-title {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.cta-banner__preview-desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* The shared yellow button */
+.cta-banner__preview-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 28px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.3s var(--ease-out), box-shadow 0.3s;
+}
+
+.cta-banner__preview-btn svg {
+  transition: transform 0.3s var(--ease-out);
+}
+
+.cta-banner__preview-btn:hover {
+  background: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(245, 166, 35, 0.4);
+}
+
+.cta-banner__preview-btn:hover svg {
+  transform: translateY(3px);
+}
+
+.cta-banner__preview-btn:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .cta-banner__preview-btn,
+  .cta-banner__preview-btn svg {
+    transition: none;
+  }
+
+  .cta-banner__preview-btn:hover,
+  .cta-banner__preview-btn:hover svg {
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .cta-banner__preview {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .cta-banner__preview-icon {
+    align-self: center;
+  }
+
+  .cta-banner__preview-btn {
     width: 100%;
   }
 }

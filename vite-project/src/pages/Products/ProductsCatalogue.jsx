@@ -3,7 +3,7 @@ import { Search, Sun } from "lucide-react";
 import { fetchPublicProducts } from "../../api/productApi";
 import { Link } from "react-router-dom";
 import "./ProductsCatalogue.css";
-
+import Footer from "../../components/layout/Footer/Footer";
 /* Shows a neat placeholder when a product has no image or it fails to load */
 function ProductImage({ src, alt }) {
     const [failed, setFailed] = useState(false);
@@ -130,6 +130,7 @@ function Products() {
     }
 
     return (
+        <>
         <main className="products-page" data-theme="light">
 
             <section className="products-page-hero">
@@ -296,6 +297,9 @@ function Products() {
             </section>
 
         </main>
+
+          <Footer />
+          </>
     );
 }
 

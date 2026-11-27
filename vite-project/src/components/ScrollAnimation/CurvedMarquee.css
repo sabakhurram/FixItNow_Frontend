@@ -1,0 +1,89 @@
+/* =====================================================
+   CurvedMarquee.css — Arch Yellow Marquee Ribbon
+   Uses src/tokens.css variables only
+   ===================================================== */
+
+.sc-marquee {
+  position: relative;
+  align-self: stretch;
+  width: auto;
+  margin: auto 0 0 0;
+  padding-bottom: 44px;
+  overflow: visible;
+  /* clip to exactly the screen width, centered on this box */
+  clip-path: inset(-400px calc(50% - 50vw));
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.sc-marquee__track {
+  position: relative;
+  left: 50%;
+  width: 140vw;
+  margin-left: -70vw;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.sc-marquee__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.sc-marquee__svg--mobile {
+  display: none;
+}
+
+.sc-marquee__ribbon {
+  fill: none;
+  stroke: var(--accent, #F5A623);
+  filter: drop-shadow(0 14px 24px var(--accent-soft));
+}
+
+.sc-marquee__ribbon--desktop {
+  stroke-width: 84px;
+}
+
+.sc-marquee__ribbon--mobile {
+  stroke-width: 60px;
+}
+
+.sc-marquee__text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  fill: var(--text);
+}
+
+.sc-marquee__text--desktop {
+  font-size: 44px;
+}
+
+.sc-marquee__text--mobile {
+  font-size: 30px;
+}
+
+@media (max-width: 767px) {
+  .sc-marquee {
+    margin-top: 20px;
+  }
+
+  .sc-marquee__svg--desktop {
+    display: none;
+  }
+
+  .sc-marquee__svg--mobile {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .sc-marquee,
+  .sc-marquee__track {
+    will-change: auto;
+  }
+}

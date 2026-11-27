@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from 'framer-motion';
 import {
   getFramePaths,
   preloadFrames,
@@ -10,7 +10,12 @@ import {
 } from './FrameLoader';
 
 import Overlay from './Overlay';
+import Loader from './Loader';
+import CurvedMarquee from './CurvedMarquee';
 import './ScrollCanvas.css';
+
+const HOOK_LINE_1 = ['No', 'More', 'Searching', 'for', 'Solar', 'Experts.'];
+const HOOK_LINE_2_HIGHLIGHT = ['Every', 'Solution', 'in', 'One', 'Place.'];
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,6 +34,7 @@ const [introVisible, setIntroVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [fadeExit, setFadeExit] = useState(false);
   const [imagesReady, setImagesReady] = useState(false);
+  const reducedMotion = useReducedMotion();
 
   // Draw a frame while preserving its aspect ratio.
   const drawFrame = (index) => {
@@ -134,13 +140,21 @@ const fitCanvas = () => {
     };
   }, []);
 
+  // Paint the first frame underneath before the loader exits so there is no blank flash.
+  useEffect(() => {
+    if (!imagesReady) return;
+    fitCanvas();
+    frameIndexRef.current = 0;
+    drawFrame(0);
+  }, [imagesReady]);
+
   // Fade out the loader once the priority frames are ready.
   useEffect(() => {
     if (!fadeExit) return undefined;
 
     const timer = window.setTimeout(() => {
       setLoading(false);
-    }, 600);
+    }, 700);
 
     return () => window.clearTimeout(timer);
   }, [fadeExit]);
@@ -399,26 +413,7 @@ const fitCanvas = () => {
 
   return (
     <>
-      {loading && (
-        <div className={`loader-screen ${fadeExit ? 'fade-out' : ''}`}>
-          <div className="loader-content">
-            <h2 className="loader-title">FixItNow</h2>
-
-            <p className="loader-subtitle">
-              Loading cinematic experience...
-            </p>
-
-            <div className="progress-bar-container">
-              <div
-                className="progress-bar-fill"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-
-            <span className="progress-text">{progress}%</span>
-          </div>
-        </div>
-      )}
+      {loading && <Loader progress={progress} fadeExit={fadeExit} />}
 
       <div
         className="scroll-animation-container"
@@ -444,59 +439,144 @@ const fitCanvas = () => {
             <div
               className="hero-transition-surface"
               ref={transitionSurfaceRef}
+              data-theme="light"
             >
-              
-<div
-  className="hero-transition-content"
-  ref={transitionContentRef}
->
-  <span className="hero-transition-label">
-    01 / POWERING A BETTER FUTURE
-  </span>
+              <div
+                className="hero-transition-content sc-hook"
+                ref={transitionContentRef}
+              >
+                <div className="sc-hook__eyebrow">
+                  <svg
+                    className="sc-hook__sun-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="4.5" fill="currentColor" />
+                    <path
+                      d="M12 2v2.5M12 19.5V22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12H22M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span>ONE PLACE FOR SOLAR</span>
+                </div>
 
-  <motion.h2
-    initial={{ opacity: 0, y: 20 }}
-    animate={
-      introVisible
-        ? { opacity: 1, y: [20, -5, 0] }
-        : { opacity: 0, y: 20 }
-    }
-    transition={{
-      duration: 0.7,
-      ease: [0.4, 0, 0.2, 1],
-    }}
-  >
-    The future runs on{' '}
-    <motion.span
-      className="solar-highlight"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: introVisible ? 1 : 0 }}
-      transition={{
-        duration: 0.6,
-        delay: introVisible ? 0.2 : 0,
-      }}
-    >
-      sunlight.
-    </motion.span>
-  </motion.h2>
+                <h2 className="sc-hook__headline">
+                  {HOOK_LINE_1.map((word, idx) => (
+                    <span
+                      key={`l1-${idx}`}
+                      className={`sc-hook__word-mask${
+                        idx === HOOK_LINE_1.length - 1
+                          ? ' sc-hook__word-mask--last'
+                          : ''
+                      }`}
+                    >
+                      <motion.span
+                        className="sc-hook__word"
+                        initial={false}
+                        animate={
+                          reducedMotion || introVisible
+                            ? { y: '0%' }
+                            : { y: '110%' }
+                        }
+                        transition={
+                          reducedMotion
+                            ? { duration: 0 }
+                            : {
+                                duration: 0.48,
+                                delay: introVisible ? idx * 0.05 : 0,
+                                ease: [0.16, 1, 0.3, 1],
+                              }
+                        }
+                      >
+                        {word}
+                      </motion.span>
+                    </span>
+                  ))}
+                  <br className="sc-hook__br" />
+                  <span className="sc-hook__word-mask">
+                    <motion.span
+                      className="sc-hook__word"
+                      initial={false}
+                      animate={
+                        reducedMotion || introVisible
+                          ? { y: '0%' }
+                          : { y: '110%' }
+                      }
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : {
+                              duration: 0.48,
+                              delay: introVisible ? HOOK_LINE_1.length * 0.05 : 0,
+                              ease: [0.16, 1, 0.3, 1],
+                            }
+                      }
+                    >
+                      Get
+                    </motion.span>
+                  </span>
+                  <motion.span
+                    className="sc-hook__highlight"
+                    initial={false}
+                    animate={
+                      reducedMotion || introVisible
+                        ? { backgroundSize: '100% 100%' }
+                        : { backgroundSize: '0% 100%' }
+                    }
+                    transition={
+                      reducedMotion
+                        ? { duration: 0 }
+                        : {
+                            duration: 0.55,
+                            delay: introVisible ? 0.55 : 0,
+                            ease: [0.16, 1, 0.3, 1],
+                          }
+                    }
+                  >
+                    {HOOK_LINE_2_HIGHLIGHT.map((word, idx) => {
+                      const wordIndex = HOOK_LINE_1.length + 1 + idx;
+                      const isLast = idx === HOOK_LINE_2_HIGHLIGHT.length - 1;
+                      return (
+                        <span
+                          key={`l2-${idx}`}
+                          className={`sc-hook__word-mask${
+                            isLast ? ' sc-hook__word-mask--last' : ''
+                          }`}
+                        >
+                          <motion.span
+                            className="sc-hook__word"
+                            initial={false}
+                            animate={
+                              reducedMotion || introVisible
+                                ? { y: '0%' }
+                                : { y: '110%' }
+                            }
+                            transition={
+                              reducedMotion
+                                ? { duration: 0 }
+                                : {
+                                    duration: 0.48,
+                                    delay: introVisible ? wordIndex * 0.05 : 0,
+                                    ease: [0.16, 1, 0.3, 1],
+                                  }
+                            }
+                          >
+                            {word}
+                          </motion.span>
+                        </span>
+                      );
+                    })}
+                  </motion.span>
+                </h2>
 
-  <motion.p
-    initial={{ opacity: 0, y: 15 }}
-    animate={
-      introVisible
-        ? { opacity: 1, y: 0 }
-        : { opacity: 0, y: 15 }
-    }
-    transition={{
-      duration: 0.6,
-      delay: 0.25,
-      ease: 'easeOut',
-    }}
-  >
-    Harnessing clean energy to create a brighter tomorrow.
-  </motion.p>
-</div>
-
+                <CurvedMarquee
+                  containerRef={containerRef}
+                  visible={introVisible}
+                />
+              </div>
             </div>
           </div>
 

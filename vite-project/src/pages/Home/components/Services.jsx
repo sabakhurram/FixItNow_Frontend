@@ -1,4 +1,5 @@
 import { useRef, useLayoutEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -287,10 +288,10 @@ const Services = () => {
                   <p>{service.desc}</p>
                 </div>
 
-                <a href="#contact" className="services__card-link">
+                <Link to="/signin" className="services__card-link">
                   Explore service
                   <ArrowUpRight size={18} />
-                </a>
+                </Link>
               </div>
             </article>
           ))}

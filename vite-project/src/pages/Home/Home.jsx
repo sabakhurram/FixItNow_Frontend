@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Lazy load below-the-fold components for optimized page speed and performance
 const Services = React.lazy(() => import('./components/Services'));
+const ProcessSteps = React.lazy(() => import('./components/ProcessSteps'));
 const Stats = React.lazy(() => import('./components/Stats'));
 const About = React.lazy(() => import('./components/About'));
 const Testimonials = React.lazy(() => import('./components/Testimonials'));
@@ -95,11 +96,13 @@ function Home() {
       {/* Lazy Loaded Page Content */}
       <Suspense fallback={<LazySectionPlaceholder />}>
         <Services />
+        <ProcessSteps />
         <Stats />
+         <Products />
         <About />
-        <Products />
-        <Testimonials />
         <CTABanner />
+        <Testimonials />
+  
         <Contact />
         <Footer />
       </Suspense>

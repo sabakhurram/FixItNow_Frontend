@@ -16,7 +16,7 @@ import { getProductReviews, submitReview } from "../../api/reviewApi";
 import { useAuth } from "../../contexts/AuthContext";
 import "./ProductDetail.css";
 import { useCart } from "../../contexts/CartContext";
-
+import Footer from "../../components/layout/Footer/Footer";
 const MAX_RELATED = 4;
 
 /* Shows a neat placeholder when a product has no image or it fails to load */
@@ -214,6 +214,7 @@ function ProductDetail() {
     if (loading) {
 
         return (
+            
             <main className="product-detail-page" data-theme="light">
                 <div className="product-detail-status">
                     <div className="product-detail-spinner"></div>
@@ -266,6 +267,7 @@ function ProductDetail() {
 
 
     return (
+        <>
         <main className="product-detail-page" data-theme="light">
 
             <div className="product-detail-container">
@@ -642,6 +644,8 @@ function ProductDetail() {
                 )}
             </div>
         </main>
+        <Footer />
+        </>
     );
 }
 
